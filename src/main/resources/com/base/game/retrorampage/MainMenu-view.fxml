@@ -5,24 +5,16 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" spacing="20.0"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.base.game.retrorampage.MainMenuController"
-      style="-fx-background-color: rgb(38, 38, 38);">
+<VBox alignment="CENTER" spacing="20.0" style="-fx-background-color: rgb(38, 38, 38);" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/19" fx:controller="com.base.game.retrorampage.MainMenuController">
 
   <padding>
-    <Insets bottom="100.0" left="100.0" right="100.0" top="100.0"/>
+    <Insets bottom="100.0" left="100.0" right="100.0" top="100.0" />
   </padding>
 
-  <Label fx:id="mainMenuLabel" textFill="WHITE"/>
-  <Button text="Start Game" onAction="#onStartGameButtonClick"
-          style="-fx-background-color: rgb(38, 38, 38); -fx-text-fill: white; -fx-border-color: black; -fx-border-width: 1px;"/>
-  <Button text="Load Game" onAction="#onLoadGameButtonClick"
-          style="-fx-background-color: rgb(38, 38, 38); -fx-text-fill: white; -fx-border-color: black; -fx-border-width: 1px;"/>
-  <Button text="Settings" onAction="#onSettingsButtonClick"
-          style="-fx-background-color: rgb(38, 38, 38); -fx-text-fill: white; -fx-border-color: black; -fx-border-width: 1px;"/>
-  <Button text="About" onAction="#onAboutButtonClick"
-          style="-fx-background-color: rgb(38, 38, 38); -fx-text-fill: white; -fx-border-color: black; -fx-border-width: 1px;"/>
-  <Button text="Exit" onAction="#onExitButtonClick"
-          style="-fx-background-color: rgb(38, 38, 38); -fx-text-fill: white; -fx-border-color: black; -fx-border-width: 1px;"/>
+  <Label fx:id="mainMenuLabel" prefHeight="17.0" prefWidth="89.0" text="Retro Rampage" textFill="WHITE" />
+  <Button onAction="#onStartGameButtonClick" prefWidth="89.0" style="-fx-background-color: rgb(38, 38, 38); -fx-text-fill: white; -fx-border-color: black; -fx-border-width: 1px;" text="Start Game" />
+  <Button onAction="#onLoadGameButtonClick" style="-fx-background-color: rgb(38, 38, 38); -fx-text-fill: white; -fx-border-color: black; -fx-border-width: 1px;" text="Load Game" />
+  <Button onAction="#onSettingsButtonClick" style="-fx-background-color: rgb(38, 38, 38); -fx-text-fill: white; -fx-border-color: black; -fx-border-width: 1px;" text="Settings" />
+  <Button onAction="#onAboutButtonClick" style="-fx-background-color: rgb(38, 38, 38); -fx-text-fill: white; -fx-border-color: black; -fx-border-width: 1px;" text="About" />
+  <Button onAction="#onExitButtonClick" style="-fx-background-color: rgb(38, 38, 38); -fx-text-fill: white; -fx-border-color: black; -fx-border-width: 1px;" text="Exit" />
 </VBox>
