@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" spacing="20.0"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.base.game.retrorampage.MainMenuController"
+      style="-fx-background-color: rgb(38, 38, 38);">
+
+  <padding>
+    <Insets bottom="100.0" left="100.0" right="100.0" top="100.0"/>
+  </padding>
+
+  <Label fx:id="mainMenuLabel" textFill="WHITE"/>
+  <Button text="Start Game" onAction="#onStartGameButtonClick"
+          style="-fx-background-color: rgb(38, 38, 38); -fx-text-fill: white; -fx-border-color: black; -fx-border-width: 1px;"/>
+  <Button text="Load Game" onAction="#onLoadGameButtonClick"
+          style="-fx-background-color: rgb(38, 38, 38); -fx-text-fill: white; -fx-border-color: black; -fx-border-width: 1px;"/>
+  <Button text="Settings" onAction="#onSettingsButtonClick"
+          style="-fx-background-color: rgb(38, 38, 38); -fx-text-fill: white; -fx-border-color: black; -fx-border-width: 1px;"/>
+  <Button text="About" onAction="#onAboutButtonClick"
+          style="-fx-background-color: rgb(38, 38, 38); -fx-text-fill: white; -fx-border-color: black; -fx-border-width: 1px;"/>
+  <Button text="Exit" onAction="#onExitButtonClick"
+          style="-fx-background-color: rgb(38, 38, 38); -fx-text-fill: white; -fx-border-color: black; -fx-border-width: 1px;"/>
+</VBox>
