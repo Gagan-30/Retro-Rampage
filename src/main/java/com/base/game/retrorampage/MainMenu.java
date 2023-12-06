@@ -11,6 +11,7 @@ public class MainMenu {
 
     public void show(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MainMenu-view.fxml"));
+        MainMenuController mainMenuController = fxmlLoader.getController();
         Parent root = fxmlLoader.load();
 
         Scene scene = new Scene(root, 640, 480);
@@ -20,8 +21,6 @@ public class MainMenu {
         stage.setMinWidth(640);
         stage.setMinHeight(480);
         stage.setScene(scene);
-
-        MainMenuController mainMenuController = fxmlLoader.getController();
 
         stage.show();
     }
