@@ -1,8 +1,14 @@
 package com.base.game.retrorampage;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class MainMenuController {
 
@@ -27,7 +33,21 @@ public class MainMenuController {
 
     @FXML
     protected void onStartGameButtonClick() {
-        // Add logic to switch to the game scene
+        loadDifficultySelectionScene();
+    }
+
+    private void loadDifficultySelectionScene() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DifficultySelection.fxml"));
+            Parent root = fxmlLoader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Select Difficulty");
+            stage.setScene(new Scene(root, 640, 480));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
