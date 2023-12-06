@@ -13,12 +13,15 @@ public class MainMenu {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MainMenu-view.fxml"));
         Parent root = fxmlLoader.load();
 
-        Scene scene = new Scene(root, 1280, 720);
+        Scene scene = new Scene(root, 640, 480);
+        scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         stage.setTitle("Retro Rampage - Main Menu");
+        stage.setResizable(true);
+        stage.setMinWidth(640);
+        stage.setMinHeight(480);
         stage.setScene(scene);
 
         MainMenuController mainMenuController = fxmlLoader.getController();
-        mainMenuController.initialize();
 
         stage.show();
     }

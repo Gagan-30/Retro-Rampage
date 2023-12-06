@@ -24,9 +24,6 @@ public class MainMenuController {
     @FXML
     private Button exitButton;
 
-    public void initialize() {
-        // You can perform any initialization logic here
-    }
 
     @FXML
     protected void onStartGameButtonClick() {

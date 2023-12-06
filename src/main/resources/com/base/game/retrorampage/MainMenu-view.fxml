@@ -1,32 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" spacing="20.0" style="-fx-background-color: rgb(38, 38, 38);"
-      xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/19"
-      fx:controller="com.base.game.retrorampage.MainMenuController">
+<VBox id="mainMenu" alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/19"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.base.game.retrorampage.MainMenuController">
+
+    <stylesheets>
+        <URL value="@styles.css"/>
+    </stylesheets>
 
     <padding>
         <Insets bottom="100.0" left="100.0" right="100.0" top="100.0"/>
     </padding>
 
-    <Label fx:id="mainMenuLabel" prefHeight="17.0" prefWidth="89.0" text="Retro Rampage" textFill="WHITE"/>
-    <Button onAction="#onStartGameButtonClick" prefWidth="89.0"
-            style="-fx-background-color: rgb(38, 38, 38); -fx-text-fill: white; -fx-border-color: black; -fx-border-width: 1px;"
-            text="Start Game"/>
-    <Button onAction="#onLoadGameButtonClick"
-            style="-fx-background-color: rgb(38, 38, 38); -fx-text-fill: white; -fx-border-color: black; -fx-border-width: 1px;"
-            text="Load Game"/>
-    <Button onAction="#onSettingsButtonClick"
-            style="-fx-background-color: rgb(38, 38, 38); -fx-text-fill: white; -fx-border-color: black; -fx-border-width: 1px;"
-            text="Settings"/>
-    <Button onAction="#onAboutButtonClick"
-            style="-fx-background-color: rgb(38, 38, 38); -fx-text-fill: white; -fx-border-color: black; -fx-border-width: 1px;"
-            text="About"/>
-    <Button onAction="#onExitButtonClick"
-            style="-fx-background-color: rgb(38, 38, 38); -fx-text-fill: white; -fx-border-color: black; -fx-border-width: 1px;"
-            text="Exit"/>
+    <Label fx:id="mainMenuLabel" text="Retro Rampage" textAlignment="CENTER"/>
+    <Button fx:id="startGameButton" onAction="#onStartGameButtonClick" styleClass="menu-button" text="Start Game"/>
+    <Button fx:id="loadGameButton" onAction="#onLoadGameButtonClick" styleClass="menu-button" text="Load Game"/>
+    <Button fx:id="settingsButton" onAction="#onSettingsButtonClick" styleClass="menu-button" text="Settings"/>
+    <Button fx:id="aboutButton" onAction="#onAboutButtonClick" styleClass="menu-button" text="About"/>
+    <Button fx:id="exitButton" onAction="#onExitButtonClick" styleClass="menu-button" text="Exit"/>
 </VBox>
