@@ -2,7 +2,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <?import java.net.URL?>
@@ -21,9 +20,9 @@
 
     <Label fx:id="mainMenuLabel" text="Retro Rampage" styleClass="main-title"/>
 
-        <Button onAction="#onStartGameButtonClick" text="Start Game" styleClass="menu-button"/>
-        <Button onAction="#onLoadGameButtonClick" text="Load Game" styleClass="menu-button"/>
-        <Button onAction="#onSettingsButtonClick" text="Settings" styleClass="menu-button"/>
-        <Button onAction="#onAboutButtonClick" text="About" styleClass="menu-button"/>
-        <Button onAction="#onExitButtonClick" text="Exit" styleClass="menu-button"/>
+    <Button onAction="#onStartGameButtonClick" text="Start Game" styleClass="menu-button"/>
+    <Button onAction="#onLoadGameButtonClick" text="Load Game" styleClass="menu-button"/>
+    <Button onAction="#onSettingsButtonClick" text="Settings" styleClass="menu-button"/>
+    <Button onAction="#onAboutButtonClick" text="About" styleClass="menu-button"/>
+    <Button onAction="#onExitButtonClick" text="Exit" styleClass="menu-button"/>
 </VBox>

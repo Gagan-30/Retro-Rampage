@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -14,6 +15,10 @@ public class MainMenuController {
 
     @FXML
     private Label mainMenuLabel;
+
+
+    @FXML
+    private VBox mainMenu;
 
     @FXML
     private Button startGameButton;
@@ -38,7 +43,7 @@ public class MainMenuController {
 
     private void loadDifficultySelectionScene() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DifficultySelection.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DifficultySelection-view.fxml"));
             Parent root = fxmlLoader.load();
 
             Stage stage = new Stage();

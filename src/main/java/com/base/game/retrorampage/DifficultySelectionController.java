@@ -12,6 +12,7 @@ public class DifficultySelectionController {
         this.root = root;
     }
 
+
     @FXML
     private void selectEasy() {
         // Handle logic for selecting Easy difficulty

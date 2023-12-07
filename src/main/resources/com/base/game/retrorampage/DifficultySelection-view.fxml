@@ -11,7 +11,7 @@
     <Button onAction="#selectHard" text="Hard"/>
     <Button onAction="#selectSurvivor" text="Survivor"/>
     <Button onAction="#selectGrounded" text="Grounded"/>
-        <HBox spacing="20" alignment="BOTTOM_LEFT">
-            <Button onAction="#selectReturn" text="Return"/>
-        </HBox>
+    <HBox spacing="20" alignment="BOTTOM_LEFT">
+        <Button onAction="#selectReturn" text="Return"/>
+    </HBox>
 </VBox>
