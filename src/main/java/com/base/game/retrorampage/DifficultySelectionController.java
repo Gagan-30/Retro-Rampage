@@ -15,7 +15,6 @@ public class DifficultySelectionController {
     @FXML
     private void selectEasy() {
         // Handle logic for selecting Easy difficulty
-        // You can update the main scene or load a new FXML for the game screen
     }
 
     @FXML
