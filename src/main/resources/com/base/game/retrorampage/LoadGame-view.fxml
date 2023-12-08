@@ -15,11 +15,7 @@
         <URL value="@styles.css"/>
     </stylesheets>
 
-    <padding>
-        <Insets bottom="100.0" left="100.0" right="100.0" top="100.0"/>
-    </padding>
-
-    <Label fx:id="mainMenuLabel" text="Retro Rampage" styleClass="main-title"/>
+    <Label fx:id="mainMenuLabel" text="Select Save" styleClass="main-title"/>
 
     <Button onAction="#onLoadSaveFileButtonClick" text="No Save File Found" styleClass="menu-button"/>
     <Button onAction="#onCreateSaveFileButtonClick" text="Create Save File" styleClass="menu-button"/>
