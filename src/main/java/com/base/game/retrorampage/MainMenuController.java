@@ -36,24 +36,13 @@ public class MainMenuController {
     private Button exitButton;
 
 
+    private DifficultySelection difficultySelection = new DifficultySelection();
+
     @FXML
     protected void onStartGameButtonClick() {
-        loadDifficultySelectionScene();
+        difficultySelection.loadDifficultySelectionScene();
     }
 
-    private void loadDifficultySelectionScene() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DifficultySelection-view.fxml"));
-            Parent root = fxmlLoader.load();
-
-            Stage stage = new Stage();
-            stage.setTitle("Select Difficulty");
-            stage.setScene(new Scene(root, 640, 480));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @FXML
     protected void onLoadGameButtonClick() {
