@@ -10,7 +10,6 @@ public class MainMenuController {
     @FXML
     private Label mainMenuLabel;
 
-
     @FXML
     private VBox mainMenu;
 
@@ -29,12 +28,12 @@ public class MainMenuController {
     @FXML
     private Button exitButton;
 
-
     private DifficultySelection difficultySelection = new DifficultySelection();
 
     @FXML
     protected void onStartGameButtonClick() {
         difficultySelection.loadDifficultySelectionScene();
+
     }
 
 
