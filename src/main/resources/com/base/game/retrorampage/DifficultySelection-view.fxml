@@ -13,12 +13,12 @@
         <URL value="@styles.css"/>
     </stylesheets>
 
-    <Button onAction="#selectEasy" text="Easy" styleClass="menu-button"/>
-    <Button onAction="#selectMedium" text="Medium" styleClass="menu-button"/>
-    <Button onAction="#selectHard" text="Hard" styleClass="menu-button"/>
-    <Button onAction="#selectSurvivor" text="Survivor" styleClass="menu-button"/>
-    <Button onAction="#selectGrounded" text="Grounded" styleClass="menu-button"/>
+    <Button onAction="#onReturnButtonEasy" text="Easy" styleClass="menu-button"/>
+    <Button onAction="#onReturnButtonMedium" text="Medium" styleClass="menu-button"/>
+    <Button onAction="#onReturnButtonHard" text="Hard" styleClass="menu-button"/>
+    <Button onAction="#onReturnButtonSurvivor" text="Survivor" styleClass="menu-button"/>
+    <Button onAction="#onReturnButtonGrounded" text="Grounded" styleClass="menu-button"/>
     <HBox spacing="20" alignment="BOTTOM_LEFT">
-        <Button onAction="#selectReturn" text="Return" styleClass="menu-button"/>
+        <Button onAction="#onReturnButtonClick" text="Return" styleClass="menu-button"/>
     </HBox>
 </VBox>

@@ -29,17 +29,17 @@ public class MainMenuController {
     private Button exitButton;
 
     private DifficultySelection difficultySelection = new DifficultySelection();
+    private LoadGame loadGame = new LoadGame();
 
     @FXML
     protected void onStartGameButtonClick() {
         difficultySelection.loadDifficultySelectionScene();
-
     }
 
 
     @FXML
     protected void onLoadGameButtonClick() {
-        // Add logic to switch to the settings scene
+        loadGame.loadLoadGameScene();
     }
 
     @FXML

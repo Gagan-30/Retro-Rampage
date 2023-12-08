@@ -14,27 +14,29 @@ public class DifficultySelectionController {
 
 
     @FXML
-    private void selectEasy() {
+    private void onReturnButtonEasy() {
         // Handle logic for selecting Easy difficulty
     }
 
     @FXML
-    private void selectMedium() {
+    private void onReturnButtonMedium() {
         // Handle logic for selecting Medium difficulty
     }
 
     @FXML
-    private void selectHard() {
+    private void onReturnButtonHard() {
         // Handle logic for selecting Hard difficulty
     }
 
     @FXML
-    public void selectSurvivor() {
+    public void onReturnButtonSurvivor() {
     }
 
-    public void selectGrounded() {
+    public void onReturnButtonGrounded() {
     }
 
-    public void selectReturn() {
+
+    public void onReturnButtonClick() {
+
     }
 }
