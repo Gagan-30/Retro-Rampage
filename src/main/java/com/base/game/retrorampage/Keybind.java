@@ -11,7 +11,7 @@ public class Keybind {
 
     public Scene createKeybindScene() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Keybind.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Keybind-view.fxml"));
             Parent root = fxmlLoader.load();
 
             Stage stage = new Stage();
