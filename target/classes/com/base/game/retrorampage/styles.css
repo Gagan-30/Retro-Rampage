@@ -2,6 +2,7 @@
     -fx-background-color: rgb(38, 38, 38);
 }
 
+
 .main-title {
     -fx-text-fill: white;
     -fx-font-size: 24px;
@@ -11,25 +12,30 @@
 .menu-button {
     -fx-background-color: rgb(38, 38, 38);
     -fx-text-fill: white;
-    -fx-border-color: black; /* Set initial border color to transparent */
+    -fx-border-color: black;
     -fx-border-width: 1px;
     -fx-min-height: 50px;
     -fx-pref-height: 50px;
     -fx-max-height: 50px;
     -fx-font-size: 20px;
-    -fx-pref-width: 200px; /* Set the preferred width as needed */
+    -fx-pref-width: 200px;
 }
 
 .menu-button:hover {
     -fx-background-color: white;
     -fx-text-fill: black;
-    -fx-border-color: black; /* Add border color for hover state */
-    -fx-padding: 5px 10px; /* Adjust padding for hover state */
+    -fx-border-color: black;
+    -fx-padding: 5px 10px;
 }
 
 .menu-button:pressed {
     -fx-background-color: white;
     -fx-text-fill: black;
-    -fx-border-color: black; /* Add border color for pressed state */
-    -fx-padding: 6px 9px; /* Adjust padding for pressed state */
+    -fx-border-color: black;
+    -fx-padding: 6px 9px;
+}
+
+.about {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
 }
