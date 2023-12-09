@@ -5,6 +5,7 @@
 
 <?import java.net.URL?>
 
+<?import javafx.scene.control.Label?>
 <VBox id="mainMenu" alignment="CENTER" spacing="20"
       xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.base.game.retrorampage.DifficultySelectionController">
@@ -13,12 +14,14 @@
         <URL value="@styles.css"/>
     </stylesheets>
 
-    <Button onAction="#onReturnButtonEasy" text="Easy" styleClass="menu-button"/>
-    <Button onAction="#onReturnButtonMedium" text="Medium" styleClass="menu-button"/>
-    <Button onAction="#onReturnButtonHard" text="Hard" styleClass="menu-button"/>
-    <Button onAction="#onReturnButtonSurvivor" text="Survivor" styleClass="menu-button"/>
-    <Button onAction="#onReturnButtonGrounded" text="Grounded" styleClass="menu-button"/>
+    <Label fx:id="difficultyLabel" text="Select Difficulty" styleClass="main-title"/>
+
+    <Button onAction="#onButtonClickEasy" text="Easy" styleClass="menu-button"/>
+    <Button onAction="#onButtonClickMedium" text="Medium" styleClass="menu-button"/>
+    <Button onAction="#onButtonClickHard" text="Hard" styleClass="menu-button"/>
+    <Button onAction="#onButtonClickSurvivor" text="Survivor" styleClass="menu-button"/>
+    <Button onAction="#onButtonClickGrounded" text="Grounded" styleClass="menu-button"/>
     <HBox spacing="20" alignment="BOTTOM_LEFT">
-        <Button onAction="#onReturnButtonClick" text="Return" styleClass="menu-button"/>
+        <Button onAction="#onButtonClickReturn" text="Return" styleClass="menu-button"/>
     </HBox>
 </VBox>
