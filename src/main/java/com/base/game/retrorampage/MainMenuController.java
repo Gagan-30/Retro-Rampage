@@ -1,9 +1,14 @@
 package com.base.game.retrorampage;
 
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class MainMenuController {
 
@@ -28,18 +33,30 @@ public class MainMenuController {
     @FXML
     private Button exitButton;
 
-    private DifficultySelection difficultySelection = new DifficultySelection();
     private LoadGame loadGame = new LoadGame();
+
+    private DifficultySelection difficultySelection = new DifficultySelection();
+
+    private Stage mainStage;
+    private Scene difficultySelectionScene;
+
+    public void setMainStage(Stage mainStage) {
+        this.mainStage = mainStage;
+    }
 
     @FXML
     protected void onStartGameButtonClick() {
-        difficultySelection.loadDifficultySelectionScene();
-    }
+        if (difficultySelectionScene == null) {
+            // Load the difficulty selection scene if not loaded
+            difficultySelectionScene = difficultySelection.createDifficultySelectionScene();
+        }
 
+        mainStage.setScene(difficultySelectionScene);
+    }
 
     @FXML
     protected void onLoadGameButtonClick() {
-        loadGame.loadLoadGameScene();
+        // Handle loading game
     }
 
     @FXML

@@ -11,8 +11,10 @@ public class MainMenu {
 
     public void show(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MainMenu-view.fxml"));
-        MainMenuController mainMenuController = fxmlLoader.getController();
         Parent root = fxmlLoader.load();
+
+        MainMenuController mainMenuController = fxmlLoader.getController();
+        mainMenuController.setMainStage(stage);  // Pass the stage to the controller
 
         Scene scene = new Scene(root, 640, 480);
         scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());

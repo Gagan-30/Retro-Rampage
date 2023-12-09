@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class DifficultySelection {
 
-    public void loadDifficultySelectionScene() {
+    public Scene createDifficultySelectionScene() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DifficultySelection-view.fxml"));
             Parent root = fxmlLoader.load();
@@ -21,9 +21,10 @@ public class DifficultySelection {
             stage.setMinWidth(640);
             stage.setMinHeight(480);
 
-            stage.show();
+            return stage.getScene();
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 }
