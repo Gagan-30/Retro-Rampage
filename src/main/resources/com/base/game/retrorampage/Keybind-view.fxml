@@ -9,45 +9,58 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox id="mainMenu" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="545.0" prefWidth="463.0" spacing="20.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.base.game.retrorampage.KeybindController">
+<VBox id="mainMenu" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+      minWidth="-Infinity" prefHeight="545.0" prefWidth="463.0" spacing="20.0" xmlns="http://javafx.com/javafx/19"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.base.game.retrorampage.KeybindController">
 
     <stylesheets>
-        <URL value="@styles.css" />
+        <URL value="@styles.css"/>
     </stylesheets>
 
-    <Label fx:id="mainMenuLabel" styleClass="main-title" text="Keybinds" />
-   <GridPane>
-     <columnConstraints>
-       <ColumnConstraints hgrow="SOMETIMES" maxWidth="238.0" minWidth="10.0" prefWidth="233.0" />
-       <ColumnConstraints hgrow="SOMETIMES" maxWidth="251.0" minWidth="10.0" prefWidth="230.0" />
-         <ColumnConstraints hgrow="SOMETIMES" maxWidth="251.0" minWidth="10.0" prefWidth="230.0" />
-     </columnConstraints>
-     <rowConstraints>
-         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-     </rowConstraints>
-      <children>
-         <Label fx:id="mainMenuLabel1" prefHeight="35.0" prefWidth="109.0" styleClass="main-title" text="Move Up" textAlignment="CENTER" GridPane.rowIndex="1" />
-         <Label fx:id="mainMenuLabel2" styleClass="main-title" text="Move Down" textAlignment="CENTER" GridPane.rowIndex="2" />
-         <Label fx:id="mainMenuLabel3" styleClass="main-title" text="Move Left" textAlignment="CENTER" GridPane.rowIndex="3" />
-         <Label fx:id="mainMenuLabel4" styleClass="main-title" text="Move Right" textAlignment="CENTER" GridPane.rowIndex="4" />
-         <Label fx:id="mainMenuLabel41" styleClass="main-title" text="Shoot" textAlignment="CENTER" GridPane.rowIndex="5" />
-         <Label fx:id="mainMenuLabel411" styleClass="main-title" text="Aim" textAlignment="CENTER" GridPane.rowIndex="6" />
-         <Label fx:id="mainMenuLabel412" styleClass="main-title" text="Inventory" textAlignment="CENTER" GridPane.rowIndex="7" />
-         <Label fx:id="mainMenuLabel11" prefHeight="35.0" prefWidth="109.0" styleClass="main-title" text="Action:" textAlignment="CENTER" />
-         <Label fx:id="mainMenuLabel12" prefHeight="35.0" prefWidth="154.0" styleClass="main-title" text="Keybind 1" GridPane.columnIndex="1" />
-         <Label fx:id="mainMenuLabel121" prefHeight="35.0" prefWidth="154.0" styleClass="main-title" text="Keybind 2" GridPane.columnIndex="2" />
-      </children>
-   </GridPane>
+    <Label fx:id="mainMenuLabel" styleClass="main-title" text="Keybinds"/>
+    <GridPane>
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="238.0" minWidth="10.0" prefWidth="233.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="251.0" minWidth="10.0" prefWidth="230.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="251.0" minWidth="10.0" prefWidth="230.0"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        </rowConstraints>
+        <children>
+            <Label fx:id="mainMenuLabel1" prefHeight="35.0" prefWidth="109.0" styleClass="main-title" text="Move Up"
+                   textAlignment="CENTER" GridPane.rowIndex="1"/>
+            <Label fx:id="mainMenuLabel2" styleClass="main-title" text="Move Down" textAlignment="CENTER"
+                   GridPane.rowIndex="2"/>
+            <Label fx:id="mainMenuLabel3" styleClass="main-title" text="Move Left" textAlignment="CENTER"
+                   GridPane.rowIndex="3"/>
+            <Label fx:id="mainMenuLabel4" styleClass="main-title" text="Move Right" textAlignment="CENTER"
+                   GridPane.rowIndex="4"/>
+            <Label fx:id="mainMenuLabel41" styleClass="main-title" text="Shoot" textAlignment="CENTER"
+                   GridPane.rowIndex="5"/>
+            <Label fx:id="mainMenuLabel411" styleClass="main-title" text="Aim" textAlignment="CENTER"
+                   GridPane.rowIndex="6"/>
+            <Label fx:id="mainMenuLabel412" styleClass="main-title" text="Inventory" textAlignment="CENTER"
+                   GridPane.rowIndex="7"/>
+            <Label fx:id="mainMenuLabel11" prefHeight="35.0" prefWidth="109.0" styleClass="main-title" text="Action:"
+                   textAlignment="CENTER"/>
+            <Label fx:id="mainMenuLabel12" prefHeight="35.0" prefWidth="154.0" styleClass="main-title" text="Keybind 1"
+                   GridPane.columnIndex="1"/>
+            <Label fx:id="mainMenuLabel121" prefHeight="35.0" prefWidth="154.0" styleClass="main-title" text="Keybind 2"
+                   GridPane.columnIndex="2"/>
+        </children>
+    </GridPane>
 
 
     <HBox alignment="BOTTOM_LEFT" prefHeight="5.0" prefWidth="463.0">
-        <Button alignment="CENTER" onAction="#onReturnButtonClick" prefWidth="116.0" styleClass="menu-button" text="Return" />
+        <Button alignment="CENTER" onAction="#onReturnButtonClick" prefWidth="116.0" styleClass="menu-button"
+                text="Return"/>
     </HBox>
 </VBox>

@@ -19,7 +19,6 @@
 
     <Button alignment="CENTER" minHeight="26.0" onAction="#onReturnButtonClick" prefHeight="26.0" prefWidth="116.0" styleClass="menu-button" text="Mute Audio" />
 
-
     <HBox alignment="BOTTOM_LEFT">
         <Button alignment="CENTER" minHeight="26.0" onAction="#onReturnButtonClick" prefHeight="26.0" prefWidth="116.0" styleClass="menu-button" text="Return" />
     </HBox>

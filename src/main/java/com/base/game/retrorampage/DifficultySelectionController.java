@@ -22,10 +22,12 @@ public class DifficultySelectionController {
 
     @FXML
     public void onButtonClickSurvivor() {
+        // Handle logic for selecting Survivor difficulty
     }
 
     @FXML
     public void onButtonClickGrounded() {
+        // Handle logic for selecting Grounded difficulty
     }
 
 

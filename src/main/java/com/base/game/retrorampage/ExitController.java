@@ -7,5 +7,6 @@ public class ExitController {
     }
 
     public void onCancelButtonClick() {
+
     }
 }

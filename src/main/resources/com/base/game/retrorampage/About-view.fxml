@@ -14,12 +14,12 @@
         <URL value="@styles.css"/>
     </stylesheets>
 
-
     <Label fx:id="mainMenuLabel" styleClass="main-title" text="About"/>
     <Label styleClass="about" text="TODO"/>
 
 
     <HBox alignment="BOTTOM_LEFT">
-        <Button alignment="CENTER" onAction="#onReturnButtonClick" prefWidth="116.0" styleClass="menu-button" text="Return"/>
+        <Button alignment="CENTER" onAction="#onReturnButtonClick" prefWidth="116.0" styleClass="menu-button"
+                text="Return"/>
     </HBox>
 </VBox>

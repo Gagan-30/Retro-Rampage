@@ -9,15 +9,12 @@ import java.io.IOException;
 
 public class MainMenuController {
 
-
     private Stage mainStage;
     private Scene difficultySelectionScene;
     private Scene loadGameScene;
     private Scene settingsScene;
     private Scene aboutScene;
     private Scene exitScene;
-
-
 
     private DifficultySelection difficultySelection = new DifficultySelection();
     private LoadGame loadGame = new LoadGame();
