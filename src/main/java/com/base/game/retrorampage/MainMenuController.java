@@ -33,15 +33,21 @@ public class MainMenuController {
     @FXML
     private Button exitButton;
 
-    private LoadGame loadGame = new LoadGame();
-
-    private DifficultySelection difficultySelection = new DifficultySelection();
-
     private Stage mainStage;
     private Scene difficultySelectionScene;
 
+    private DifficultySelection difficultySelection = new DifficultySelection();
+
+    private LoadGame loadGame = new LoadGame();
+
     public void setMainStage(Stage mainStage) {
         this.mainStage = mainStage;
+    }
+
+    private void updateTitle(String newTitle) {
+        if (mainStage != null) {
+            mainStage.setTitle(newTitle);
+        }
     }
 
     @FXML
@@ -50,13 +56,13 @@ public class MainMenuController {
             // Load the difficulty selection scene if not loaded
             difficultySelectionScene = difficultySelection.createDifficultySelectionScene();
         }
-
+        updateTitle("Select Difficulty");
         mainStage.setScene(difficultySelectionScene);
     }
 
     @FXML
     protected void onLoadGameButtonClick() {
-        // Handle loading game
+        // Handle loading save game
     }
 
     @FXML

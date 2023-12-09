@@ -15,7 +15,6 @@ public class DifficultySelection {
             Parent root = fxmlLoader.load();
 
             Stage stage = new Stage();
-            stage.setTitle("Select Difficulty");
             stage.setScene(new Scene(root, 640, 480));
             stage.setResizable(true);
             stage.setMinWidth(640);
