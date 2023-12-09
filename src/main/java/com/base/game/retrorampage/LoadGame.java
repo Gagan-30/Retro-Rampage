@@ -9,21 +9,21 @@ import java.io.IOException;
 
 public class LoadGame {
 
-    public void loadLoadGameScene() {
+    public Scene createLoadGameScene() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("LoadGame-view.fxml"));
             Parent root = fxmlLoader.load();
 
             Stage stage = new Stage();
-            stage.setTitle("Select Save File");
             stage.setScene(new Scene(root, 640, 480));
             stage.setResizable(true);
             stage.setMinWidth(640);
             stage.setMinHeight(480);
 
-            stage.show();
+            return stage.getScene();
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 }

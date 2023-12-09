@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
 
 <?import java.net.URL?>
-
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
-<VBox id="mainMenu" alignment="CENTER" spacing="20.0"
-      xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/19"
+<?import javafx.scene.layout.VBox?>
+
+<VBox id="mainMenu" alignment="CENTER" prefHeight="545.0" prefWidth="463.0" spacing="20.0"
+      xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.base.game.retrorampage.LoadGameController">
 
     <stylesheets>
         <URL value="@styles.css"/>
     </stylesheets>
 
-    <Label fx:id="mainMenuLabel" text="Select Save" styleClass="main-title"/>
+    <Label fx:id="mainMenuLabel" styleClass="main-title" text="Select Save"/>
 
-    <Button onAction="#onLoadSaveFileButtonClick" text="No Save File Found" styleClass="menu-button"/>
-    <Button onAction="#onCreateSaveFileButtonClick" text="Create Save File" styleClass="menu-button"/>
+    <Button onAction="#onLoadSaveFileButtonClick" styleClass="menu-button" text="No Save File Found"/>
+    <Button onAction="#onCreateSaveFileButtonClick" styleClass="menu-button" text="Create Save File"/>
 
     <HBox alignment="BOTTOM_LEFT">
-        <Button onAction="#onReturnButtonClick" text="Return" styleClass="menu-button"/>
+        <Button alignment="CENTER" onAction="#onReturnButtonClick" prefWidth="116.0" styleClass="menu-button" text="Return"/>
     </HBox>
 </VBox>
