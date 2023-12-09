@@ -60,7 +60,7 @@ public class MainMenuController {
     protected void onSettingsButtonClick() {
         if (settingsScene == null) {
             // Load the Settings scene if not loaded
-            settingsScene = settings.createSettingsScene();
+            settingsScene = settings.createSettingsScene(mainStage);
         }
         updateTitle("Settings");
         mainStage.setScene(settingsScene);
