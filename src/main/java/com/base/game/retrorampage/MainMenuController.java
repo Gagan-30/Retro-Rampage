@@ -72,8 +72,8 @@ public class MainMenuController {
     @FXML
     protected void onAboutButtonClick() {
         if (aboutScene == null) {
-            // Load the About scene if not loaded
-            aboutScene = about.createAboutScene();
+            // Pass the current scene as the previous scene and the stage
+            aboutScene = about.createAboutScene(mainStage.getScene(), mainStage);
         }
         updateTitle("About");
         mainStage.setScene(aboutScene);
