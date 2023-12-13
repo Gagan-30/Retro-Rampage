@@ -8,7 +8,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class Graphics {
-
     public Scene createGraphicsScene() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Graphics-view.fxml"));
@@ -26,4 +25,5 @@ public class Graphics {
             return null;
         }
     }
+
 }

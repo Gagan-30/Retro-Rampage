@@ -76,8 +76,8 @@ public class MainMenuController {
     @FXML
     protected void onExitButtonClick() {
         if (exitScene == null) {
-            // Load the Exit scene if not loaded
-            exitScene = exit.createExitScene();
+            // Pass the current scene as the previous scene and the stage
+            exitScene = exit.createExitScene(mainStage.getScene(),mainStage);
         }
         updateTitle("Exit");
         mainStage.setScene(exitScene);

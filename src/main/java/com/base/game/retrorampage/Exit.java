@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class Exit {
 
-    public Scene createExitScene() {
+    public Scene createExitScene(Scene previousScene, Stage mainStage) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Exit-view.fxml"));
             Parent root = fxmlLoader.load();
@@ -19,6 +19,10 @@ public class Exit {
             stage.setResizable(true);
             stage.setMinWidth(640);
             stage.setMinHeight(480);
+
+            ExitController exitController = fxmlLoader.getController();
+            exitController.setPreviousScene(previousScene);
+            exitController.setStage(mainStage); // Set the main stage in the controller
 
             return stage.getScene();
         } catch (IOException e) {
