@@ -9,14 +9,14 @@ import java.io.IOException;
 
 public class About {
 
-    // Method to create the exit scene
+    // Method to create the about scene
     public Scene createAboutScene(Scene previousScene, Stage mainStage) {
         try {
-            // Load the Exit-view.fxml file using FXMLLoader
+            // Load the About-view.fxml file using FXMLLoader
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("About-view.fxml"));
             Parent root = fxmlLoader.load();
 
-            // Create a new stage for the exit scene
+            // Create a new stage for the about scene
             Stage stage = new Stage();
             stage.setScene(new Scene(root, 640, 480));
             stage.setResizable(true);
@@ -26,10 +26,10 @@ public class About {
             // Get the controller associated with the About-view.fxml
             AboutController aboutController = fxmlLoader.getController();
 
-            // Set the previous scene in the ExitController
+            // Set the previous scene in the AboutController
             aboutController.setPreviousScene(previousScene);
 
-            // Set the main stage in the ExitController
+            // Set the main stage in the AboutController
             aboutController.setStage(mainStage);
 
             // Return the scene associated with the new stage

@@ -19,6 +19,13 @@ public class ExitController {
         this.stage = stage;
     }
 
+    // Method to update the title of the main stage
+    private void updateTitle(String newTitle) {
+        if (stage != null) {
+            stage.setTitle(newTitle);
+        }
+    }
+
     // Event handler for the "Quit" button
     @FXML
     public void onQuitButtonClick() {
@@ -37,6 +44,7 @@ public class ExitController {
         if (previousScene != null && stage != null) {
             // Set the main stage's scene back to the previous scene
             stage.setScene(previousScene);
+            updateTitle("Main Menu");
         }
     }
 }

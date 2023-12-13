@@ -12,15 +12,6 @@ public class GraphicsController {
 
     private Settings settings = new Settings();
 
-    public void onReturnButtonClick() throws IOException {
-        if (settingsScene == null) {
-            // Load the settings scene if not loaded
-            settingsScene = settings.createSettingsScene(mainStage);
-        }
-        updateTitle("Settings");
-        mainStage.setScene(settingsScene);
-    }
-
     public void setMainStage(Stage mainStage) {
         this.mainStage = mainStage;
     }
@@ -30,4 +21,6 @@ public class GraphicsController {
             mainStage.setTitle(newTitle);
         }
     }
+
+
 }

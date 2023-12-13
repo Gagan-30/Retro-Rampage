@@ -18,6 +18,12 @@ public class AboutController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
+    // Method to update the title of the main stage
+    private void updateTitle(String newTitle) {
+        if (stage != null) {
+            stage.setTitle(newTitle);
+        }
+    }
     @FXML
     public void onReturnButtonClick() {
         // Print the previous scene and stage for debugging purposes
@@ -28,6 +34,7 @@ public class AboutController {
         if (previousScene != null && stage != null) {
             // Set the main stage's scene back to the previous scene
             stage.setScene(previousScene);
+            updateTitle("Main Menu");
         }
     }
 }
