@@ -16,23 +16,26 @@ public class MainMenuController {
     private Scene aboutScene;
     private Scene exitScene;
 
+    // Instances of various scenes and functionalities for the main menu
     private DifficultySelection difficultySelection = new DifficultySelection();
     private LoadGame loadGame = new LoadGame();
     private Settings settings = new Settings();
     private About about = new About();
     private Exit exit = new Exit();
 
-
+    // Method to set the main stage for the controller
     public void setMainStage(Stage mainStage) {
         this.mainStage = mainStage;
     }
 
+    // Method to update the title of the main stage
     private void updateTitle(String newTitle) {
         if (mainStage != null) {
             mainStage.setTitle(newTitle);
         }
     }
 
+    // Event handler for the "Start Game" button
     @FXML
     protected void onStartGameButtonClick() {
         if (difficultySelectionScene == null) {
@@ -43,6 +46,7 @@ public class MainMenuController {
         mainStage.setScene(difficultySelectionScene);
     }
 
+    // Event handler for the "Load Game" button
     @FXML
     protected void onLoadGameButtonClick() {
         if (loadGameScene == null) {
@@ -53,6 +57,7 @@ public class MainMenuController {
         mainStage.setScene(loadGameScene);
     }
 
+    // Event handler for the "Settings" button
     @FXML
     protected void onSettingsButtonClick() {
         if (settingsScene == null) {
@@ -63,6 +68,7 @@ public class MainMenuController {
         mainStage.setScene(settingsScene);
     }
 
+    // Event handler for the "About" button
     @FXML
     protected void onAboutButtonClick() {
         if (aboutScene == null) {
@@ -73,11 +79,12 @@ public class MainMenuController {
         mainStage.setScene(aboutScene);
     }
 
+    // Event handler for the "Exit" button
     @FXML
     protected void onExitButtonClick() {
         if (exitScene == null) {
             // Pass the current scene as the previous scene and the stage
-            exitScene = exit.createExitScene(mainStage.getScene(),mainStage);
+            exitScene = exit.createExitScene(mainStage.getScene(), mainStage);
         }
         updateTitle("Exit");
         mainStage.setScene(exitScene);

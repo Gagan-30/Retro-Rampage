@@ -9,27 +9,34 @@ public class ExitController {
     private Scene previousScene;
     private Stage stage; // Add a stage variable
 
+    // Method to set the previous scene
     public void setPreviousScene(Scene previousScene) {
         this.previousScene = previousScene;
     }
 
+    // Method to set the main stage
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
+    // Event handler for the "Quit" button
     @FXML
-    public void onConfirmationButtonClick() {
+    public void onQuitButtonClick() {
+        // Exit the application
         System.exit(0);
     }
 
+    // Event handler for the "Return" button
     @FXML
-    public void onCancelButtonClick() {
+    public void onReturnButtonClick() {
+        // Print the previous scene and stage for debugging purposes
         System.out.println("Previous Scene: " + previousScene);
         System.out.println("Stage: " + stage);
 
+        // Check if both previous scene and stage are not null
         if (previousScene != null && stage != null) {
+            // Set the main stage's scene back to the previous scene
             stage.setScene(previousScene);
         }
     }
-
 }

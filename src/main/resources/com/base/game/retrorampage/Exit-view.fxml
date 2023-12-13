@@ -16,8 +16,8 @@
     <Label fx:id="mainMenuLabel" styleClass="main-title" text="Are you sure you want to Exit the Game?"/>
 
     <HBox alignment="CENTER" spacing="30">
-        <Button onAction="#onConfirmationButtonClick" styleClass="menu-button" text="Confirm"/>
-        <Button onAction="#onCancelButtonClick" styleClass="menu-button" text="Return"/>
+        <Button onAction="#onQuitButtonClick" styleClass="menu-button" text="Confirm"/>
+        <Button onAction="#onReturnButtonClick" styleClass="menu-button" text="Return"/>
     </HBox>
 
 
