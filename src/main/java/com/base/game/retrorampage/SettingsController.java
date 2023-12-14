@@ -58,7 +58,7 @@ public class SettingsController {
     public void onKeybindButtonClick() {
         if (keybindScene == null) {
             // Load the keybind scene if not loaded
-            keybindScene = keybind.createKeybindScene();
+            keybindScene = keybind.createKeybindScene(stage.getScene(), stage);
         }
         updateTitle("Keybind Settings");
         stage.setScene(keybindScene);
