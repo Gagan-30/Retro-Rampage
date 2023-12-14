@@ -7,7 +7,8 @@ import javafx.stage.Stage;
 
 public class SettingsController {
 
-    private Stage mainStage;
+    private Scene previousScene;
+    private Stage stage;
     private Scene graphicsScene;
     private Scene soundScene;
     private Scene keybindScene;
@@ -16,13 +17,20 @@ public class SettingsController {
     private Sound sound = new Sound();
     private Keybind keybind = new Keybind();
 
-    public void setMainStage(Stage mainStage) {
-        this.mainStage = mainStage;
+    // Method to set the previous scene
+    public void setPreviousScene(Scene previousScene) {
+        this.previousScene = previousScene;
     }
 
+    // Method to set the main stage
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    // Method to update the title of the main stage
     private void updateTitle(String newTitle) {
-        if (mainStage != null) {
-            mainStage.setTitle(newTitle);
+        if (stage != null) {
+            stage.setTitle(newTitle);
         }
     }
 
@@ -33,7 +41,7 @@ public class SettingsController {
             graphicsScene = graphics.createGraphicsScene();
         }
         updateTitle("Graphics Settings");
-        mainStage.setScene(graphicsScene);
+        stage.setScene(graphicsScene);
     }
 
     @FXML
@@ -43,7 +51,7 @@ public class SettingsController {
             soundScene = sound.createSoundScene();
         }
         updateTitle("Sound Settings");
-        mainStage.setScene(soundScene);
+        stage.setScene(soundScene);
     }
 
     @FXML
@@ -53,11 +61,21 @@ public class SettingsController {
             keybindScene = keybind.createKeybindScene();
         }
         updateTitle("Keybind Settings");
-        mainStage.setScene(keybindScene);
+        stage.setScene(keybindScene);
     }
 
+    // Event handler for the "Return" button
     @FXML
     public void onReturnButtonClick() {
+        // Print the previous scene and stage for debugging purposes
+        System.out.println("Previous Scene: " + previousScene);
+        System.out.println("Stage: " + stage);
 
+        // Check if both previous scene and stage are not null
+        if (previousScene != null && stage != null) {
+            // Set the main stage's scene back to the previous scene
+            stage.setScene(previousScene);
+            updateTitle("Main Menu");
+        }
     }
 }
