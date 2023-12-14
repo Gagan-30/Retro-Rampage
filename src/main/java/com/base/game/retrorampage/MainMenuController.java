@@ -40,7 +40,7 @@ public class MainMenuController {
     protected void onStartGameButtonClick() {
         if (difficultySelectionScene == null) {
             // Load the difficulty selection scene if not loaded
-            difficultySelectionScene = difficultySelection.createDifficultySelectionScene();
+            difficultySelectionScene = difficultySelection.createDifficultySelectionScene(mainStage.getScene(), mainStage);
         }
         updateTitle("Select Difficulty");
         mainStage.setScene(difficultySelectionScene);
