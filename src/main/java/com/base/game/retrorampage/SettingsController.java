@@ -48,7 +48,7 @@ public class SettingsController {
     public void onSoundButtonClick() {
         if (soundScene == null) {
             // Load the sound scene if not loaded
-            soundScene = sound.createSoundScene();
+            soundScene = sound.createSoundScene(stage.getScene(), stage);
         }
         updateTitle("Sound Settings");
         stage.setScene(soundScene);

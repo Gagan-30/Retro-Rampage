@@ -4,8 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 public class GraphicsController {
 
     private Scene previousScene;
@@ -42,5 +40,4 @@ public class GraphicsController {
             updateTitle("Main Menu");
         }
     }
-
 }

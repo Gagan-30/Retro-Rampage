@@ -20,6 +20,7 @@
     <Button onAction="#onKeybindButtonClick" styleClass="menu-button" text="Keybind Settings"/>
 
     <HBox alignment="BOTTOM_LEFT">
-        <Button alignment="CENTER" onAction="#onReturnButtonClick" prefWidth="116.0" styleClass="menu-button" text="Return"/>
+        <Button alignment="CENTER" onAction="#onReturnButtonClick" prefWidth="116.0" styleClass="menu-button"
+                text="Return"/>
     </HBox>
 </VBox>
