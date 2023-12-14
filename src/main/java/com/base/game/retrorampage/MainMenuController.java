@@ -51,7 +51,7 @@ public class MainMenuController {
     protected void onLoadGameButtonClick() {
         if (loadGameScene == null) {
             // Load the Load Game scene if not loaded
-            loadGameScene = loadGame.createLoadGameScene();
+            loadGameScene = loadGame.createLoadGameScene(mainStage.getScene(), mainStage);
         }
         updateTitle("Select Game Save");
         mainStage.setScene(loadGameScene);

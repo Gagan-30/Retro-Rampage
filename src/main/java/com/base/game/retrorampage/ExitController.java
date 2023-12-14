@@ -26,13 +26,6 @@ public class ExitController {
         }
     }
 
-    // Event handler for the "Quit" button
-    @FXML
-    public void onQuitButtonClick() {
-        // Exit the application
-        System.exit(0);
-    }
-
     // Event handler for the "Return" button
     @FXML
     public void onReturnButtonClick() {
@@ -46,5 +39,11 @@ public class ExitController {
             stage.setScene(previousScene);
             updateTitle("Main Menu");
         }
+    }
+    // Event handler for the "Quit" button
+    @FXML
+    public void onQuitButtonClick() {
+        // Exit the application
+        System.exit(0);
     }
 }
