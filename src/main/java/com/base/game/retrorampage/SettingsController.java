@@ -38,7 +38,7 @@ public class SettingsController {
     protected void onGraphicsButtonClick() {
         if (graphicsScene == null) {
             // Load the graphics scene if not loaded
-            graphicsScene = graphics.createGraphicsScene();
+            graphicsScene = graphics.createGraphicsScene(stage.getScene(), stage);
         }
         updateTitle("Graphics Settings");
         stage.setScene(graphicsScene);
