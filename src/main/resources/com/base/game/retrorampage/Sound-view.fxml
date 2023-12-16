@@ -23,7 +23,7 @@
     </HBox>
 
     <Button fx:id="muteButton" alignment="CENTER" minHeight="26.0" onAction="#onMuteButtonClick" prefHeight="26.0"
-            prefWidth="116.0" styleClass="menu-button" text="Mute Audio"/>
+            prefWidth="116.0" styleClass="menu-button" text="Audio: Unmuted"/>
 
     <HBox alignment="BOTTOM_LEFT">
         <Button alignment="CENTER" minHeight="26.0" onAction="#onReturnButtonClick" prefHeight="26.0" prefWidth="116.0"

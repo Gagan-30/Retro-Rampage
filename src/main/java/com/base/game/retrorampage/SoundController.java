@@ -23,9 +23,6 @@ public class SoundController {
     private TextField volumeTextField;
 
     @FXML
-    private Label audioStatusLabel;
-
-    @FXML
     private Button muteButton;
 
     // Method to set the previous scene
