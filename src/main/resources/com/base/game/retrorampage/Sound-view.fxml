@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Slider?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
 <VBox id="mainMenu" alignment="CENTER" prefHeight="545.0" prefWidth="463.0" spacing="20.0"
-      xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+      xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.base.game.retrorampage.SoundController">
 
     <stylesheets>
         <URL value="@styles.css"/>
     </stylesheets>
 
-
     <Label fx:id="mainMenuLabel" styleClass="main-title" text="Sound"/>
-    <Slider maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="14.0"
-            prefWidth="200.0"/>
 
-    <Button alignment="CENTER" minHeight="26.0" onAction="#onMuteButtonClick" prefHeight="26.0" prefWidth="116.0"
-            styleClass="menu-button" text="Mute Audio"/>
+    <!-- New layout with volume text box to the left of the slider -->
+    <HBox alignment="CENTER" spacing="10.0">
+        <TextField fx:id="volumeTextField" onKeyReleased="#onVolumeTextFieldChanged"
+                   prefHeight="25.0" prefWidth="70.0" styleClass="volume-text-field"/>
+        <Slider fx:id="volumeSlider" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                minWidth="-Infinity" prefHeight="23.0" prefWidth="223.0"/>
+    </HBox>
+
+    <Button fx:id="muteButton" alignment="CENTER" minHeight="26.0" onAction="#onMuteButtonClick" prefHeight="26.0"
+            prefWidth="116.0" styleClass="menu-button" text="Mute Audio"/>
 
     <HBox alignment="BOTTOM_LEFT">
         <Button alignment="CENTER" minHeight="26.0" onAction="#onReturnButtonClick" prefHeight="26.0" prefWidth="116.0"
