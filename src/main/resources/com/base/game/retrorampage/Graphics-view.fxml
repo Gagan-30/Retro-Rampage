@@ -16,7 +16,9 @@
 
 
     <Label fx:id="mainMenuLabel" styleClass="main-title" text="Graphics"/>
-    <Button alignment="CENTER" minHeight="26.0" onAction="#onReturnButtonClick" prefHeight="26.0" prefWidth="116.0"
+    <Button fx:id="resolutionButton" alignment="CENTER" minHeight="26.0" onAction="#onChangeResolutionButtonClick"
+            prefHeight="26.0" prefWidth="116.0" styleClass="menu-button" text="Change Resolution"/>
+    <Button fx:id="screenTypeButton" alignment="CENTER" minHeight="26.0" onAction="#onChangeScreenTypeButtonClick" prefHeight="26.0" prefWidth="116.0"
             styleClass="menu-button" text="Fullscreen"/>
 
 

@@ -1,13 +1,18 @@
 package com.base.game.retrorampage;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 public class GraphicsController {
 
     private Scene previousScene;
-    private Stage stage; // Add a stage variable
+    private Stage stage;
+
+    @FXML
+    private Button screenType;
 
     // Method to set the previous scene
     public void setPreviousScene(Scene previousScene) {
@@ -26,6 +31,20 @@ public class GraphicsController {
         }
     }
 
+    public void onChangeResolutionButtonClick() {
+
+    }
+
+    public void onChangeScreenTypeButtonClick() {
+        if (!stage.isFullScreen()) {
+            stage.setFullScreen(true);
+            screenType.setText("FullScreen: Enabled");
+        } else {
+            stage.setResizable(true);
+            screenType.setText("FullScreen: Disabled");
+        }
+    }
+
     // Event handler for the "Return" button
     @FXML
     public void onReturnButtonClick() {
@@ -40,4 +59,5 @@ public class GraphicsController {
             updateTitle("Main Menu");
         }
     }
+
 }
