@@ -5,14 +5,20 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
+
+import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 
 public class SoundController {
     private Scene previousScene;
     private Stage stage;
     private int previousVolume = 50;
+
     @FXML
     private Slider volumeSlider;
 
@@ -59,6 +65,31 @@ public class SoundController {
         // Set default values
         volumeSlider.setValue(previousVolume);
         volumeTextField.setText(String.valueOf(previousVolume));
+
+        // Set up text formatter to limit input to 3 characters
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String newText = change.getControlNewText();
+            // Allow only digits and limit to 3 characters
+            if (Pattern.matches("\\d{0,3}", newText)) {
+                return change;
+            }
+            return null;
+        };
+
+        StringConverter<Integer> converter = new StringConverter<>() {
+            @Override
+            public Integer fromString(String string) {
+                return Integer.parseInt(string);
+            }
+
+            @Override
+            public String toString(Integer object) {
+                return object.toString();
+            }
+        };
+
+        TextFormatter<Integer> textFormatter = new TextFormatter<>(converter, previousVolume, filter);
+        volumeTextField.setTextFormatter(textFormatter);
     }
 
     // Method to handle volume change from the text field
@@ -69,20 +100,33 @@ public class SoundController {
     }
 
     private void updateVolumeFromTextField() {
-        try {
+        // Get the text from the text field
+        String input = volumeTextField.getText();
+
+        // Define a regex pattern for integers between 0 and 100
+        String regex = "^(100|[1-9]?[0-9])$";
+
+        // Check if the input matches the regex pattern
+        if (input.matches(regex)) {
             // Parse the text field value to an integer
-            int volume = Integer.parseInt(volumeTextField.getText());
+            int volume = Integer.parseInt(input);
 
             // Ensure the volume is within the valid range (0-100)
             volume = Math.max(0, Math.min(100, volume));
 
             // Update the slider value
             volumeSlider.setValue(volume);
-        } catch (NumberFormatException e) {
+        } else {
             // Handle the case where the input is not a valid integer
-            e.printStackTrace();
+            System.out.println("Invalid input. Please enter a valid integer between 0 and 100.");
+
+            // Reset the text field to the previous valid volume
+            volumeTextField.setText(String.valueOf((int) volumeSlider.getValue()));
         }
+
+        System.out.println("Input: " + volumeTextField.getText());
     }
+
 
     @FXML
     public void onMuteButtonClick() {
