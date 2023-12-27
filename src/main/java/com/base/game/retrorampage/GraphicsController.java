@@ -1,18 +1,21 @@
 package com.base.game.retrorampage;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
+import java.io.*;
+import java.util.Properties;
+
 public class GraphicsController {
 
+    private static final String CONFIG_FILE = "config.properties";
     private Scene previousScene;
     private Stage stage;
 
     @FXML
-    private Button screenType;
+    private Button screenTypeButton;
 
     // Method to set the previous scene
     public void setPreviousScene(Scene previousScene) {
@@ -22,6 +25,8 @@ public class GraphicsController {
     // Method to set the main stage
     public void setStage(Stage stage) {
         this.stage = stage;
+        // Apply fullscreen setting when the stage is set
+        applyFullscreenSetting(loadFullscreenSetting());
     }
 
     // Method to update the title of the main stage
@@ -31,17 +36,53 @@ public class GraphicsController {
         }
     }
 
-    public void onChangeResolutionButtonClick() {
+    // Method to initialize the controller after FXML file is loaded
+    @FXML
+    private void initialize() {
+        // Set the initial fullscreen setting when the controller is initialized
+        applyFullscreenSetting(loadFullscreenSetting());
+    }
 
+    public void onChangeResolutionButtonClick() {
+        // Implement resolution change logic here
     }
 
     public void onChangeScreenTypeButtonClick() {
-        if (!stage.isFullScreen()) {
-            stage.setFullScreen(true);
-            screenType.setText("FullScreen: Enabled");
-        } else {
-            stage.setResizable(true);
-            screenType.setText("FullScreen: Disabled");
+        boolean fullscreen = !stage.isFullScreen();
+        stage.setFullScreen(fullscreen);
+        stage.setResizable(!fullscreen);
+        screenTypeButton.setText("FullScreen: " + (fullscreen ? "Enabled" : "Disabled"));
+        saveFullscreenSetting(fullscreen);
+    }
+
+    private void saveFullscreenSetting(boolean fullscreen) {
+        Properties properties = new Properties();
+        properties.setProperty("fullscreen", String.valueOf(fullscreen));
+
+        try (OutputStream output = new FileOutputStream(CONFIG_FILE)) {
+            properties.store(output, "Fullscreen Settings");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean loadFullscreenSetting() {
+        Properties properties = new Properties();
+        boolean defaultFullscreen = false;
+
+        try (InputStream input = new FileInputStream(CONFIG_FILE)) {
+            properties.load(input);
+            String fullscreenString = properties.getProperty("fullscreen", String.valueOf(defaultFullscreen));
+            return Boolean.parseBoolean(fullscreenString);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return defaultFullscreen;
+        }
+    }
+
+    private void applyFullscreenSetting(boolean fullscreen) {
+        if (stage != null) {
+            stage.setFullScreen(fullscreen);
         }
     }
 
@@ -59,5 +100,4 @@ public class GraphicsController {
             updateTitle("Main Menu");
         }
     }
-
 }
