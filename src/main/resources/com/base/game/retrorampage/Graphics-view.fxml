@@ -19,9 +19,7 @@
     <Button fx:id="resolutionButton" alignment="CENTER" minHeight="26.0" onAction="#onChangeResolutionButtonClick"
             prefHeight="26.0" prefWidth="116.0" styleClass="menu-button" text="Change Resolution"/>
     <Button fx:id="screenTypeButton" alignment="CENTER" minHeight="26.0" onAction="#onChangeScreenTypeButtonClick"
-            prefHeight="26.0" prefWidth="116.0" styleClass="menu-button" text="Toggle FullScreen"/>
-
-
+            prefHeight="26.0" prefWidth="116.0" styleClass="menu-button"/>
 
     <HBox alignment="BOTTOM_LEFT">
         <Button alignment="CENTER" minHeight="26.0" onAction="#onReturnButtonClick" prefHeight="26.0" prefWidth="116.0"

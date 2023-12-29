@@ -40,20 +40,45 @@ public class GraphicsController {
     @FXML
     private void initialize() {
         // Set the initial fullscreen setting when the controller is initialized
+        // Avoid executing the change screen type logic during initialization
         applyFullscreenSetting(loadFullscreenSetting());
+
+        // Update the button text based on the initial fullscreen setting
+        if (stage != null) {
+            updateButtonText();
+        }
     }
 
     public void onChangeResolutionButtonClick() {
         // Implement resolution change logic here
     }
 
+    @FXML
     public void onChangeScreenTypeButtonClick() {
         boolean fullscreen = !stage.isFullScreen();
+        System.out.println("Changing fullscreen to: " + fullscreen);
+
+        // Set full-screen mode directly on the main stage
         stage.setFullScreen(fullscreen);
+
+        // Set resizable property based on full-screen mode
         stage.setResizable(!fullscreen);
-        screenTypeButton.setText("FullScreen: " + (fullscreen ? "Enabled" : "Disabled"));
+
+        // Save the full-screen setting to the config file immediately
         saveFullscreenSetting(fullscreen);
+
+        // Update the button text after changing the fullscreen mode
+        if (stage != null) {
+            updateButtonText();
+        }
     }
+
+    private void updateButtonText() {
+        boolean fullscreen = stage.isFullScreen();
+        screenTypeButton.setText("FullScreen: " + (fullscreen ? "Enabled" : "Disabled"));
+    }
+
+
 
     private void saveFullscreenSetting(boolean fullscreen) {
         Properties properties = new Properties();
@@ -61,6 +86,7 @@ public class GraphicsController {
 
         try (OutputStream output = new FileOutputStream(CONFIG_FILE)) {
             properties.store(output, "Fullscreen Settings");
+            output.flush(); // Flush the stream to ensure immediate write
         } catch (IOException e) {
             e.printStackTrace();
         }
