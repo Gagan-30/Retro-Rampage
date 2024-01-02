@@ -3,6 +3,8 @@ package com.base.game.retrorampage;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitMenuButton;
 import javafx.stage.Stage;
 
 import java.io.*;
@@ -16,6 +18,9 @@ public class GraphicsController {
 
     @FXML
     private Button screenTypeButton;
+
+    @FXML
+    private SplitMenuButton resolutionMenu;
 
     // Method to set the previous scene
     public void setPreviousScene(Scene previousScene) {
@@ -49,8 +54,10 @@ public class GraphicsController {
         }
     }
 
-    public void onChangeResolutionButtonClick() {
-        // Implement resolution change logic here
+    @FXML
+    private void handleResolutionChange(javafx.event.ActionEvent event) {
+        MenuItem selectedMenuItem = (MenuItem) event.getSource();
+        resolutionMenu.setText(selectedMenuItem.getText());
     }
 
     @FXML
