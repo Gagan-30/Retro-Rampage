@@ -54,13 +54,11 @@ public class SoundController {
         volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             volumeTextField.setText(String.valueOf(newValue.intValue()));
             updateVolumeFromTextField();
-            saveConfig(); // Save the config immediately when there is a change
         });
 
         volumeTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 updateVolumeFromTextField();
-                saveConfig(); // Save the config immediately when there is a change
             }
         });
 
@@ -115,7 +113,6 @@ public class SoundController {
     public void onVolumeTextFieldChanged(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
             updateVolumeFromTextField();
-            saveConfig(); // Save the config immediately when there is a change
         }
     }
 
@@ -145,7 +142,6 @@ public class SoundController {
             volumeSlider.setValue(previousVolume);
             muteButton.setText("Audio: Unmuted");
         }
-        saveConfig(); // Save the config immediately when there is a change
     }
 
     private void saveConfig() {
@@ -182,12 +178,9 @@ public class SoundController {
         System.out.println("Returning to Main Menu...");
 
         if (previousScene != null && stage != null) {
+            saveConfig(); // Save the config immediately when returning to the main menu
             stage.setScene(previousScene);
             updateTitle("Main Menu");
-            saveConfig(); // Save the config immediately when returning to the main menu
-            System.out.println("Config saved. Volume: " + (int) volumeSlider.getValue());
-        } else {
-            System.out.println("Error: previousScene or stage is null.");
         }
     }
 }
