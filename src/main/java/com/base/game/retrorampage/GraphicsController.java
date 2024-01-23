@@ -12,7 +12,7 @@ import java.util.Properties;
 
 public class GraphicsController {
 
-    private static final String CONFIG_FILE = "config.properties";
+    private static final String CONFIG_FILE = "config.json";
     private Scene previousScene;
     private Stage stage;
 
