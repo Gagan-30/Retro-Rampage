@@ -4,6 +4,13 @@ public class GameLoop implements Runnable {
 
     private boolean running = false;
     private Thread gameThread;
+    private final Runnable updateAction;
+    private final Runnable renderAction;
+
+    public GameLoop(Runnable updateAction, Runnable renderAction) {
+        this.updateAction = updateAction;
+        this.renderAction = renderAction;
+    }
 
     public synchronized void start() {
         if (running) return;
@@ -25,16 +32,8 @@ public class GameLoop implements Runnable {
     @Override
     public void run() {
         while (running) {
-            update();
-            render();
+            updateAction.run();
+            renderAction.run();
         }
-    }
-
-    private void update() {
-        // Game update logic
-    }
-
-    private void render() {
-        // Game render logic
     }
 }
