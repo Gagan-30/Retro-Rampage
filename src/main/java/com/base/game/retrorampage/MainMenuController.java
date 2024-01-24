@@ -1,11 +1,8 @@
 package com.base.game.retrorampage;
 
 import javafx.fxml.FXML;
-
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class MainMenuController {
 
@@ -17,18 +14,17 @@ public class MainMenuController {
     private Scene exitScene;
 
     // Instances of various scenes and functionalities for the main menu
-    private DifficultySelection difficultySelection = new DifficultySelection();
-    private LoadGame loadGame = new LoadGame();
-    private Settings settings = new Settings();
-    private About about = new About();
-    private Exit exit = new Exit();
+    private final DifficultySelection difficultySelection = new DifficultySelection();
+    private final LoadGame loadGame = new LoadGame();
+    private final Settings settings = new Settings();
+    private final About about = new About();
+    private final Exit exit = new Exit();
 
     // Method to set the main stage for the controller
     public void setMainStage(Stage mainStage) {
         this.mainStage = mainStage;
     }
 
-    // Method to update the title of the main stage
     private void updateTitle(String newTitle) {
         if (mainStage != null) {
             mainStage.setTitle(newTitle);
