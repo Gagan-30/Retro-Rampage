@@ -11,6 +11,8 @@ public class Settings {
 
     public Scene createSettingsScene(Scene previousScene, Stage mainStage) {
         try {
+            System.out.println("[Settings] Creating settings scene at " + java.time.LocalDateTime.now());
+
             // Load the Settings-view.fxml file using FXMLLoader
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Settings-view.fxml"));
             Parent root = fxmlLoader.load();

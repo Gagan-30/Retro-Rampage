@@ -1,7 +1,6 @@
 package com.base.game.retrorampage;
 
 import java.io.*;
-import java.nio.channels.FileChannel;
 
 public class Config {
     private String configFilePath;
@@ -22,17 +21,21 @@ public class Config {
     }
 
     public void setVolume(int volume) {
-        try (FileOutputStream fos = new FileOutputStream(configFilePath);
-             BufferedWriter writer = new BufferedWriter(new FileWriter(fos.getFD()))) {
+        FileWriter writer = null;
+        try {
+            writer = new FileWriter(configFilePath);
             writer.write(String.valueOf(volume));
             writer.flush();
-
-            FileChannel channel = fos.getChannel();
-            channel.force(true); // Force synchronization with the disk
-
-            System.out.println("Wrote volume to file: " + volume);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

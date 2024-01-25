@@ -1,23 +1,19 @@
 package com.base.game.retrorampage;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
-
-import java.util.function.UnaryOperator;
-import java.util.regex.Pattern;
+import javafx.util.converter.NumberStringConverter;
 
 public class SoundController {
     private Scene previousScene;
     private Stage stage;
-    private Config config = new Config("config.txt");
+    private Config config;
 
     @FXML
     private Slider volumeSlider;
@@ -25,6 +21,10 @@ public class SoundController {
     private TextField volumeTextField;
     @FXML
     private Button muteButton;
+
+    public SoundController() {
+        this.config = new Config("config.txt");
+    }
 
     public void setPreviousScene(Scene previousScene) {
         this.previousScene = previousScene;
@@ -34,84 +34,26 @@ public class SoundController {
         this.stage = stage;
     }
 
-    private void updateTitle() {
-        if (stage != null) {
-            stage.setTitle("Main Menu");
-        }
-    }
-
     @FXML
     private void initialize() {
         loadConfig();
+        setupListeners();
+    }
 
-        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            volumeTextField.setText(String.valueOf(newValue.intValue()));
-            updateVolumeFromTextField();
-        });
+    private void setupListeners() {
+        volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> syncSliderWithTextField());
+        volumeTextField.textProperty().bindBidirectional(volumeSlider.valueProperty(), new NumberStringConverter());
+        volumeTextField.setOnKeyReleased(this::onVolumeTextFieldChanged);
+    }
 
-        volumeTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                updateVolumeFromTextField();
-            }
-        });
-
-        TextFormatter<Integer> textFormatter = getIntegerTextFormatter();
-        volumeTextField.setTextFormatter(textFormatter);
+    private void syncSliderWithTextField() {
+        volumeTextField.setText(String.valueOf((int) volumeSlider.getValue()));
         updateMuteButtonState();
     }
 
-    private void updateMuteButtonState() {
-        if (volumeSlider.getValue() > 0) {
-            muteButton.setText("Audio: Unmuted");
-        } else {
-            muteButton.setText("Audio: Muted");
-        }
-    }
-
-    private TextFormatter<Integer> getIntegerTextFormatter() {
-        UnaryOperator<TextFormatter.Change> filter = change -> {
-            String newText = change.getControlNewText();
-            if (Pattern.matches("\\d{0,3}", newText)) {
-                return change;
-            }
-            return null;
-        };
-
-        StringConverter<Integer> converter = new StringConverter<>() {
-            @Override
-            public Integer fromString(String string) {
-                return Integer.parseInt(string);
-            }
-
-            @Override
-            public String toString(Integer object) {
-                return object.toString();
-            }
-        };
-
-        return new TextFormatter<>(converter, config.getVolume(), filter);
-    }
-
     public void onVolumeTextFieldChanged(KeyEvent event) {
-        if (event.getCode() == KeyCode.ENTER) {
-            updateVolumeFromTextField();
-        }
-    }
-
-    private void updateVolumeFromTextField() {
-        String input = volumeTextField.getText();
-        String regex = "^(100|[1-9]?[0-9])$";
-
-        if (input.matches(regex)) {
-            int volume = Integer.parseInt(input);
-            volume = Math.max(0, Math.min(100, volume));
-            volumeSlider.setValue(volume);
-            saveConfig();
-            updateMuteButtonState();
-        } else {
-            System.out.println("Invalid input. Please enter a valid integer between 0 and 100.");
-            volumeTextField.setText(String.valueOf((int) volumeSlider.getValue()));
-            saveConfig();
+        if (event.getCode().isDigitKey() || event.getCode().isArrowKey()) {
+            syncSliderWithTextField();
         }
     }
 
@@ -120,34 +62,41 @@ public class SoundController {
         if (volumeSlider.getValue() > 0) {
             volumeSlider.setValue(0);
             muteButton.setText("Audio: Muted");
-            saveConfig();
-
         } else {
             volumeSlider.setValue(config.getVolume());
             muteButton.setText("Audio: Unmuted");
-            saveConfig();
         }
-        saveConfig();
     }
 
     private void saveConfig() {
-         int currentVolume = (int) volumeSlider.getValue();
-         config.setVolume(currentVolume);
-         System.out.println("Volume = " + currentVolume);
+        int currentVolume = (int) volumeSlider.getValue();
+        new Thread(() -> {
+            config.setVolume(currentVolume);
+            System.out.println("Volume saved: " + currentVolume);
+        }).start();
     }
 
     private void loadConfig() {
         int volume = config.getVolume();
         volumeSlider.setValue(volume);
         volumeTextField.setText(String.valueOf(volume));
+        updateMuteButtonState();
+    }
+
+    private void updateMuteButtonState() {
+        muteButton.setText(volumeSlider.getValue() > 0 ? "Audio: Unmuted" : "Audio: Muted");
     }
 
     @FXML
     public void onReturnButtonClick() {
+        System.out.println("[Settings] Return button clicked at " + java.time.LocalDateTime.now());
         saveConfig();
+        //Platform.exit(); // Explicitly close the application
+
         if (previousScene != null && stage != null) {
+            System.out.println("[Sound] Testing scene transition at " + java.time.LocalDateTime.now());
             stage.setScene(previousScene);
-            updateTitle();
+            stage.setTitle("Main Menu");
         }
     }
 }

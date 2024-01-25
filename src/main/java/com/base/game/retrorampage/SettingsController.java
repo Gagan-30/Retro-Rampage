@@ -48,6 +48,8 @@ public class SettingsController {
     public void onSoundButtonClick() {
         if (soundScene == null) {
             // Load the sound scene if not loaded
+            System.out.println("[Sound] Testing scene transition at " + java.time.LocalDateTime.now());
+
             soundScene = sound.createSoundScene(stage.getScene(), stage);
         }
         updateTitle("Sound Settings");
@@ -67,13 +69,11 @@ public class SettingsController {
     // Event handler for the "Return" button
     @FXML
     public void onReturnButtonClick() {
-        // Print the previous scene and stage for debugging purposes
-        System.out.println("Previous Scene: " + previousScene);
-        System.out.println("Stage: " + stage);
 
         // Check if both previous scene and stage are not null
         if (previousScene != null && stage != null) {
             // Set the main stage's scene back to the previous scene
+            System.out.println("[Sound] Testing scene transition at " + java.time.LocalDateTime.now());
             stage.setScene(previousScene);
             updateTitle("Main Menu");
         }

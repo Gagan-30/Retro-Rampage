@@ -11,6 +11,8 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         // Create an instance of the MainMenu class
+        System.out.println("[Main] Starting main application scene at " + java.time.LocalDateTime.now());
+
         MainMenu mainMenu = new MainMenu();
 
         // Call createMainMenuScene to initialize the main menu scene

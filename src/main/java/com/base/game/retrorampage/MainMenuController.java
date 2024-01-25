@@ -95,6 +95,7 @@ public class MainMenuController {
     protected void onSettingsButtonClick() {
         if (settingsScene == null) {
             // Load the Settings scene if not loaded
+            System.out.println("[Test] Setting scene transition at " + java.time.LocalDateTime.now());
             settingsScene = settings.createSettingsScene(mainStage.getScene(), mainStage);
         }
         updateTitle("Settings");
@@ -117,6 +118,8 @@ public class MainMenuController {
     protected void onExitButtonClick() {
         if (exitScene == null) {
             // Pass the current scene as the previous scene and the stage
+            System.out.println("[Exit] Testing scene transition at " + java.time.LocalDateTime.now());
+
             exitScene = exit.createExitScene(mainStage.getScene(), mainStage);
         }
         updateTitle("Exit");
