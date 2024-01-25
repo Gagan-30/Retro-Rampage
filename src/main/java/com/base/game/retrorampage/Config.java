@@ -21,21 +21,11 @@ public class Config {
     }
 
     public void setVolume(int volume) {
-        FileWriter writer = null;
-        try {
-            writer = new FileWriter(configFilePath);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(configFilePath))) {
             writer.write(String.valueOf(volume));
-            writer.flush();
+            // No need to explicitly close the writer here, as it's handled by try-with-resources
         } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            throw new RuntimeException(e);
         }
     }
 }
