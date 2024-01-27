@@ -3,58 +3,108 @@ package com.base.game.retrorampage;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
 
 public class GraphicsController {
     private Scene previousScene;
     private Stage stage;
+    private Config config;
 
-    // Assuming these are the resolutions you want to toggle between.
-    private String[] resolutions = { "640 x 480", "800 x 600", "1280 x 720", "1920 x 1080" };
-    private int currentResolutionIndex = 3; // Start with the last resolution as default.
-
-    @FXML
-    private Button resolutionButton; // The button to display and change the resolution.
+    private String[] resolutions = {"640 x 480", "800 x 600", "1280 x 720", "1920 x 1080"};
+    private int currentResolutionIndex = 0;
 
     @FXML
-    private Button returnButton; // The return button to go back to the previous scene.
-
-    // Initialize method is called after all @FXML annotated members have been injected.
+    private Button resolutionButton;
     @FXML
-    public void initialize() {
-        updateResolutionButtonText();
+    private CheckBox fullscreenCheckBox;
+
+    public GraphicsController() {
+        this.config = new Config("config.txt");
+        // Don't call loadGraphicsConfig here, move it to initialize
     }
 
-    // Method to set the previous scene
+    @FXML
+    public void initialize() {
+        loadGraphicsConfig();
+        updateResolutionButtonText();
+        applyResolution(resolutions[currentResolutionIndex]);
+        updateFullscreenState();
+    }
+
     public void setPreviousScene(Scene previousScene) {
         this.previousScene = previousScene;
     }
 
-    // Method to set the main stage
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
-    // Method called when the resolution button is clicked.
     @FXML
     private void handleChangeResolution() {
-        // Cycle through the resolutions array.
         currentResolutionIndex = (currentResolutionIndex + 1) % resolutions.length;
         updateResolutionButtonText();
-        // Here you can also call a method to actually change the screen resolution if needed.
+        applyResolution(resolutions[currentResolutionIndex]);
     }
 
-    // Method to update the text on the resolution button.
     private void updateResolutionButtonText() {
         resolutionButton.setText("Screen Resolution: " + resolutions[currentResolutionIndex]);
     }
 
-    // Method called when the return button is clicked.
+    private void applyResolution(String resolution) {
+        if (stage != null) {
+            String[] parts = resolution.split(" x ");
+            if (parts.length == 2) {
+                int width = Integer.parseInt(parts[0]);
+                int height = Integer.parseInt(parts[1]);
+                stage.setWidth(width);
+                stage.setHeight(height);
+            }
+        }
+    }
+
+    public void handleFullScreen() {
+        if (stage != null) {
+            boolean isFullScreen = stage.isFullScreen();
+            stage.setFullScreen(!isFullScreen);
+            if (fullscreenCheckBox != null) {
+                fullscreenCheckBox.setSelected(!isFullScreen);
+            }
+        }
+    }
+
+    private void updateFullscreenState() {
+        if (stage != null && fullscreenCheckBox != null) {
+            stage.setFullScreen(fullscreenCheckBox.isSelected());
+        }
+    }
+
+    private void saveGraphicsConfig() {
+        if (fullscreenCheckBox != null) {
+            String resolution = resolutions[currentResolutionIndex];
+            boolean isFullscreen = fullscreenCheckBox.isSelected();
+            config.saveResolutionSetting(resolution);
+            config.saveFullScreenSetting(isFullscreen);
+        }
+    }
+
+    private void loadGraphicsConfig() {
+        boolean isFullscreen = config.loadFullscreenSetting();
+        String resolution = config.loadResolutionSetting();
+        if (fullscreenCheckBox != null) {
+            fullscreenCheckBox.setSelected(isFullscreen);
+        }
+        currentResolutionIndex = java.util.Arrays.asList(resolutions).indexOf(resolution);
+        currentResolutionIndex = currentResolutionIndex == -1 ? 0 : currentResolutionIndex;
+        updateResolutionButtonText();
+        applyResolution(resolutions[currentResolutionIndex]);
+    }
+
     @FXML
     private void onReturnButtonClick() {
+        saveGraphicsConfig();
         if (previousScene != null && stage != null) {
             stage.setScene(previousScene);
-            // Optionally, you can update the stage title or do other actions here.
         }
     }
 }

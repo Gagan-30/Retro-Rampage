@@ -9,25 +9,81 @@ public class Config {
         this.configFilePath = configFilePath;
     }
 
-    public int getVolume() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(configFilePath))) {
-            String line = reader.readLine();
-            System.out.println("Read volume from file: " + line); // Logging read operation
-            // Extract the numeric part after "Volume: "
-            String numberPart = line.replace("Volume: ", "").trim();
-            return Integer.parseInt(numberPart);
-        } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
-            return 50; // Default volume if there's an error
-        }
-    }
-
-    public void setVolume(int volume) {
+    // Save resolution setting
+    public void saveResolutionSetting(String resolution) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(configFilePath))) {
-            writer.write("Volume: " + volume);
+            writer.write("Resolution: " + resolution);
+            writer.newLine();
             // No need to explicitly close the writer here, as it's handled by try-with-resources
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    // Save fullscreen setting
+    public void saveFullScreenSetting(boolean fullscreen) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(configFilePath))) {
+            writer.write("Fullscreen: " + fullscreen);
+            writer.newLine();
+            // No need to explicitly close the writer here, as it's handled by try-with-resources
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Save volume setting
+    public void saveVolumeSetting(int volume) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(configFilePath))) {
+            writer.write("Volume: " + volume);
+            writer.newLine();
+            // No need to explicitly close the writer here, as it's handled by try-with-resources
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Load resolution setting
+    public String loadResolutionSetting() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(configFilePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("Resolution:")) {
+                    return line.split(":")[1];
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "800 x 600"; // Default resolution
+    }
+
+    // Load fullscreen setting
+    public boolean loadFullscreenSetting() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(configFilePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("Fullscreen:")) {
+                    return Boolean.parseBoolean(line.split(":")[1]);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false; // Default fullscreen setting
+    }
+
+    // Load volume setting
+    public int loadVolumeSetting() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(configFilePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("Volume:")) {
+                    return Integer.parseInt(line.split(":")[1].trim());
+                }
+            }
+        } catch (IOException | NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return 50; // Default volume
     }
 }

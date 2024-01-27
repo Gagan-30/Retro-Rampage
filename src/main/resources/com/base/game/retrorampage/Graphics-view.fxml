@@ -18,7 +18,9 @@
             onAction="#handleChangeResolution" maxHeight="57.0" prefHeight="57.0"
             prefWidth="320.0" styleClass="graphicsMenu-button" />
 
-    <CheckBox mnemonicParsing="false" prefHeight="58.0" prefWidth="198.0"
+    <CheckBox mnemonicParsing="false"
+              onAction="#handleFullScreen"
+              prefHeight="58.0" prefWidth="198.0"
               styleClass="checkbox" text="Full Screen" />
 
     <HBox alignment="BOTTOM_LEFT">

@@ -52,7 +52,7 @@
     -fx-pref-width: 320px;
 }
 
-.grahicsMenu-button:hover {
+.graphicsMenu-button:hover {
     -fx-background-color: white;
     -fx-text-fill: black;
     -fx-border-color: black;

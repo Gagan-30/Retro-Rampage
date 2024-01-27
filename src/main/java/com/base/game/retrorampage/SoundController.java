@@ -63,7 +63,7 @@ public class SoundController {
             volumeSlider.setValue(0);
             muteButton.setText("Audio: Muted");
         } else {
-            volumeSlider.setValue(config.getVolume());
+            volumeSlider.setValue(config.loadVolumeSetting());
             muteButton.setText("Audio: Unmuted");
         }
     }
@@ -71,13 +71,13 @@ public class SoundController {
     private void saveConfig() {
         int currentVolume = (int) volumeSlider.getValue();
         new Thread(() -> {
-            config.setVolume(currentVolume);
+            config.saveVolumeSetting(currentVolume);
             System.out.println("Volume saved: " + currentVolume);
         }).start();
     }
 
     private void loadConfig() {
-        int volume = config.getVolume();
+        int volume = config.loadVolumeSetting();
         volumeSlider.setValue(volume);
         volumeTextField.setText(String.valueOf(volume));
         updateMuteButtonState();
