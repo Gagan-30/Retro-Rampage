@@ -89,12 +89,9 @@ public class SoundController {
 
     @FXML
     public void onReturnButtonClick() {
-        System.out.println("[Settings] Return button clicked at " + java.time.LocalDateTime.now());
         saveConfig();
-        //Platform.exit(); // Explicitly close the application
 
         if (previousScene != null && stage != null) {
-            System.out.println("[Sound] Testing scene transition at " + java.time.LocalDateTime.now());
             stage.setScene(previousScene);
             stage.setTitle("Main Menu");
         }

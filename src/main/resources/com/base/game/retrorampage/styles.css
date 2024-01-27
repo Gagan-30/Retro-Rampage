@@ -40,7 +40,7 @@
     -fx-font-size: 16px;
 }
 
-.split-menu-button {
+.graphicsMenu-button {
     -fx-background-color: rgb(38, 38, 38);
     -fx-text-fill: white;
     -fx-border-color: black;
@@ -48,18 +48,11 @@
     -fx-min-height: 50px;
     -fx-pref-height: 50px;
     -fx-max-height: 50px;
-    -fx-font-size: 16px;
-    -fx-pref-width: 134px; /* Adjust the width as needed */
+    -fx-font-size: 20px;
+    -fx-pref-width: 320px;
 }
 
-.split-menu-button:hover {
-    -fx-background-color: white;
-    -fx-text-fill: black;
-    -fx-border-color: black;
-    -fx-padding: 6px 9px;
-}
-
-.split-menu-button:pressed {
+.grahicsMenu-button:hover {
     -fx-background-color: white;
     -fx-text-fill: black;
     -fx-border-color: black;

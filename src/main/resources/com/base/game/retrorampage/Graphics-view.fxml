@@ -4,29 +4,25 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox id="mainMenu" alignment="CENTER" prefHeight="545.0" prefWidth="463.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.base.game.retrorampage.GraphicsController">
+<VBox id="mainMenu" alignment="CENTER" prefHeight="545.0" prefWidth="463.0" spacing="20.0"
+      xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.base.game.retrorampage.GraphicsController">
 
     <stylesheets>
         <URL value="@styles.css" />
     </stylesheets>
 
-
     <Label fx:id="mainMenuLabel" styleClass="main-title" text="Graphics" />
-    <SplitMenuButton fx:id="resolutionMenu" maxHeight="57.0" prefHeight="57.0" prefWidth="216.0" styleClass="split-menu-button">
-        <items>
-            <MenuItem onAction="#handleResolutionChange" styleClass="menu-item" text="640 x 480" />
-            <MenuItem onAction="#handleResolutionChange" styleClass="menu-item" text="800 x 600" />
-            <MenuItem onAction="#handleResolutionChange" styleClass="menu-item" text="1024 x 768" />
-            <MenuItem onAction="#handleResolutionChange" styleClass="menu-item" text="1280 x 720" />
-            <MenuItem onAction="#handleResolutionChange" styleClass="menu-item" text="1920 x 1080" />
-        </items>
-    </SplitMenuButton>
 
+    <Button fx:id="resolutionButton" text="Screen Resolution: 1920 x 1080"
+            onAction="#handleChangeResolution" maxHeight="57.0" prefHeight="57.0"
+            prefWidth="320.0" styleClass="graphicsMenu-button" />
 
-    <CheckBox mnemonicParsing="false" prefHeight="58.0" prefWidth="198.0" styleClass="checkbox" text="Full Screen" />
-
+    <CheckBox mnemonicParsing="false" prefHeight="58.0" prefWidth="198.0"
+              styleClass="checkbox" text="Full Screen" />
 
     <HBox alignment="BOTTOM_LEFT">
-        <Button alignment="CENTER" minHeight="26.0" onAction="#onReturnButtonClick" prefHeight="26.0" prefWidth="116.0" styleClass="menu-button" text="Return" />
+        <Button alignment="CENTER" minHeight="26.0" onAction="#onReturnButtonClick"
+                prefHeight="26.0" prefWidth="116.0" styleClass="menu-button" text="Return" />
     </HBox>
 </VBox>
