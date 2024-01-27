@@ -81,10 +81,12 @@ public class GraphicsController {
 
     private void saveGraphicsConfig() {
         if (fullscreenCheckBox != null) {
+            new Thread(() -> {
             String resolution = resolutions[currentResolutionIndex];
             boolean isFullscreen = fullscreenCheckBox.isSelected();
             config.saveResolutionSetting(resolution);
             config.saveFullScreenSetting(isFullscreen);
+            }).start();
         }
     }
 
