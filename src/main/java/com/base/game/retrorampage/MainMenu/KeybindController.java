@@ -2,12 +2,21 @@ package com.base.game.retrorampage.MainMenu;
 
 
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class KeybindController {
     private Scene previousScene;
     private Stage stage; // Add a stage variable
+
+    @FXML
+    private VBox mainMenu;
 
     // Method to set the previous scene
     public void setPreviousScene(Scene previousScene) {
@@ -24,6 +33,32 @@ public class KeybindController {
         if (stage != null) {
             stage.setTitle(newTitle);
         }
+    }
+
+    @FXML
+    private void initialize() {
+        for (Node node : mainMenu.getChildren()) {
+            if (node instanceof GridPane) {
+                GridPane grid = (GridPane) node;
+                for (Node gridNode : grid.getChildren()) {
+                    if (gridNode instanceof TextField) {
+                        TextField textField = (TextField) gridNode;
+                        textField.setOnKeyPressed(this::handleKeyPress);
+                        textField.setOnMouseClicked(this::handleMouseClick);
+                    }
+                }
+            }
+        }
+    }
+
+    private void handleKeyPress(KeyEvent event) {
+        // Handle key press event
+        System.out.println("Key Pressed in TextField: " + ((TextField) event.getSource()).getId());
+    }
+
+    private void handleMouseClick(MouseEvent event) {
+        // Handle mouse click event
+        System.out.println("Mouse Clicked in TextField: " + ((TextField) event.getSource()).getId());
     }
 
     // Event handler for the "Return" button

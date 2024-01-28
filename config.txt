@@ -1,3 +1,18 @@
 Volume: 53
 Fullscreen: true
 Resolution: 640 x 480
+MoveUp1:
+MoveUp2:
+MoveDown1:
+MoveDown2:
+MoveLeft1:
+MoveLeft2:
+MoveRight1:
+MoveRight2:
+Shoot1:
+Shoot2:
+Aim1:
+Aim2:
+Inventory1:
+Inventory2:
+MouseSensitivity: 
