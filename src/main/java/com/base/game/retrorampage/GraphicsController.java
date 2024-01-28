@@ -10,9 +10,9 @@ import javafx.stage.Stage;
 public class GraphicsController {
     private Scene previousScene;
     private Stage stage;
-    private Config config;
+    private final Config config;
 
-    private String[] resolutions = {"640 x 480", "800 x 600", "1280 x 720", "1920 x 1080"};
+    private final String[] resolutions = {"640 x 480", "800 x 600", "1280 x 720", "1920 x 1080"};
     private int currentResolutionIndex = 0;
 
     @FXML
@@ -22,15 +22,16 @@ public class GraphicsController {
 
     public GraphicsController() {
         this.config = new Config("config.txt");
-        // Don't call loadGraphicsConfig here, move it to initialize
+        System.out.println("[GraphicsController] Constructor called");
     }
 
     @FXML
     public void initialize() {
+        System.out.println("[GraphicsController] Initialize method called");
         loadGraphicsConfig();
-        updateResolutionButtonText();
         applyResolution(resolutions[currentResolutionIndex]);
-        updateFullscreenState();
+        applyFullScreen();
+        updateResolutionButtonText();
     }
 
     public void setPreviousScene(Scene previousScene) {
@@ -43,6 +44,7 @@ public class GraphicsController {
 
     @FXML
     private void handleChangeResolution() {
+        System.out.println("[GraphicsController] handleChangeResolution called");
         currentResolutionIndex = (currentResolutionIndex + 1) % resolutions.length;
         updateResolutionButtonText();
         applyResolution(resolutions[currentResolutionIndex]);
@@ -53,47 +55,43 @@ public class GraphicsController {
     }
 
     private void applyResolution(String resolution) {
+        System.out.println("[GraphicsController] applyResolution called with resolution: " + resolution);
         if (stage != null) {
             String[] parts = resolution.split(" x ");
             if (parts.length == 2) {
-                int width = Integer.parseInt(parts[0]);
-                int height = Integer.parseInt(parts[1]);
+                int width = Integer.parseInt(parts[0].trim());
+                int height = Integer.parseInt(parts[1].trim());
                 stage.setWidth(width);
                 stage.setHeight(height);
             }
         }
     }
 
-    public void handleFullScreen() {
+    public void applyFullScreen() {
+        System.out.println("[GraphicsController] applyFullScreen called");
         if (stage != null) {
-            boolean isFullScreen = stage.isFullScreen();
+            boolean isFullScreen = fullscreenCheckBox.isSelected(); // Use the checkbox state directly
             stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
             stage.setFullScreenExitHint("");
-            stage.setFullScreen(!isFullScreen);
-            if (fullscreenCheckBox != null) {
-                fullscreenCheckBox.setSelected(!isFullScreen);
-            }
+            stage.setFullScreen(isFullScreen);
         }
     }
 
-    private void updateFullscreenState() {
-        if (stage != null && fullscreenCheckBox != null) {
-            stage.setFullScreen(fullscreenCheckBox.isSelected());
-        }
-    }
 
     private void saveGraphicsConfig() {
-        if (fullscreenCheckBox != null) {
-            new Thread(() -> {
+        if (config != null) {
+            System.out.println("[GraphicsController] config is not null, saving settings");
             String resolution = resolutions[currentResolutionIndex];
-            boolean isFullscreen = fullscreenCheckBox.isSelected();
+            boolean isFullscreen = fullscreenCheckBox.isSelected(); // Get the actual fullscreen state
             config.saveResolutionSetting(resolution);
             config.saveFullScreenSetting(isFullscreen);
-            }).start();
+        } else {
+            System.out.println("[GraphicsController] config is null");
         }
     }
 
     private void loadGraphicsConfig() {
+        System.out.println("[GraphicsController] loadGraphicsConfig called");
         boolean isFullscreen = config.loadFullscreenSetting();
         String resolution = config.loadResolutionSetting();
         if (fullscreenCheckBox != null) {
@@ -107,6 +105,7 @@ public class GraphicsController {
 
     @FXML
     private void onReturnButtonClick() {
+        System.out.println("[GraphicsController] onReturnButtonClick called");
         saveGraphicsConfig();
         if (previousScene != null && stage != null) {
             stage.setScene(previousScene);

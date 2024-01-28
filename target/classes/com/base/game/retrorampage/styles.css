@@ -61,5 +61,5 @@
 
 .checkbox {
     -fx-text-fill: white;
-    -fx-font-size: 16px;
+    -fx-font-size: 20px; /* Adjust the font size as needed */
 }

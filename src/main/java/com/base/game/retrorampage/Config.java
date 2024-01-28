@@ -1,89 +1,69 @@
 package com.base.game.retrorampage;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Config {
     private String configFilePath;
+    private Map<String, String> settings = new HashMap<>();
 
     public Config(String configFilePath) {
         this.configFilePath = configFilePath;
+        loadSettings();
     }
 
-    // Save resolution setting
+    private void loadSettings() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(configFilePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(":", 2);
+                if (parts.length == 2) {
+                    settings.put(parts[0].trim(), parts[1].trim());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveSetting(String key, String value) {
+        settings.put(key, value);
+        saveSettingsToFile();
+    }
+
+    private void saveSettingsToFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(configFilePath, false))) {
+            for (Map.Entry<String, String> entry : settings.entrySet()) {
+                writer.write(entry.getKey() + ": " + entry.getValue());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void saveResolutionSetting(String resolution) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(configFilePath))) {
-            writer.write("Resolution: " + resolution);
-            writer.newLine();
-            // No need to explicitly close the writer here, as it's handled by try-with-resources
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        saveSetting("Resolution", resolution);
     }
 
-    // Save fullscreen setting
     public void saveFullScreenSetting(boolean fullscreen) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(configFilePath))) {
-            writer.write("Fullscreen: " + fullscreen);
-            writer.newLine();
-            // No need to explicitly close the writer here, as it's handled by try-with-resources
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        saveSetting("Fullscreen", String.valueOf(fullscreen));
     }
 
-    // Save volume setting
     public void saveVolumeSetting(int volume) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(configFilePath))) {
-            writer.write("Volume: " + volume);
-            writer.newLine();
-            // No need to explicitly close the writer here, as it's handled by try-with-resources
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        saveSetting("Volume", String.valueOf(volume));
     }
 
-    // Load resolution setting
     public String loadResolutionSetting() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(configFilePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.startsWith("Resolution:")) {
-                    return line.split(":")[1];
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "800 x 600"; // Default resolution
+        return settings.getOrDefault("Resolution", "800 x 600");
     }
 
-    // Load fullscreen setting
     public boolean loadFullscreenSetting() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(configFilePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.startsWith("Fullscreen:")) {
-                    return Boolean.parseBoolean(line.split(":")[1]);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false; // Default fullscreen setting
+        return Boolean.parseBoolean(settings.getOrDefault("Fullscreen", "false"));
     }
 
-    // Load volume setting
     public int loadVolumeSetting() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(configFilePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.startsWith("Volume:")) {
-                    return Integer.parseInt(line.split(":")[1].trim());
-                }
-            }
-        } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
-        }
-        return 50; // Default volume
+        return Integer.parseInt(settings.getOrDefault("Volume", "50"));
     }
 }
