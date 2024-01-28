@@ -63,7 +63,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.base.game.retrorampage/com.base.game.retrorampage.Main
+                            <mainClass>com.base.game.retrorampage/com.base.game.retrorampage.MainMenu.Main
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
