@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
 public class GraphicsController {
@@ -66,6 +67,8 @@ public class GraphicsController {
     public void handleFullScreen() {
         if (stage != null) {
             boolean isFullScreen = stage.isFullScreen();
+            stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+            stage.setFullScreenExitHint("");
             stage.setFullScreen(!isFullScreen);
             if (fullscreenCheckBox != null) {
                 fullscreenCheckBox.setSelected(!isFullScreen);

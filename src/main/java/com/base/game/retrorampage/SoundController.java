@@ -1,9 +1,8 @@
 package com.base.game.retrorampage;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
@@ -20,7 +19,7 @@ public class SoundController {
     @FXML
     private TextField volumeTextField;
     @FXML
-    private Button muteButton;
+    private CheckBox muteCheckBox; // Changed to CheckBox
 
     public SoundController() {
         this.config = new Config("config.txt");
@@ -48,7 +47,7 @@ public class SoundController {
 
     private void syncSliderWithTextField() {
         volumeTextField.setText(String.valueOf((int) volumeSlider.getValue()));
-        updateMuteButtonState();
+        updateMuteCheckBoxState();
     }
 
     public void onVolumeTextFieldChanged(KeyEvent event) {
@@ -58,15 +57,14 @@ public class SoundController {
     }
 
     @FXML
-    public void onMuteButtonClick() {
-        if (volumeSlider.getValue() > 0) {
+    public void onMuteBoxClick() {
+        if (muteCheckBox.isSelected()) {
             volumeSlider.setValue(0);
-            muteButton.setText("Audio: Muted");
         } else {
             volumeSlider.setValue(config.loadVolumeSetting());
-            muteButton.setText("Audio: Unmuted");
         }
     }
+
 
     private void saveConfig() {
         int currentVolume = (int) volumeSlider.getValue();
@@ -80,11 +78,11 @@ public class SoundController {
         int volume = config.loadVolumeSetting();
         volumeSlider.setValue(volume);
         volumeTextField.setText(String.valueOf(volume));
-        updateMuteButtonState();
+        updateMuteCheckBoxState();
     }
 
-    private void updateMuteButtonState() {
-        muteButton.setText(volumeSlider.getValue() > 0 ? "Audio: Unmuted" : "Audio: Muted");
+    private void updateMuteCheckBoxState() {
+        muteCheckBox.setSelected(volumeSlider.getValue() == 0);
     }
 
     @FXML

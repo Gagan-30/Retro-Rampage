@@ -22,8 +22,8 @@
                 minWidth="-Infinity" prefHeight="23.0" prefWidth="223.0"/>
     </HBox>
 
-    <Button fx:id="muteButton" alignment="CENTER" minHeight="26.0" onAction="#onMuteButtonClick" prefHeight="26.0"
-            prefWidth="116.0" styleClass="menu-button" text="Audio: Unmuted"/>
+    <CheckBox fx:id="muteCheckBox" text="Mute Audio" onAction="#onMuteBoxClick" styleClass="checkbox" />
+
 
     <HBox alignment="BOTTOM_LEFT">
         <Button alignment="CENTER" minHeight="26.0" onAction="#onReturnButtonClick" prefHeight="26.0" prefWidth="116.0"
