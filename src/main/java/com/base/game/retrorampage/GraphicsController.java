@@ -8,11 +8,10 @@ import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
 public class GraphicsController {
+    private final Config config;
+    private final String[] resolutions = {"640 x 480", "800 x 600", "1280 x 720", "1920 x 1080"};
     private Scene previousScene;
     private Stage stage;
-    private final Config config;
-
-    private final String[] resolutions = {"640 x 480", "800 x 600", "1280 x 720", "1920 x 1080"};
     private int currentResolutionIndex = 0;
 
     @FXML
@@ -77,14 +76,15 @@ public class GraphicsController {
         }
     }
 
-
     private void saveGraphicsConfig() {
         if (config != null) {
-            System.out.println("[GraphicsController] config is not null, saving settings");
-            String resolution = resolutions[currentResolutionIndex];
-            boolean isFullscreen = fullscreenCheckBox.isSelected(); // Get the actual fullscreen state
-            config.saveResolutionSetting(resolution);
-            config.saveFullScreenSetting(isFullscreen);
+            new Thread(() -> {
+                System.out.println("[GraphicsController] config is not null, saving settings");
+                String resolution = resolutions[currentResolutionIndex];
+                boolean isFullscreen = fullscreenCheckBox.isSelected(); // Get the actual fullscreen state
+                config.saveResolutionSetting(resolution);
+                config.saveFullScreenSetting(isFullscreen);
+            }).start();
         } else {
             System.out.println("[GraphicsController] config is null");
         }

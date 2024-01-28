@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import java.net.URL?>
 <VBox id="mainMenu" alignment="CENTER" prefHeight="545.0" prefWidth="463.0" spacing="20.0"
       xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.base.game.retrorampage.SoundController">
@@ -14,7 +14,6 @@
 
     <Label fx:id="mainMenuLabel" styleClass="main-title" text="Sound"/>
 
-    <!-- New layout with volume text box to the left of the slider -->
     <HBox alignment="CENTER" spacing="10.0">
         <TextField fx:id="volumeTextField" onKeyReleased="#onVolumeTextFieldChanged"
                    prefHeight="25.0" prefWidth="70.0" styleClass="volume-text-field"/>
@@ -22,11 +21,8 @@
                 minWidth="-Infinity" prefHeight="23.0" prefWidth="223.0"/>
     </HBox>
 
-    <CheckBox fx:id="muteCheckBox" text="Mute Audio" onAction="#onMuteBoxClick" styleClass="checkbox" />
+    <CheckBox fx:id="muteCheckBox" text="Mute Audio" onAction="#onMuteBoxClick" styleClass="checkbox"/>
 
-
-    <HBox alignment="BOTTOM_LEFT">
-        <Button alignment="CENTER" minHeight="26.0" onAction="#onReturnButtonClick" prefHeight="26.0" prefWidth="116.0"
-                styleClass="menu-button" text="Return"/>
-    </HBox>
+    <Button alignment="CENTER" minHeight="26.0" onAction="#onReturnButtonClick" prefHeight="26.0" prefWidth="116.0"
+            styleClass="menu-button" text="Return"/>
 </VBox>

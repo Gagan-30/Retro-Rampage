@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Config {
-    private String configFilePath;
-    private Map<String, String> settings = new HashMap<>();
+    private final String configFilePath;
+    private final Map<String, String> settings = new HashMap<>();
 
     public Config(String configFilePath) {
         this.configFilePath = configFilePath;

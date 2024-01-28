@@ -26,8 +26,6 @@
               prefHeight="58.0" prefWidth="198.0"
               styleClass="checkbox" text="Full Screen"/>
 
-    <HBox alignment="BOTTOM_LEFT">
-        <Button alignment="CENTER" minHeight="26.0" onAction="#onReturnButtonClick"
-                prefHeight="26.0" prefWidth="116.0" styleClass="menu-button" text="Return"/>
-    </HBox>
+    <Button alignment="CENTER" minHeight="26.0" onAction="#onReturnButtonClick"
+            prefHeight="26.0" prefWidth="116.0" styleClass="menu-button" text="Return"/>
 </VBox>

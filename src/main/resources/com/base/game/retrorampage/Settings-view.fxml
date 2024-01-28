@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
+<?import javafx.scene.layout.VBox?>
 <?import java.net.URL?>
-
 <VBox id="mainMenu" alignment="CENTER" prefHeight="545.0" prefWidth="463.0" spacing="20.0"
       xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.base.game.retrorampage.SettingsController">
@@ -19,8 +17,6 @@
     <Button onAction="#onSoundButtonClick" styleClass="menu-button" text="Sound Settings"/>
     <Button onAction="#onKeybindButtonClick" styleClass="menu-button" text="Keybind Settings"/>
 
-    <HBox alignment="BOTTOM_LEFT">
-        <Button alignment="CENTER" onAction="#onReturnButtonClick" prefWidth="116.0" styleClass="menu-button"
-                text="Return"/>
-    </HBox>
+    <Button alignment="CENTER" onAction="#onReturnButtonClick" prefWidth="116.0" styleClass="menu-button"
+            text="Return"/>
 </VBox>

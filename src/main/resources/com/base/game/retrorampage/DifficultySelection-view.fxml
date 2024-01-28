@@ -21,7 +21,5 @@
     <Button onAction="#onHardButtonClick" text="Hard" styleClass="menu-button"/>
     <Button onAction="#onSurvivorButtonClick" text="Survivor" styleClass="menu-button"/>
     <Button onAction="#onGroundedButtonClick" text="Grounded" styleClass="menu-button"/>
-    <HBox spacing="20" alignment="BOTTOM_LEFT">
-        <Button onAction="#onReturnButtonClick" text="Return" styleClass="menu-button"/>
-    </HBox>
+    <Button onAction="#onReturnButtonClick" text="Return" styleClass="menu-button"/>
 </VBox>

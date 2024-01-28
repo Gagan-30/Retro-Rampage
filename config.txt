@@ -1,3 +1,3 @@
-Volume: 54
-Fullscreen: true
-Resolution: 640 x 480
+Volume: 44
+Fullscreen: false
+Resolution: 800 x 600
