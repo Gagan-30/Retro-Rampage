@@ -3,37 +3,41 @@ package com.base.game.retrorampage.MainMenu;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class MainMenu {
 
-    // Method to create and return the main menu scene
-    public Scene createMainMenuScene(Stage stage) throws IOException {
-        // Load the FXML file for the main menu view
+    public Scene createMainMenuScene(Stage stage, Config config) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MainMenu-view.fxml"));
         Parent root = fxmlLoader.load();
 
-        // Get the controller associated with the FXML file
         MainMenuController mainMenuController = fxmlLoader.getController();
-
-        // Pass the main stage to the controller
         mainMenuController.setMainStage(stage);
 
-        // Create a new scene with the loaded FXML as the root, with specified dimensions
-        Scene scene = new Scene(root, 640, 480);
+        // Apply settings from config
+        applySettingsFromConfig(stage, config);
 
-        // Add an external CSS stylesheet to the scene for styling
-        scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
-
-        // Set properties for the main stage
+        Scene scene = new Scene(root);
         stage.setTitle("Main Menu");
         stage.setResizable(true);
-        stage.setMinWidth(640);
-        stage.setMinHeight(480);
 
-        // Return the created main menu scene
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
         return scene;
+    }
+
+    private void applySettingsFromConfig(Stage stage, Config config) {
+        String resolution = config.loadResolutionSetting();
+        String[] parts = resolution.split(" x ");
+        if (parts.length == 2) {
+            stage.setWidth(Integer.parseInt(parts[0]));
+            stage.setHeight(Integer.parseInt(parts[1]));
+        }
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+        stage.setFullScreen(config.loadFullscreenSetting());
     }
 }

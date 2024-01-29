@@ -1,5 +1,6 @@
 package com.base.game.retrorampage.MainMenu;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -26,11 +27,12 @@ public class GraphicsController {
 
     @FXML
     public void initialize() {
-        System.out.println("[GraphicsController] Initialize method called");
-        loadGraphicsConfig(); // Load graphics settings from config.txt
-        applyFullScreen(); // Apply fullscreen setting
-        applyResolution(resolutions[currentResolutionIndex]); // Apply resolution setting
-        updateResolutionButtonText();
+        Platform.runLater(() -> {
+            loadGraphicsConfig();
+            applyFullScreen();
+            applyResolution(resolutions[currentResolutionIndex]);
+            updateResolutionButtonText();
+        });
     }
 
     public void setPreviousScene(Scene previousScene) {

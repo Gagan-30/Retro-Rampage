@@ -7,13 +7,6 @@ import javafx.stage.Stage;
 public class MainMenuController {
 
     private Stage mainStage;
-    private GameLoop gameLoop;
-
-    private long lastTime = System.nanoTime();
-    private double delta = 0;
-    private final double ns = 1000000000.0 / 60.0; // 60 times per second
-    private int frames = 0;
-    private long timer = System.currentTimeMillis();
     private Scene difficultySelectionScene;
     private Scene loadGameScene;
     private Scene settingsScene;
@@ -37,36 +30,6 @@ public class MainMenuController {
             mainStage.setTitle(newTitle);
         }
     }
-
-    public MainMenuController() {
-        // Initialize the game loop with update and render actions specific to the main menu
-        this.gameLoop = new GameLoop(this::updateMainMenu, this::renderMainMenu);
-    }
-
-    private void updateMainMenu() {
-        System.out.println("Updating Main Menu");
-
-        long now = System.nanoTime();
-        delta += (now - lastTime) / ns;
-        lastTime = now;
-        while (delta >= 1) {
-            // Update logic for the main menu
-            delta--;
-        }
-    }
-
-    private void renderMainMenu() {
-        System.out.println("Rendering Main Menu");
-
-        frames++;
-        if(System.currentTimeMillis() - timer > 1000) {
-            timer += 1000;
-            System.out.println("FPS: " + frames);
-            frames = 0;
-        }
-        // Render logic for the main menu
-    }
-
 
     // Event handler for the "Start Game" button
     @FXML

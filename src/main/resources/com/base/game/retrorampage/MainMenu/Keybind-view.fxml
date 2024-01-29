@@ -1,59 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<VBox id="mainMenu" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="545.0" prefWidth="463.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.base.game.retrorampage.MainMenu.KeybindController">
+<?import java.net.URL?>
+<VBox id="mainMenu" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+      minWidth="-Infinity" prefHeight="545.0" prefWidth="463.0" spacing="20.0"
+      xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.base.game.retrorampage.MainMenu.KeybindController">
 
     <stylesheets>
-        <URL value="@styles.css" />
+        <URL value="@styles.css"/>
     </stylesheets>
 
-    <Label fx:id="mainMenuLabel" styleClass="main-title" text="Keybinds" />
+    <Label fx:id="mainMenuLabel" styleClass="main-title" text="Keybinds"/>
     <GridPane>
         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="238.0" minWidth="10.0" prefWidth="233.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="251.0" minWidth="10.0" prefWidth="230.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="251.0" minWidth="10.0" prefWidth="230.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="238.0" minWidth="10.0" prefWidth="233.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="251.0" minWidth="10.0" prefWidth="230.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="251.0" minWidth="10.0" prefWidth="230.0"/>
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
         </rowConstraints>
         <children>
-            <Label fx:id="mainMenuLabel1" prefHeight="35.0" prefWidth="109.0" styleClass="main-title" text="Move Up" textAlignment="CENTER" GridPane.rowIndex="1" />
-            <Label fx:id="mainMenuLabel2" styleClass="main-title" text="Move Down" textAlignment="CENTER" GridPane.rowIndex="2" />
-            <Label fx:id="mainMenuLabel3" styleClass="main-title" text="Move Left" textAlignment="CENTER" GridPane.rowIndex="3" />
-            <Label fx:id="mainMenuLabel4" styleClass="main-title" text="Move Right" textAlignment="CENTER" GridPane.rowIndex="4" />
-            <Label fx:id="mainMenuLabel41" styleClass="main-title" text="Shoot" textAlignment="CENTER" GridPane.rowIndex="5" />
-            <Label fx:id="mainMenuLabel411" styleClass="main-title" text="Aim" textAlignment="CENTER" GridPane.rowIndex="6" />
-            <Label fx:id="mainMenuLabel412" styleClass="main-title" text="Inventory" textAlignment="CENTER" GridPane.rowIndex="7" />
-            <Label fx:id="mainMenuLabel11" prefHeight="35.0" prefWidth="109.0" styleClass="main-title" text="Action:" textAlignment="CENTER" />
-            <Label fx:id="mainMenuLabel12" prefHeight="35.0" prefWidth="154.0" styleClass="main-title" text="Keybind 1" GridPane.columnIndex="1" />
-            <Label fx:id="mainMenuLabel121" prefHeight="35.0" prefWidth="154.0" styleClass="main-title" text="Keybind 2" GridPane.columnIndex="2" />
-            <TextField fx:id="moveUpTextField1" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="moveUpTextField2"  GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="moveDownTextField1" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <TextField fx:id="moveDownTextField2"  GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <TextField fx:id="moveLeftTextField1"  GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <TextField fx:id="moveLeftTextField2"  GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <TextField fx:id="moveRightTextField1" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-            <TextField fx:id="moveRightTextField2" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <TextField fx:id="shootTextField1"  GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <TextField fx:id="shootTextField2" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <TextField fx:id="aimTextField1" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-            <TextField fx:id="aimTextField2" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-            <TextField fx:id="inventoryTextField1" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-            <TextField fx:id="inventoryTextField2" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+            <Label fx:id="mainMenuLabel1" prefHeight="35.0" prefWidth="109.0" styleClass="main-title" text="Move Up"
+                   textAlignment="CENTER" GridPane.rowIndex="1"/>
+            <Label fx:id="mainMenuLabel2" styleClass="main-title" text="Move Down" textAlignment="CENTER"
+                   GridPane.rowIndex="2"/>
+            <Label fx:id="mainMenuLabel3" styleClass="main-title" text="Move Left" textAlignment="CENTER"
+                   GridPane.rowIndex="3"/>
+            <Label fx:id="mainMenuLabel4" styleClass="main-title" text="Move Right" textAlignment="CENTER"
+                   GridPane.rowIndex="4"/>
+            <Label fx:id="mainMenuLabel41" styleClass="main-title" text="Shoot" textAlignment="CENTER"
+                   GridPane.rowIndex="5"/>
+            <Label fx:id="mainMenuLabel411" styleClass="main-title" text="Aim" textAlignment="CENTER"
+                   GridPane.rowIndex="6"/>
+            <Label fx:id="mainMenuLabel412" styleClass="main-title" text="Inventory" textAlignment="CENTER"
+                   GridPane.rowIndex="7"/>
+            <Label fx:id="mainMenuLabel11" prefHeight="35.0" prefWidth="109.0" styleClass="main-title" text="Action:"
+                   textAlignment="CENTER"/>
+            <Label fx:id="mainMenuLabel12" prefHeight="35.0" prefWidth="154.0" styleClass="main-title" text="Keybind 1"
+                   GridPane.columnIndex="1"/>
+            <Label fx:id="mainMenuLabel121" prefHeight="35.0" prefWidth="154.0" styleClass="main-title" text="Keybind 2"
+                   GridPane.columnIndex="2"/>
+            <TextField fx:id="moveUpTextField1" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <TextField fx:id="moveUpTextField2" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <TextField fx:id="moveDownTextField1" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            <TextField fx:id="moveDownTextField2" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+            <TextField fx:id="moveLeftTextField1" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+            <TextField fx:id="moveLeftTextField2" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+            <TextField fx:id="moveRightTextField1" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+            <TextField fx:id="moveRightTextField2" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+            <TextField fx:id="shootTextField1" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+            <TextField fx:id="shootTextField2" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+            <TextField fx:id="aimTextField1" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+            <TextField fx:id="aimTextField2" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+            <TextField fx:id="inventoryTextField1" GridPane.columnIndex="2" GridPane.rowIndex="7"/>
+            <TextField fx:id="inventoryTextField2" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
         </children>
     </GridPane>
 
-    <Button alignment="CENTER" onAction="#onReturnButtonClick" prefWidth="116.0" styleClass="menu-button" text="Return" />
+    <Button alignment="CENTER" onAction="#onReturnButtonClick" prefWidth="116.0" styleClass="menu-button"
+            text="Return"/>
 </VBox>
