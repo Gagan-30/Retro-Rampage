@@ -2,6 +2,7 @@ package com.base.game.retrorampage.MainMenu;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -10,9 +11,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        Config config = new Config("config.txt"); // Ensure correct path
-
-        System.out.println("[Main] Starting main application scene at " + java.time.LocalDateTime.now());
+        Config config = new Config("config.txt");
+        applySettingsToStage(stage, config);
         MainMenu mainMenu = new MainMenu();
 
         // Pass the config object to createMainMenuScene
@@ -24,6 +24,18 @@ public class Main extends Application {
     private void showMainMenu(Stage stage, Scene scene) {
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void applySettingsToStage(Stage stage, Config config) {
+        String resolution = config.loadResolutionSetting();
+        String[] parts = resolution.split(" x ");
+        if (parts.length == 2) {
+            stage.setWidth(Integer.parseInt(parts[0]));
+            stage.setHeight(Integer.parseInt(parts[1]));
+        }
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+        stage.setFullScreen(config.loadFullscreenSetting());
     }
 
     public static void main(String[] args) {
