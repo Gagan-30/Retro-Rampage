@@ -7,85 +7,56 @@ import javafx.stage.Stage;
 public class MainMenuController {
 
     private Stage mainStage;
-    private Scene difficultySelectionScene;
-    private Scene loadGameScene;
-    private Scene settingsScene;
-    private Scene aboutScene;
-    private Scene exitScene;
-
-    // Instances of various scenes and functionalities for the main menu
     private final DifficultySelection difficultySelection = new DifficultySelection();
     private final LoadGame loadGame = new LoadGame();
     private final Settings settings = new Settings();
     private final About about = new About();
     private final Exit exit = new Exit();
 
-    // Method to set the main stage for the controller
     public void setMainStage(Stage mainStage) {
         this.mainStage = mainStage;
+    }
+
+    @FXML
+    protected void onStartGameButtonClick() {
+        Scene difficultySelectionScene = difficultySelection.createDifficultySelectionScene(mainStage);
+        switchScene(difficultySelectionScene, "Select Difficulty");
+    }
+
+    @FXML
+    protected void onLoadGameButtonClick() {
+        Scene loadGameScene = loadGame.createLoadGameScene(mainStage);
+        switchScene(loadGameScene, "Select Game Save");
+    }
+
+    @FXML
+    protected void onSettingsButtonClick() {
+        Scene settingsScene = settings.createSettingsScene(mainStage);
+        switchScene(settingsScene, "Settings");
+    }
+
+    @FXML
+    protected void onAboutButtonClick() {
+        Scene aboutScene = about.createAboutScene(mainStage);
+        switchScene(aboutScene, "About");
+    }
+
+    @FXML
+    protected void onExitButtonClick() {
+        Scene exitScene = exit.createExitScene(mainStage);
+        switchScene(exitScene, "Exit");
+    }
+
+    private void switchScene(Scene newScene, String title) {
+        if (newScene != null) {
+            mainStage.setScene(newScene);
+            updateTitle(title);
+        }
     }
 
     private void updateTitle(String newTitle) {
         if (mainStage != null) {
             mainStage.setTitle(newTitle);
         }
-    }
-
-    // Event handler for the "Start Game" button
-    @FXML
-    protected void onStartGameButtonClick() {
-        if (difficultySelectionScene == null) {
-            // Load the difficulty selection scene if not loaded
-            difficultySelectionScene = difficultySelection.createDifficultySelectionScene(mainStage.getScene(), mainStage);
-        }
-        updateTitle("Select Difficulty");
-        mainStage.setScene(difficultySelectionScene);
-    }
-
-    // Event handler for the "Load Game" button
-    @FXML
-    protected void onLoadGameButtonClick() {
-        if (loadGameScene == null) {
-            // Load the Load Game scene if not loaded
-            loadGameScene = loadGame.createLoadGameScene(mainStage.getScene(), mainStage);
-        }
-        updateTitle("Select Game Save");
-        mainStage.setScene(loadGameScene);
-    }
-
-    // Event handler for the "Settings" button
-    @FXML
-    protected void onSettingsButtonClick() {
-        if (settingsScene == null) {
-            // Load the Settings scene if not loaded
-            System.out.println("[Test] Setting scene transition at " + java.time.LocalDateTime.now());
-            settingsScene = settings.createSettingsScene(mainStage.getScene(), mainStage);
-        }
-        updateTitle("Settings");
-        mainStage.setScene(settingsScene);
-    }
-
-    // Event handler for the "About" button
-    @FXML
-    protected void onAboutButtonClick() {
-        if (aboutScene == null) {
-            // Pass the current scene as the previous scene and the stage
-            aboutScene = about.createAboutScene(mainStage.getScene(), mainStage);
-        }
-        updateTitle("About");
-        mainStage.setScene(aboutScene);
-    }
-
-    // Event handler for the "Exit" button
-    @FXML
-    protected void onExitButtonClick() {
-        if (exitScene == null) {
-            // Pass the current scene as the previous scene and the stage
-            System.out.println("[Exit] Testing scene transition at " + java.time.LocalDateTime.now());
-
-            exitScene = exit.createExitScene(mainStage.getScene(), mainStage);
-        }
-        updateTitle("Exit");
-        mainStage.setScene(exitScene);
     }
 }

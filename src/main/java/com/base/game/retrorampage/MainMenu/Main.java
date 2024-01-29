@@ -1,29 +1,15 @@
 package com.base.game.retrorampage.MainMenu;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class Main extends Application {
 
     @Override
-    public void start(Stage stage) throws IOException {
-        Config config = new Config("config.txt");
-        applySettingsToStage(stage, config);
-        MainMenu mainMenu = new MainMenu();
-
-        // Pass the config object to createMainMenuScene
-        Scene mainMenuScene = mainMenu.createMainMenuScene(stage, config);
-
-        showMainMenu(stage, mainMenuScene);
-    }
-
-    private void showMainMenu(Stage stage, Scene scene) {
-        stage.setScene(scene);
-        stage.show();
+    public void start(Stage primaryStage) {
+        SceneSwitcher sceneSwitcher = new SceneSwitcher(primaryStage);
+        sceneSwitcher.switchToScene("MainMenu.fxml");
     }
 
     private void applySettingsToStage(Stage stage, Config config) {
