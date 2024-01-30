@@ -6,6 +6,7 @@ public class DifficultySelectionController {
 
     private SceneSwitcher sceneSwitcher;
 
+    // Setter method to inject SceneSwitcher instance
     public void setSceneSwitcher(SceneSwitcher sceneSwitcher) {
         this.sceneSwitcher = sceneSwitcher;
     }

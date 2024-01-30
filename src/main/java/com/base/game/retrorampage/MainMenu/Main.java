@@ -44,12 +44,6 @@ public class Main extends Application {
         stage.setFullScreen(config.loadFullscreenSetting());
     }
 
-    @FXML
-    protected void onDifficultySelectionButtonClick() throws IOException {
-        DifficultySelection difficultySelection = new DifficultySelection(sceneSwitcher);
-        difficultySelection.display(primaryStage);
-    }
-    
     public static void main(String[] args) {
         launch(args);
     }
