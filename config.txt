@@ -15,4 +15,4 @@ MoveDown2:
 Shoot2: 
 MoveDown1: 
 Shoot1: 
-Resolution: 1920 x 1080
+Resolution: 640 x 480

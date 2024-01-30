@@ -9,33 +9,33 @@ import java.io.IOException;
 
 public class Exit {
 
-    // Method to create the exit scene
     public Scene createExitScene(Scene previousScene, Stage mainStage) {
         try {
-            // Load the Exit-view.fxml file using FXMLLoader
+            // Load the FXML for the Difficulty Selection screen
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Exit-view.fxml"));
             Parent root = fxmlLoader.load();
 
-            // Create a new stage for the exit scene
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root, 640, 480));
-            stage.setResizable(true);
-            stage.setMinWidth(640);
-            stage.setMinHeight(480);
+            // Create a new scene with the loaded FXML root
+            Scene scene = new Scene(root, 640, 480); // You might want to adjust the size
 
-            // Get the controller associated with the Exit-view.fxml
+            // Apply the new scene to the existing stage
+            // Check if the stage was in fullscreen mode
+            boolean wasFullScreen = mainStage.isFullScreen();
+
+            mainStage.setScene(scene);
+
+            // Reapply fullscreen mode if it was previously set
+            if (wasFullScreen) {
+                mainStage.setFullScreen(true);
+            }
+
+            // Set up the controller
             ExitController exitController = fxmlLoader.getController();
-
-            // Set the previous scene in the ExitController
             exitController.setPreviousScene(previousScene);
-
-            // Set the main stage in the ExitController
             exitController.setStage(mainStage);
 
-            // Return the scene associated with the new stage
-            return stage.getScene();
+            return scene;
         } catch (IOException e) {
-            // Handle IOException by printing the stack trace
             e.printStackTrace();
             return null;
         }

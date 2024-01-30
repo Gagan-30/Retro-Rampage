@@ -29,17 +29,22 @@ public class ExitController {
     // Event handler for the "Return" button
     @FXML
     public void onReturnButtonClick() {
-        // Print the previous scene and stage for debugging purposes
-        System.out.println("Previous Scene: " + previousScene);
-        System.out.println("Stage: " + stage);
+        // Check if the stage is in fullscreen mode
+        boolean wasFullScreen = stage.isFullScreen();
 
-        // Check if both previous scene and stage are not null
+        // Set the main stage's scene back to the previous scene
         if (previousScene != null && stage != null) {
-            // Set the main stage's scene back to the previous scene
             stage.setScene(previousScene);
+
+            // Re-enable fullscreen if it was previously set
+            if (wasFullScreen) {
+                stage.setFullScreen(true);
+            }
+
             updateTitle("Main Menu");
         }
     }
+
     // Event handler for the "Quit" button
     @FXML
     public void onQuitButtonClick() {

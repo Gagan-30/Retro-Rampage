@@ -4,25 +4,40 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 
 public class DifficultySelection {
-    private SceneSwitcher sceneSwitcher;
 
-    public DifficultySelection(SceneSwitcher sceneSwitcher) {
-        this.sceneSwitcher = sceneSwitcher;
-    }
+    public Scene createDifficultySelectionScene(Scene previousScene, Stage mainStage) {
+        try {
+            // Load the FXML for the Difficulty Selection screen
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DifficultySelection-view.fxml"));
+            Parent root = fxmlLoader.load();
 
-    public void display(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("DifficultySelection.fxml"));
-        Parent root = loader.load();
+            // Create a new scene with the loaded FXML root
+            Scene scene = new Scene(root, 640, 480); // You might want to adjust the size
 
-        DifficultySelectionController controller = loader.getController();
-        controller.setSceneSwitcher(sceneSwitcher); // Make sure to set SceneSwitcher here
+            // Apply the new scene to the existing stage
+            // Check if the stage was in fullscreen mode
+            boolean wasFullScreen = mainStage.isFullScreen();
 
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+            mainStage.setScene(scene);
+
+            // Reapply fullscreen mode if it was previously set
+            if (wasFullScreen) {
+                mainStage.setFullScreen(true);
+            }
+
+            // Set up the controller
+            DifficultySelectionController difficultySelectionController = fxmlLoader.getController();
+            difficultySelectionController.setPreviousScene(previousScene);
+            difficultySelectionController.setStage(mainStage);
+
+            return scene;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
-

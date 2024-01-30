@@ -1,9 +1,6 @@
 package com.base.game.retrorampage.MainMenu;
 
 import javafx.application.Application;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
@@ -12,27 +9,23 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-    private Stage primaryStage;
-    private SceneSwitcher sceneSwitcher;
-
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage stage) throws IOException {
         Config config = new Config("config.txt");
-        SceneSwitcher sceneSwitcher = new SceneSwitcher(primaryStage, config);
+        applySettingsToStage(stage, config);
 
-        applySettings(primaryStage, config);
+        MainMenu mainMenu = new MainMenu();
+        Scene mainMenuScene = mainMenu.createMainMenuScene(stage, config);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainMenu-view.fxml"));
-        Parent root = loader.load();
-        MainMenuController controller = loader.getController();
-        controller.setSceneSwitcher(sceneSwitcher);
-
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+        showMainMenu(stage, mainMenuScene);
     }
 
-    private void applySettings(Stage stage, Config config) {
-        // Read and apply resolution and fullscreen settings from config
+    private void showMainMenu(Stage stage, Scene scene) {
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private static void applySettingsToStage(Stage stage, Config config) {
         String resolution = config.loadResolutionSetting();
         String[] parts = resolution.split(" x ");
         if (parts.length == 2) {
