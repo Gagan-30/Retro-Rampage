@@ -1,62 +1,38 @@
 package com.base.game.retrorampage.MainMenu;
 
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 
 public class MainMenuController {
 
-    private Stage mainStage;
-    private final DifficultySelection difficultySelection = new DifficultySelection();
-    private final LoadGame loadGame = new LoadGame();
-    private final Settings settings = new Settings();
-    private final About about = new About();
-    private final Exit exit = new Exit();
+    private SceneSwitcher sceneSwitcher;
 
-    public void setMainStage(Stage mainStage) {
-        this.mainStage = mainStage;
+    // Setter method to inject SceneSwitcher instance
+    public void setSceneSwitcher(SceneSwitcher sceneSwitcher) {
+        this.sceneSwitcher = sceneSwitcher;
     }
 
     @FXML
     protected void onStartGameButtonClick() {
-        Scene difficultySelectionScene = difficultySelection.createDifficultySelectionScene(mainStage);
-        switchScene(difficultySelectionScene, "Select Difficulty");
+        sceneSwitcher.switchToScene("DifficultySelection-view.fxml", "Select Difficulty");
     }
 
     @FXML
     protected void onLoadGameButtonClick() {
-        Scene loadGameScene = loadGame.createLoadGameScene(mainStage);
-        switchScene(loadGameScene, "Select Game Save");
+        sceneSwitcher.switchToScene("LoadGame-view.fxml", "Select Game Save");
     }
 
     @FXML
     protected void onSettingsButtonClick() {
-        Scene settingsScene = settings.createSettingsScene(mainStage);
-        switchScene(settingsScene, "Settings");
+        sceneSwitcher.switchToScene("Settings-view.fxml", "Settings");
     }
 
     @FXML
     protected void onAboutButtonClick() {
-        Scene aboutScene = about.createAboutScene(mainStage);
-        switchScene(aboutScene, "About");
+        sceneSwitcher.switchToScene("About-view.fxml", "About");
     }
 
     @FXML
     protected void onExitButtonClick() {
-        Scene exitScene = exit.createExitScene(mainStage);
-        switchScene(exitScene, "Exit");
-    }
-
-    private void switchScene(Scene newScene, String title) {
-        if (newScene != null) {
-            mainStage.setScene(newScene);
-            updateTitle(title);
-        }
-    }
-
-    private void updateTitle(String newTitle) {
-        if (mainStage != null) {
-            mainStage.setTitle(newTitle);
-        }
+        sceneSwitcher.switchToScene("Exit-view.fxml", "Exit");
     }
 }

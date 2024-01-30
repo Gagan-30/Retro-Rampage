@@ -16,11 +16,11 @@
         <Insets bottom="100.0" left="100.0" right="100.0" top="100.0"/>
     </padding>
 
-    <Label fx:id="mainMenuLabel" text="Retro Rampage" styleClass="main-title"/>
+    <Label text="Retro Rampage" styleClass="main-title"/>
 
-    <Button onAction="#onStartGameButtonClick" text="Start Game" styleClass="menu-button"/>
-    <Button onAction="#onLoadGameButtonClick" text="Load Game" styleClass="menu-button"/>
-    <Button onAction="#onSettingsButtonClick" text="Settings" styleClass="menu-button"/>
-    <Button onAction="#onAboutButtonClick" text="About" styleClass="menu-button"/>
-    <Button onAction="#onExitButtonClick" text="Exit" styleClass="menu-button"/>
+    <Button fx:id="startButton" onAction="#onStartGameButtonClick" text="Start Game" styleClass="menu-button"/>
+    <Button fx:id="loadGameButton" onAction="#onLoadGameButtonClick" text="Load Game" styleClass="menu-button"/>
+    <Button fx:id="settingsButton" onAction="#onSettingsButtonClick" text="Settings" styleClass="menu-button"/>
+    <Button fx:id="aboutButton" onAction="#onAboutButtonClick" text="About" styleClass="menu-button"/>
+    <Button fx:id="exitButton" onAction="#onExitButtonClick" text="Exit" styleClass="menu-button"/>
 </VBox>
