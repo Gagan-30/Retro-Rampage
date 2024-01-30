@@ -7,7 +7,7 @@ MoveUp1:
 Aim2: 
 Inventory2: 
 Aim1: 
-Volume: 53
+Volume: 34
 MoveLeft2: 
 MoveLeft1: 
 Fullscreen: true
@@ -15,4 +15,4 @@ MoveDown2:
 Shoot2: 
 MoveDown1: 
 Shoot1: 
-Resolution: 640 x 480
+Resolution: 1920 x 1080

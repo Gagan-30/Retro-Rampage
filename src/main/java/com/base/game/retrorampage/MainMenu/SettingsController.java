@@ -36,45 +36,67 @@ public class SettingsController {
 
     @FXML
     protected void onGraphicsButtonClick() {
+        boolean wasFullScreen = stage.isFullScreen();
+
         if (graphicsScene == null) {
-            // Load the graphics scene if not loaded
             graphicsScene = graphics.createGraphicsScene(stage.getScene(), stage);
         }
-        updateTitle("Graphics Settings");
         stage.setScene(graphicsScene);
+
+        if (wasFullScreen) {
+            stage.setFullScreen(true);
+        }
+
+        updateTitle("Graphics Settings");
     }
 
     @FXML
-    public void onSoundButtonClick() {
-        if (soundScene == null) {
-            // Load the sound scene if not loaded
-            System.out.println("[Sound] Testing scene transition at " + java.time.LocalDateTime.now());
+    protected void onSoundButtonClick() {
+        boolean wasFullScreen = stage.isFullScreen();
 
+        if (soundScene == null) {
             soundScene = sound.createSoundScene(stage.getScene(), stage);
         }
-        updateTitle("Sound Settings");
         stage.setScene(soundScene);
+
+        if (wasFullScreen) {
+            stage.setFullScreen(true);
+        }
+
+        updateTitle("Sound Settings");
     }
 
     @FXML
-    public void onKeybindButtonClick() {
+    protected void onKeybindButtonClick() {
+        boolean wasFullScreen = stage.isFullScreen();
+
         if (keybindScene == null) {
-            // Load the keybind scene if not loaded
             keybindScene = keybind.createKeybindScene(stage.getScene(), stage);
         }
-        updateTitle("Keybind Settings");
         stage.setScene(keybindScene);
+
+        if (wasFullScreen) {
+            stage.setFullScreen(true);
+        }
+
+        updateTitle("Keybind Settings");
     }
 
     // Event handler for the "Return" button
     @FXML
     public void onReturnButtonClick() {
+        // Check if the stage is in fullscreen mode
+        boolean wasFullScreen = stage.isFullScreen();
 
-        // Check if both previous scene and stage are not null
+        // Set the main stage's scene back to the previous scene
         if (previousScene != null && stage != null) {
-            // Set the main stage's scene back to the previous scene
-            System.out.println("[Sound] Testing scene transition at " + java.time.LocalDateTime.now());
             stage.setScene(previousScene);
+
+            // Re-enable fullscreen if it was previously set
+            if (wasFullScreen) {
+                stage.setFullScreen(true);
+            }
+
             updateTitle("Main Menu");
         }
     }

@@ -9,33 +9,32 @@ import java.io.IOException;
 
 public class About {
 
-    // Method to create the about scene
     public Scene createAboutScene(Scene previousScene, Stage mainStage) {
         try {
-            // Load the About-view.fxml file using FXMLLoader
+            // Load the FXML for the Difficulty Selection screen
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("About-view.fxml"));
             Parent root = fxmlLoader.load();
 
-            // Create a new stage for the about scene
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root, 640, 480));
-            stage.setResizable(true);
-            stage.setMinWidth(640);
-            stage.setMinHeight(480);
+            // Create a new scene with the loaded FXML root
+            Scene scene = new Scene(root, 640, 480); // You might want to adjust the size
 
-            // Get the controller associated with the About-view.fxml
+            // Check if the stage was in fullscreen mode
+            boolean wasFullScreen = mainStage.isFullScreen();
+
+            mainStage.setScene(scene);
+
+            // Reapply fullscreen mode if it was previously set
+            if (wasFullScreen) {
+                mainStage.setFullScreen(true);
+            }
+
+            // Set up the controller
             AboutController aboutController = fxmlLoader.getController();
-
-            // Set the previous scene in the AboutController
             aboutController.setPreviousScene(previousScene);
-
-            // Set the main stage in the AboutController
             aboutController.setStage(mainStage);
 
-            // Return the scene associated with the new stage
-            return stage.getScene();
+            return scene;
         } catch (IOException e) {
-            // Handle IOException by printing the stack trace
             e.printStackTrace();
             return null;
         }

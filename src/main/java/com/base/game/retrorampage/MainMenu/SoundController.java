@@ -85,13 +85,30 @@ public class SoundController {
         muteCheckBox.setSelected(volumeSlider.getValue() == 0);
     }
 
+    private void updateTitle(String newTitle) {
+        if (stage != null) {
+            stage.setTitle(newTitle);
+        }
+    }
+
     @FXML
     public void onReturnButtonClick() {
+
         saveConfig();
 
+        // Check if the stage is in fullscreen mode
+        boolean wasFullScreen = stage.isFullScreen();
+
+        // Set the main stage's scene back to the previous scene
         if (previousScene != null && stage != null) {
             stage.setScene(previousScene);
-            stage.setTitle("Main Menu");
+
+            // Re-enable fullscreen if it was previously set
+            if (wasFullScreen) {
+                stage.setFullScreen(true);
+            }
+
+            updateTitle("Settings");
         }
     }
 }

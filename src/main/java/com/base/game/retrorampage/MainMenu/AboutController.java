@@ -18,22 +18,28 @@ public class AboutController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
+
     // Method to update the title of the main stage
     private void updateTitle(String newTitle) {
         if (stage != null) {
             stage.setTitle(newTitle);
         }
     }
+
     @FXML
     public void onReturnButtonClick() {
-        // Print the previous scene and stage for debugging purposes
-        System.out.println("Previous Scene: " + previousScene);
-        System.out.println("Stage: " + stage);
+        // Check if the stage is in fullscreen mode
+        boolean wasFullScreen = stage.isFullScreen();
 
-        // Check if both previous scene and stage are not null
+        // Set the main stage's scene back to the previous scene
         if (previousScene != null && stage != null) {
-            // Set the main stage's scene back to the previous scene
             stage.setScene(previousScene);
+
+            // Re-enable fullscreen if it was previously set
+            if (wasFullScreen) {
+                stage.setFullScreen(true);
+            }
+
             updateTitle("Main Menu");
         }
     }

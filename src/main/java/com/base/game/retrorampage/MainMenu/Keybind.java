@@ -11,30 +11,30 @@ public class Keybind {
 
     public Scene createKeybindScene(Scene previousScene, Stage mainStage) {
         try {
-            // Load the Graphics-view.fxml file using FXMLLoader
+            // Load the FXML for the Difficulty Selection screen
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Keybind-view.fxml"));
             Parent root = fxmlLoader.load();
 
-            // Create a new stage for the exit scene
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root, 640, 480));
-            stage.setResizable(true);
-            stage.setMinWidth(640);
-            stage.setMinHeight(480);
+            // Create a new scene with the loaded FXML root
+            Scene scene = new Scene(root, 640, 480); // You might want to adjust the size
 
-            // Get the controller associated with the KeybindController-view.fxml
+            // Check if the stage was in fullscreen mode
+            boolean wasFullScreen = mainStage.isFullScreen();
+
+            mainStage.setScene(scene);
+
+            // Reapply fullscreen mode if it was previously set
+            if (wasFullScreen) {
+                mainStage.setFullScreen(true);
+            }
+
+            // Set up the controller
             KeybindController keybindController = fxmlLoader.getController();
-
-            // Set the previous scene in the GraphicsController
             keybindController.setPreviousScene(previousScene);
-
-            // Set the main stage in the KeybindController
             keybindController.setStage(mainStage);
 
-            // Return the scene associated with the new stage
-            return stage.getScene();
+            return scene;
         } catch (IOException e) {
-            // Handle IOException by printing the stack trace
             e.printStackTrace();
             return null;
         }

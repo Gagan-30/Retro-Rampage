@@ -43,6 +43,12 @@ public class GraphicsController {
         this.stage = stage;
     }
 
+    private void updateTitle(String newTitle) {
+        if (stage != null) {
+            stage.setTitle(newTitle);
+        }
+    }
+
     @FXML
     private void handleChangeResolution() {
         System.out.println("[GraphicsController] handleChangeResolution called");
@@ -106,11 +112,22 @@ public class GraphicsController {
     }
 
     @FXML
-    private void onReturnButtonClick() {
-        System.out.println("[GraphicsController] onReturnButtonClick called");
+    public void onReturnButtonClick() {
         saveGraphicsConfig();
+
+        // Check if the stage is in fullscreen mode
+        boolean wasFullScreen = stage.isFullScreen();
+
+        // Set the main stage's scene back to the previous scene
         if (previousScene != null && stage != null) {
             stage.setScene(previousScene);
+
+            // Re-enable fullscreen if it was previously set
+            if (wasFullScreen) {
+                stage.setFullScreen(true);
+            }
+
+            updateTitle("Settings");
         }
     }
 }
