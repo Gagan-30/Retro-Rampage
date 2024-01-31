@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -19,7 +20,6 @@ public class KeybindController {
     private boolean readyToCaptureClick = false;
     private boolean inputListenersSetup = false;
 
-
     @FXML
     private Button moveUp1Button, moveUp2Button, moveDown1Button, moveDown2Button;
     @FXML
@@ -30,12 +30,19 @@ public class KeybindController {
     private Button inventory1Button, inventory2Button;
 
     private final Map<Button, String> buttonToActionMap = new HashMap<>();
-    private Config config;
+    private final Config config;
+
+    public KeybindController() {
+        config = new Config("config.txt");
+    }
 
     public void initialize() {
-        config = new Config("config.txt"); // Adjust the path as needed
+        mapButtonsToActions();
+        loadKeybindsIntoScene();
+    }
 
-        // Map buttons to their corresponding actions
+    private void mapButtonsToActions() {
+        buttonToActionMap.put(moveUp1Button, "MoveUp1");
         buttonToActionMap.put(moveUp1Button, "MoveUp1");
         buttonToActionMap.put(moveUp2Button, "MoveUp2");
         buttonToActionMap.put(moveDown1Button, "MoveDown1");
@@ -49,18 +56,135 @@ public class KeybindController {
         buttonToActionMap.put(aim1Button, "Aim1");
         buttonToActionMap.put(aim2Button, "Aim2");
         buttonToActionMap.put(inventory1Button, "Inventory1");
-        buttonToActionMap.put(inventory2Button, "Inventory2");
-
-        loadKeybindsIntoScene();
-    }
+        buttonToActionMap.put(inventory2Button, "Inventory2");    }
 
     private void loadKeybindsIntoScene() {
-        for (Map.Entry<Button, String> entry : buttonToActionMap.entrySet()) {
-            String keybind = config.getKeybind(entry.getValue());
-            entry.getKey().setText(keybind);
+        buttonToActionMap.forEach((button, action) -> button.setText(config.getKeybind(action)));
+    }
+
+    @FXML
+    public void onActionButtonClick(ActionEvent event) {
+        if (event.getSource() instanceof Button) {
+            Button clickedButton = (Button) event.getSource();
+            prepareForNewKeybind(clickedButton);
         }
     }
 
+    private void prepareForNewKeybind(Button clickedButton) {
+        if (activeButton != null && !activeButton.equals(clickedButton)) {
+            revertButtonToOriginalText(activeButton);
+        }
+        setupInputListeners();
+        activeButton = clickedButton;
+        activeButton.setText("Listening");
+        delayReadyToCaptureClick();
+    }
+
+    private void delayReadyToCaptureClick() {
+        new Thread(() -> {
+            try {
+                Thread.sleep(200); // Delay for 200 milliseconds
+                javafx.application.Platform.runLater(() -> readyToCaptureClick = true);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    private void revertButtonToOriginalText(Button button) {
+        String action = buttonToActionMap.get(button);
+        if (action != null) {
+            button.setText(config.getKeybind(action));
+        }
+    }
+
+    private void setupInputListeners() {
+        if (!inputListenersSetup) {
+            stage.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKeyPress);
+            stage.addEventFilter(MouseEvent.MOUSE_CLICKED, this::handleMouseClick);
+            inputListenersSetup = true;
+        }
+    }
+
+    private void handleKeyPress(KeyEvent event) {
+        if (activeButton != null && "Listening".equals(activeButton.getText())) {
+            if (event.getCode() == KeyCode.DELETE) {
+                // If Delete is pressed, remove the keybind for this action
+                removeKeybindForCurrentAction();
+            } else if (readyToCaptureClick) {
+                // Otherwise, process other keys as before
+                String keyName = event.getCode().toString();
+                processInput(keyName);
+                event.consume();
+            }
+        }
+    }
+
+    private void removeKeybindForCurrentAction() {
+        String action = buttonToActionMap.get(activeButton);
+        if (action != null) {
+            config.removeKeybind(action);
+            activeButton.setText("None"); // Or any default text you prefer
+        }
+        readyToCaptureClick = false;
+        activeButton = null;
+    }
+
+
+    private void handleMouseClick(MouseEvent event) {
+        if (readyToCaptureClick && isListening() && event.getSource() != activeButton) {
+            processInput(getClickType(event.getButton()));
+        }
+    }
+
+    private boolean isListening() {
+        return activeButton != null && "Listening".equals(activeButton.getText());
+    }
+
+    private String getClickType(MouseButton button) {
+        return switch (button) {
+            case PRIMARY -> "Left Click";
+            case SECONDARY -> "Right Click";
+            case MIDDLE -> "Middle Click";
+            default -> "Other Click";
+        };
+    }
+
+    private void processInput(String input) {
+        String currentAction = buttonToActionMap.get(activeButton);
+
+        if (config.isDuplicateKeybind(input, currentAction)) {
+            System.out.println("This key is already in use. Please choose another.");
+            revertButtonToOriginalText(activeButton);
+        } else {
+            config.removeKeybindIfAssigned(input);
+            config.saveKeybind(currentAction, input);
+            activeButton.setText(input);
+        }
+
+        readyToCaptureClick = false;
+        activeButton = null;
+    }
+
+    @FXML
+    public void onReturnButtonClick() {
+        config.saveSettingsToFile();
+
+        // Check if the stage is in fullscreen mode
+        boolean wasFullScreen = stage.isFullScreen();
+
+        // Set the main stage's scene back to the previous scene
+        if (previousScene != null && stage != null) {
+            stage.setScene(previousScene);
+
+            // Re-enable fullscreen if it was previously set
+            if (wasFullScreen) {
+                stage.setFullScreen(true);
+            }
+
+            updateTitle("Settings");
+        }
+    }
 
     public void setPreviousScene(Scene previousScene) {
         this.previousScene = previousScene;
@@ -73,115 +197,6 @@ public class KeybindController {
     private void updateTitle(String newTitle) {
         if (stage != null) {
             stage.setTitle(newTitle);
-        }
-    }
-
-    @FXML
-    public void onActionButtonClick(ActionEvent event) {
-        if (event.getSource() instanceof Button) {
-            if (activeButton != null && !activeButton.equals(event.getSource())) {
-                revertButtonToOriginalText(activeButton);
-            }
-            setupInputListeners();
-            activeButton = (Button) event.getSource();
-            activeButton.setText("Listening");
-
-            // Introduce a delay before setting readyToCaptureClick to true
-            new Thread(() -> {
-                try {
-                    Thread.sleep(200); // Delay for 200 milliseconds
-                    javafx.application.Platform.runLater(() -> readyToCaptureClick = true);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }).start();
-        }
-    }
-
-    private void revertButtonToOriginalText(Button button) {
-        String action = buttonToActionMap.get(button);
-        if (action != null) {
-            String keybind = config.getKeybind(action);
-            button.setText(keybind);
-        }
-    }
-
-
-    private void setupInputListeners() {
-        if (!inputListenersSetup) {
-            System.out.println("Setting up input listeners");
-
-            stage.removeEventFilter(KeyEvent.KEY_PRESSED, this::handleKeyPress);
-            stage.removeEventFilter(MouseEvent.MOUSE_CLICKED, this::handleMouseClick);
-
-            stage.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKeyPress);
-            stage.addEventFilter(MouseEvent.MOUSE_CLICKED, this::handleMouseClick);
-
-            inputListenersSetup = true;
-        }
-    }
-
-
-    private void handleKeyPress(KeyEvent event) {
-        System.out.println("Key Pressed: " + event.getCode());
-
-        if (readyToCaptureClick && activeButton != null && "Listening".equals(activeButton.getText())) {
-            String keyName = event.getCode().toString();
-            updateButtonAndRemoveListeners(keyName);
-            event.consume();
-            readyToCaptureClick = false;
-        }
-    }
-
-    private void handleMouseClick(MouseEvent event) {
-        System.out.println("Mouse Clicked: " + event.getButton());
-
-        // Check if we're ready to capture a click, and the click is not on the activeButton itself
-        if (readyToCaptureClick && activeButton != null && "Listening".equals(activeButton.getText()) && event.getSource() != activeButton) {
-            MouseButton button = event.getButton();
-            String clickType = getClickType(button);
-            updateButtonAndRemoveListeners(clickType);
-            readyToCaptureClick = false;
-        }
-    }
-
-
-    private String getClickType(MouseButton button) {
-        return switch (button) {
-            case PRIMARY -> "Left Click";
-            case SECONDARY -> "Right Click";
-            case MIDDLE -> "Middle Click";
-            default -> "Other Click";
-        };
-    }
-
-    private void updateButtonAndRemoveListeners(String input) {
-        if (activeButton != null) {
-            activeButton.setText(input);
-
-            // Save the new keybind
-            String action = buttonToActionMap.get(activeButton);
-            if (action != null) {
-                config.saveKeybind(action, input);
-            }
-
-            activeButton = null;
-            // No need to remove listeners here as they are shared for all buttons
-        }
-    }
-
-    @FXML
-    public void onReturnButtonClick() {
-        boolean wasFullScreen = stage.isFullScreen();
-
-        if (previousScene != null && stage != null) {
-            stage.setScene(previousScene);
-
-            if (wasFullScreen) {
-                stage.setFullScreen(true);
-            }
-
-            updateTitle("Settings");
         }
     }
 }
