@@ -16,7 +16,9 @@ public class KeybindController {
     private Scene previousScene;
     private Stage stage;
     private Button activeButton;
-    private boolean readyToCaptureClick = false; // Flag to control click capturing
+    private boolean readyToCaptureClick = false;
+    private boolean inputListenersSetup = false;
+
 
     @FXML
     private Button moveUp1Button, moveUp2Button, moveDown1Button, moveDown2Button;
@@ -77,16 +79,22 @@ public class KeybindController {
     @FXML
     public void onActionButtonClick(ActionEvent event) {
         if (event.getSource() instanceof Button) {
-            if (activeButton != null) {
-                // Revert text of previously active button
+            if (activeButton != null && !activeButton.equals(event.getSource())) {
                 revertButtonToOriginalText(activeButton);
             }
-
+            setupInputListeners();
             activeButton = (Button) event.getSource();
             activeButton.setText("Listening");
-            readyToCaptureClick = true;
 
-            setupInputListeners();
+            // Introduce a delay before setting readyToCaptureClick to true
+            new Thread(() -> {
+                try {
+                    Thread.sleep(200); // Delay for 200 milliseconds
+                    javafx.application.Platform.runLater(() -> readyToCaptureClick = true);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
         }
     }
 
@@ -98,44 +106,45 @@ public class KeybindController {
         }
     }
 
-    private void setupInputListeners() {
-        // Remove existing listeners to avoid duplicates
-        stage.removeEventFilter(KeyEvent.KEY_PRESSED, this::handleKeyPress);
-        stage.removeEventFilter(MouseEvent.MOUSE_CLICKED, this::handleMouseClick);
 
-        // Delay the setup of mouse click listener
-        new Thread(() -> {
-            try {
-                Thread.sleep(100); // Delay in milliseconds
-                javafx.application.Platform.runLater(() -> {
-                    stage.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKeyPress);
-                    stage.addEventFilter(MouseEvent.MOUSE_CLICKED, this::handleMouseClick);
-                });
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
+    private void setupInputListeners() {
+        if (!inputListenersSetup) {
+            System.out.println("Setting up input listeners");
+
+            stage.removeEventFilter(KeyEvent.KEY_PRESSED, this::handleKeyPress);
+            stage.removeEventFilter(MouseEvent.MOUSE_CLICKED, this::handleMouseClick);
+
+            stage.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKeyPress);
+            stage.addEventFilter(MouseEvent.MOUSE_CLICKED, this::handleMouseClick);
+
+            inputListenersSetup = true;
+        }
     }
 
 
     private void handleKeyPress(KeyEvent event) {
-        if (activeButton != null && "Listening".equals(activeButton.getText())) {
+        System.out.println("Key Pressed: " + event.getCode());
+
+        if (readyToCaptureClick && activeButton != null && "Listening".equals(activeButton.getText())) {
             String keyName = event.getCode().toString();
             updateButtonAndRemoveListeners(keyName);
             event.consume();
+            readyToCaptureClick = false;
         }
     }
 
     private void handleMouseClick(MouseEvent event) {
-        if (event.getEventType() == MouseEvent.MOUSE_CLICKED && event.getSource() != activeButton) {
-            if (readyToCaptureClick && activeButton != null && "Listening".equals(activeButton.getText())) {
-                MouseButton button = event.getButton();
-                String clickType = getClickType(button);
-                updateButtonAndRemoveListeners(clickType);
-                readyToCaptureClick = false; // Reset the flag after capturing
-            }
+        System.out.println("Mouse Clicked: " + event.getButton());
+
+        // Check if we're ready to capture a click, and the click is not on the activeButton itself
+        if (readyToCaptureClick && activeButton != null && "Listening".equals(activeButton.getText()) && event.getSource() != activeButton) {
+            MouseButton button = event.getButton();
+            String clickType = getClickType(button);
+            updateButtonAndRemoveListeners(clickType);
+            readyToCaptureClick = false;
         }
     }
+
 
     private String getClickType(MouseButton button) {
         return switch (button) {
@@ -157,9 +166,7 @@ public class KeybindController {
             }
 
             activeButton = null;
-            // Remove event listeners
-            stage.removeEventFilter(KeyEvent.KEY_PRESSED, this::handleKeyPress);
-            stage.removeEventFilter(MouseEvent.MOUSE_CLICKED, this::handleMouseClick);
+            // No need to remove listeners here as they are shared for all buttons
         }
     }
 
