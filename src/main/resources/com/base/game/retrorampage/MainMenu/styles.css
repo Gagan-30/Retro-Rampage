@@ -4,7 +4,7 @@
 
 .main-title {
     -fx-text-fill: white;
-    -fx-font-size: 30px;
+    -fx-font-size: 40px;
     -fx-font-weight: bold;
 }
 
@@ -62,4 +62,10 @@
 .checkbox {
     -fx-text-fill: white;
     -fx-font-size: 20px; /* Adjust the font size as needed */
+}
+
+.grid-title {
+    -fx-text-fill: white;
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
 }
