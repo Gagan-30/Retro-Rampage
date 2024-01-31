@@ -7,10 +7,13 @@ import java.util.Map;
 public class Config {
     private final String configFilePath;
     private final Map<String, String> settings = new HashMap<>();
+    private final Map<String, String> keybinds = new HashMap<>();
+
 
     public Config(String configFilePath) {
         this.configFilePath = configFilePath;
         loadSettings();
+        loadKeybinds();
     }
 
     private void loadSettings() {
@@ -25,6 +28,10 @@ public class Config {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void loadKeybinds() {
+
     }
 
     public void saveSetting(String key, String value) {

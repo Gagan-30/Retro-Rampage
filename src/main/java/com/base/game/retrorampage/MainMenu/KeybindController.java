@@ -39,13 +39,17 @@ public class KeybindController {
 
             activeButton = (Button) event.getSource();
             activeButton.setText("Listening");
-            readyToCaptureClick = false; // Reset the flag
+            readyToCaptureClick = false; // Initially, do not capture the click
 
-            // Delay setting the flag to true to avoid capturing the current click
+            // Remove existing mouse click event filter and re-add it after a delay
+            stage.removeEventFilter(MouseEvent.MOUSE_CLICKED, this::handleMouseClick);
             new Thread(() -> {
                 try {
-                    Thread.sleep(200); // Short delay
-                    javafx.application.Platform.runLater(() -> readyToCaptureClick = true);
+                    Thread.sleep(100); // Short delay
+                    javafx.application.Platform.runLater(() -> {
+                        stage.addEventFilter(MouseEvent.MOUSE_CLICKED, this::handleMouseClick);
+                        readyToCaptureClick = true; // Now ready to capture the next click
+                    });
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -63,7 +67,7 @@ public class KeybindController {
         // Delay the setup of mouse click listener
         new Thread(() -> {
             try {
-                Thread.sleep(200); // Delay in milliseconds
+                Thread.sleep(100); // Delay in milliseconds
                 javafx.application.Platform.runLater(() -> {
                     stage.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKeyPress);
                     stage.addEventFilter(MouseEvent.MOUSE_CLICKED, this::handleMouseClick);
@@ -93,22 +97,17 @@ public class KeybindController {
     }
 
     private String getClickType(MouseButton button) {
-        switch (button) {
-            case PRIMARY:
-                return "Left Click";
-            case SECONDARY:
-                return "Right Click";
-            case MIDDLE:
-                return "Middle Click";
-            default:
-                return "Other Click";
-        }
+        return switch (button) {
+            case PRIMARY -> "Left Click";
+            case SECONDARY -> "Right Click";
+            case MIDDLE -> "Middle Click";
+            default -> "Other Click";
+        };
     }
 
     private void updateButtonAndRemoveListeners(String input) {
         if (activeButton != null) {
             activeButton.setText(input);
-            // Reset the active button
             activeButton = null;
         }
 
