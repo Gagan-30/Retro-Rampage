@@ -1,17 +1,3 @@
 Volume: 53
-Fullscreen: true
+Fullscreen: false
 Resolution: 1920 x 1080
-MoveUp1: W
-MoveUp2: UP
-MoveDown1: S
-MoveDown2: DOWN
-MoveLeft1: A
-MoveLeft2: LEFT
-MoveRight1: D
-MoveRight2: RIGHT
-Shoot1: LEFT CLICK
-Shoot2: SPACE
-Aim1: RIGHT CLICK
-Aim2:
-Inventory1: TAB
-Inventory2:

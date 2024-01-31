@@ -49,34 +49,34 @@
                    GridPane.columnIndex="1"/>
             <Label fx:id="mainMenuLabel121" prefHeight="35.0" prefWidth="154.0" styleClass="grid-title" text="Keybind 2"
                    GridPane.columnIndex="2"/>
-            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
+            <Button fx:id="moveUp1Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
+                    text="MoveUp1" onAction="#onActionButtonClick" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <Button fx:id="moveUp2Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
+                    text="MoveUp2" onAction="#onActionButtonClick" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+            <Button fx:id="moveDown1Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
                     text="MoveDown1" onAction="#onActionButtonClick" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-            <Button layoutX="166.0" layoutY="73.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0"
-                    styleClass="menu-button" onAction="#onActionButtonClick" text="MoveUp1" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-            <Button layoutX="166.0" layoutY="43.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0"
-                    styleClass="menu-button" onAction="#onActionButtonClick" text="MoveUp2" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-            <Button layoutX="319.0" layoutY="43.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0"
-                    styleClass="menu-button" onAction="#onActionButtonClick" text="MoveDown2" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-            <Button layoutX="166.0" layoutY="73.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0"
-                    styleClass="menu-button" onAction="#onActionButtonClick" text="MoveLeft1" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-            <Button layoutX="166.0" layoutY="103.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0"
-                    styleClass="menu-button" onAction="#onActionButtonClick" text="MoveRight1" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-            <Button layoutX="166.0" layoutY="133.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0"
-                    styleClass="menu-button" onAction="#onActionButtonClick" text="MoveLeft2" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
-            <Button layoutX="319.0" layoutY="103.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0"
-                    styleClass="menu-button" onAction="#onActionButtonClick" text="MoveRight2" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
-            <Button layoutX="319.0" layoutY="133.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0"
-                    styleClass="menu-button" onAction="#onActionButtonClick" text="Shoot1" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-            <Button layoutX="166.0" layoutY="163.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0"
-                    styleClass="menu-button" onAction="#onActionButtonClick" text="Shoot2" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
-            <Button layoutX="319.0" layoutY="163.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0"
-                    styleClass="menu-button" onAction="#onActionButtonClick" text="Aim1" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
-            <Button layoutX="166.0" layoutY="193.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0"
-                    styleClass="menu-button" onAction="#onActionButtonClick" text="Aim2" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
-            <Button layoutX="319.0" layoutY="193.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0"
-                    styleClass="menu-button" onAction="#onActionButtonClick" text="Inventory1" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
-            <Button layoutX="166.0" layoutY="223.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0"
-                    styleClass="menu-button" onAction="#onActionButtonClick" text="Inventory2" GridPane.columnIndex="2" GridPane.rowIndex="7"/>
+            <Button fx:id="moveDown2Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
+                    text="MoveDown2" onAction="#onActionButtonClick" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+            <Button fx:id="moveLeft1Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
+                    text="MoveLeft1" onAction="#onActionButtonClick" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            <Button fx:id="moveRight1Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
+                    text="MoveRight1" onAction="#onActionButtonClick" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+            <Button fx:id="moveLeft2Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
+                    text="MoveLeft2" onAction="#onActionButtonClick" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+            <Button fx:id="moveRight2Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
+                    text="MoveRight2" onAction="#onActionButtonClick" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+            <Button fx:id="shoot1Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
+                    text="Shoot1" onAction="#onActionButtonClick" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+            <Button fx:id="shoot2Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
+                    text="Shoot2" onAction="#onActionButtonClick" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+            <Button fx:id="aim1Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
+                    text="Aim1" onAction="#onActionButtonClick" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+            <Button fx:id="aim2Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
+                    text="Aim2" onAction="#onActionButtonClick" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+            <Button fx:id="inventory1Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
+                    text="Inventory1" onAction="#onActionButtonClick" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+            <Button fx:id="inventory2Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
+                    text="Inventory2" onAction="#onActionButtonClick" GridPane.columnIndex="2" GridPane.rowIndex="7"/>
         </children>
     </GridPane>
 
