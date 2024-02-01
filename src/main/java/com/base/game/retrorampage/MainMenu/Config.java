@@ -84,11 +84,12 @@ public class Config {
     public void saveSettingsToFile() {
         // Implementation includes writing settings and keybindings to the configuration file.
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(configFilePath, false))) {
-            // Save Graphics and Volume Settings
+            // Save Graphics
             writer.write("Fullscreen: " + settings.getOrDefault("Fullscreen", "false"));
             writer.newLine();
             writer.write("Resolution: " + settings.getOrDefault("Resolution", "800 x 600"));
             writer.newLine();
+            // Save Volume
             writer.write("Volume: " + settings.getOrDefault("Volume", "50"));
             writer.newLine();
 
