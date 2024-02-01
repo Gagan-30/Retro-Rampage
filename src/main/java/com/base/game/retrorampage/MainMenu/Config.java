@@ -139,10 +139,6 @@ public class Config {
         saveSettingsToFile(); // Save changes to the file
     }
 
-    public Map<String, String> getAllKeybinds() {
-        return new HashMap<>(keybinds);
-    }
-
     public void saveResolutionSetting(String resolution) {
         saveSetting("Resolution", resolution);
     }
