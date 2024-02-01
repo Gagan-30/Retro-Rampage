@@ -40,6 +40,12 @@
     -fx-font-size: 16px;
 }
 
+.rectangle-style {
+    -fx-fill: #262626;
+    -fx-stroke: black;
+    -fx-stroke-width: 2px;
+}
+
 .graphicsMenu-button {
     -fx-background-color: rgb(38, 38, 38);
     -fx-text-fill: white;

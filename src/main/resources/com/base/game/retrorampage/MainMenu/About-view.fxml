@@ -3,6 +3,9 @@
 <?import java.net.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<!-- Import StackPane -->
 
 <VBox id="mainMenu" alignment="CENTER" prefHeight="1080.0" prefWidth="1920.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.base.game.retrorampage.MainMenu.AboutController">
 
@@ -11,8 +14,20 @@
     </stylesheets>
 
     <Label fx:id="mainMenuLabel" styleClass="main-title" text="About" />
-    <Label styleClass="about" text="TODO" />
+    <StackPane>
+        <Rectangle fx:id="rectangle1" height="100.0" styleClass="rectangle-style" width="400.0" />
+        <Label style="-fx-text-fill: white; -fx-font-size: 18;" text="Kill enemies" textAlignment="CENTER" />
+    </StackPane>
 
+    <StackPane>
+        <Rectangle fx:id="rectangle2" height="100.0" styleClass="rectangle-style" width="400.0" />
+        <Label style="-fx-text-fill: white; -fx-font-size: 18;" text="Find weapons and Health" />
+    </StackPane>
+
+    <StackPane>
+        <Rectangle fx:id="rectangle3" height="100.0" styleClass="rectangle-style" width="400.0" />
+        <Label style="-fx-text-fill: white; -fx-font-size: 18;" text="Escape to the next level" />
+    </StackPane>
 
     <Button alignment="CENTER" maxHeight="183.0" onAction="#onReturnButtonClick" prefHeight="183.0" prefWidth="379.0" styleClass="menu-button" text="Return" />
 </VBox>
