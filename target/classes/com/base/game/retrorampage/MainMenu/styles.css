@@ -35,9 +35,42 @@
     -fx-padding: 6px 9px;
 }
 
+.keybind-button {
+    -fx-background-color: rgb(38, 38, 38);
+    -fx-text-fill: white;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-min-height: 35px;
+    -fx-pref-height: 50px;
+    -fx-max-height: 50px;
+    -fx-font-size: 20px;
+    -fx-pref-width: 200px;
+}
+
+.keybind-button:hover {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-padding: 6px 9px;
+}
+
+
+.keybind-button:pressed {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-padding: 6px 9px;
+}
+
 .about {
     -fx-text-fill: white;
     -fx-font-size: 16px;
+}
+
+.rectangle-style {
+    -fx-fill: #262626;
+    -fx-stroke: black;
+    -fx-stroke-width: 2px;
 }
 
 .graphicsMenu-button {

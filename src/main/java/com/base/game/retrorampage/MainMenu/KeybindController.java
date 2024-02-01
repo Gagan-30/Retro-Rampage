@@ -25,7 +25,7 @@ public class KeybindController {
     @FXML
     private Button moveLeft1Button, moveLeft2Button, moveRight1Button, moveRight2Button;
     @FXML
-    private Button shoot1Button, shoot2Button, aim1Button, aim2Button;
+    private Button shoot1Button, shoot2Button, aim1Button, aim2Button, reload1Button, reload2Button;
     @FXML
     private Button inventory1Button, inventory2Button;
 
@@ -55,8 +55,11 @@ public class KeybindController {
         buttonToActionMap.put(shoot2Button, "Shoot2");
         buttonToActionMap.put(aim1Button, "Aim1");
         buttonToActionMap.put(aim2Button, "Aim2");
+        buttonToActionMap.put(reload1Button, "Reload1");
+        buttonToActionMap.put(reload2Button, "Reload2");
         buttonToActionMap.put(inventory1Button, "Inventory1");
-        buttonToActionMap.put(inventory2Button, "Inventory2");    }
+        buttonToActionMap.put(inventory2Button, "Inventory2");
+    }
 
     private void loadKeybindsIntoScene() {
         buttonToActionMap.forEach((button, action) -> button.setText(config.getKeybind(action)));
