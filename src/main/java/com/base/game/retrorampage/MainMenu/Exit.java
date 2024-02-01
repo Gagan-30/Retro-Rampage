@@ -2,10 +2,12 @@
 package com.base.game.retrorampage.MainMenu;
 
 // Import statements for necessary JavaFX classes and exception handling.
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 
 // Defines the Exit class.

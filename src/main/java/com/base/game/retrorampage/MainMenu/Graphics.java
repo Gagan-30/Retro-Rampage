@@ -2,10 +2,12 @@
 package com.base.game.retrorampage.MainMenu;
 
 // Importing necessary JavaFX classes for scene management and exception handling.
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 
 // Defines the Graphics class.
@@ -13,8 +15,9 @@ public class Graphics {
 
     /**
      * Creates and returns a Scene for the graphics settings screen.
+     *
      * @param previousScene The scene that was displayed before transitioning to this graphics settings screen.
-     * @param mainStage The primary window (stage) where the scene is to be displayed.
+     * @param mainStage     The primary window (stage) where the scene is to be displayed.
      * @return A new Scene object for the graphics settings screen, or null if an error occurs.
      */
     public Scene createGraphicsScene(Scene previousScene, Stage mainStage) {

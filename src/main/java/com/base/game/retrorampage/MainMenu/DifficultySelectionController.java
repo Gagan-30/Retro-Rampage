@@ -2,6 +2,7 @@
 package com.base.game.retrorampage.MainMenu;
 
 // Import statements for required JavaFX classes.
+
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

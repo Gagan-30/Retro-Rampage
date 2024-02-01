@@ -2,10 +2,12 @@
 package com.base.game.retrorampage.MainMenu;
 
 // Importing necessary JavaFX classes for scene and stage manipulation, as well as exception handling.
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 
 // Declares the Keybind class, which is responsible for creating and displaying the keybinds configuration screen.
@@ -13,8 +15,9 @@ public class Keybind {
 
     /**
      * Creates and returns a new scene for the keybind configuration screen, based on an FXML layout.
+     *
      * @param previousScene The scene that was active before transitioning to the keybinds screen.
-     * @param mainStage The primary window (stage) of the application.
+     * @param mainStage     The primary window (stage) of the application.
      * @return A Scene object representing the keybinds screen, or null if an error occurs during creation.
      */
     public Scene createKeybindScene(Scene previousScene, Stage mainStage) {

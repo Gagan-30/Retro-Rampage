@@ -2,6 +2,7 @@
 package com.base.game.retrorampage.MainMenu;
 
 // Import statements for necessary JavaFX classes.
+
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -16,6 +17,7 @@ public class ExitController {
      * Sets the previous scene.
      * This method allows the controller to remember which scene was displayed before transitioning to the exit screen,
      * enabling the application to return to that scene if necessary.
+     *
      * @param previousScene The Scene object representing the previous scene.
      */
     public void setPreviousScene(Scene previousScene) {
@@ -25,6 +27,7 @@ public class ExitController {
     /**
      * Sets the main application window (stage).
      * This is necessary for changing scenes or updating stage properties, such as the title.
+     *
      * @param stage The Stage object representing the main application window.
      */
     public void setStage(Stage stage) {
@@ -34,6 +37,7 @@ public class ExitController {
     /**
      * Updates the title of the main application window (stage).
      * This private method is used internally to change the window's title when returning to the main menu.
+     *
      * @param newTitle The new title to be set for the window.
      */
     private void updateTitle(String newTitle) {

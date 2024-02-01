@@ -78,8 +78,7 @@ public class KeybindController {
     // Event handler for button clicks, preparing to listen for a new keybind.
     @FXML
     public void onActionButtonClick(ActionEvent event) {
-        if (event.getSource() instanceof Button) {
-            Button clickedButton = (Button) event.getSource();
+        if (event.getSource() instanceof Button clickedButton) {
             prepareForNewKeybind(clickedButton);
         }
     }

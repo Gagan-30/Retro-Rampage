@@ -1,5 +1,6 @@
 package com.base.game.retrorampage.MainMenu;
 
+// Import statements for handling JavaFX components and exceptions
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -9,33 +10,40 @@ import java.io.IOException;
 
 public class Settings {
 
+    // Method to create and return a JavaFX Scene for the settings screen. This method takes the previous scene and the main application stage as parameters.
     public Scene createSettingsScene(Scene previousScene, Stage mainStage) {
         try {
-            // Load the FXML for the Difficulty Selection screen
+            // Initialize an FXMLLoader to load the FXML file associated with the settings screen
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Settings-view.fxml"));
+            // Load the root node from the FXML file into a Parent object
             Parent root = fxmlLoader.load();
 
-            // Create a new scene with the loaded FXML root
-            Scene scene = new Scene(root, 640, 480); // You might want to adjust the size
+            // Create a new Scene instance with the loaded root node, specifying its width and height
+            Scene scene = new Scene(root, 640, 480); // The size can be adjusted as needed
 
-            // Check if the stage was in fullscreen mode
+            // Check if the main application stage was previously set to fullscreen mode
             boolean wasFullScreen = mainStage.isFullScreen();
 
+            // Set the newly created scene to the main application stage
             mainStage.setScene(scene);
 
-            // Reapply fullscreen mode if it was previously set
+            // If the stage was in fullscreen mode before, reapply this mode to the stage
             if (wasFullScreen) {
                 mainStage.setFullScreen(true);
             }
 
-            // Set up the controller
+            // Retrieve the controller associated with the FXML file loaded for the settings screen
             SettingsController settingsController = fxmlLoader.getController();
+            // Pass the previous scene and the main stage to the controller for further use
             settingsController.setPreviousScene(previousScene);
             settingsController.setStage(mainStage);
 
+            // Return the newly created scene to wherever this method was called from
             return scene;
         } catch (IOException e) {
+            // If there's an IOException (e.g., file not found), print the stack trace for debugging
             e.printStackTrace();
+            // Return null indicating that the scene could not be created due to an error
             return null;
         }
     }

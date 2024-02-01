@@ -1,6 +1,7 @@
 package com.base.game.retrorampage.MainMenu;
 
 // Import necessary JavaFX classes.
+
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -13,6 +14,7 @@ public class AboutController {
 
     /**
      * Sets the previous scene that was displayed before the current scene.
+     *
      * @param previousScene The Scene object representing the previous scene.
      */
     public void setPreviousScene(Scene previousScene) {
@@ -21,6 +23,7 @@ public class AboutController {
 
     /**
      * Sets the main application window (stage) for this controller.
+     *
      * @param stage The Stage object representing the main application window.
      */
     public void setStage(Stage stage) {
@@ -29,6 +32,7 @@ public class AboutController {
 
     /**
      * Updates the title of the main application window (stage).
+     *
      * @param newTitle The new title to set for the window.
      */
     private void updateTitle(String newTitle) {

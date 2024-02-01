@@ -42,8 +42,8 @@ public class Config {
     public Config(String configFilePath) {
         this.configFilePath = configFilePath;
         initializeDefaultKeybinds();
-        loadSettings();
         loadKeybinds();
+        loadSettings();
     }
 
     // Initializes the keybinds map with default keybindings from the defaultKeybinds map.
@@ -54,6 +54,19 @@ public class Config {
     // Loads application settings from the configuration file. Each setting is expected to be in a "key: value" format.
     private void loadSettings() {
         // Implementation for loading settings from the configuration file.
+        try (BufferedReader reader = new BufferedReader(new FileReader(configFilePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Splits each line by ":", expecting a key-value pair.
+                String[] parts = line.split(":", 2);
+                if (parts.length == 2) {
+                    // Stores each setting in the settings map.
+                    settings.put(parts[0].trim(), parts[1].trim());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // Loads user-defined keybindings from the configuration file, similar to how settings are loaded.

@@ -1,12 +1,12 @@
 package com.base.game.retrorampage.MainMenu;
 
 // Import necessary JavaFX classes.
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-// Import IOException for handling exceptions during FXML loading.
 import java.io.IOException;
 
 // Defines the 'About' class.
@@ -14,8 +14,9 @@ public class About {
 
     /**
      * Creates and returns a new scene for the "About" screen.
+     *
      * @param previousScene The scene that was displayed before switching to the "About" scene.
-     * @param mainStage The primary window (stage) in which the scene is displayed.
+     * @param mainStage     The primary window (stage) in which the scene is displayed.
      * @return A new Scene object for the "About" screen, or null if an error occurs.
      */
     public Scene createAboutScene(Scene previousScene, Stage mainStage) {
