@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
 <VBox id="mainMenu" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-      minWidth="-Infinity" prefHeight="545.0" prefWidth="600.0" spacing="10" xmlns="http://javafx.com/javafx/17.0.2-ea"
+      minWidth="-Infinity" prefHeight="605.0" prefWidth="600.0" spacing="10" xmlns="http://javafx.com/javafx/17.0.2-ea"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.base.game.retrorampage.MainMenu.KeybindController">
 
     <stylesheets>
@@ -12,13 +12,14 @@
     </stylesheets>
 
     <Label fx:id="mainMenuLabel" prefHeight="66.0" prefWidth="192.0" styleClass="main-title" text="Keybinds"/>
-    <GridPane alignment="CENTER" prefHeight="369.0" prefWidth="556.0">
+    <GridPane alignment="CENTER" prefHeight="387.0" prefWidth="600.0">
         <columnConstraints>
             <ColumnConstraints halignment="CENTER"/>
             <ColumnConstraints halignment="CENTER"/>
             <ColumnConstraints halignment="CENTER"/>
         </columnConstraints>
         <rowConstraints>
+            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="60.0"/>
             <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="60.0"/>
             <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="60.0"/>
             <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="60.0"/>
@@ -41,42 +42,65 @@
                    GridPane.rowIndex="5"/>
             <Label fx:id="mainMenuLabel411" styleClass="grid-title" text="Aim" textAlignment="CENTER"
                    GridPane.rowIndex="6"/>
-            <Label fx:id="mainMenuLabel412" styleClass="grid-title" text="Inventory" textAlignment="CENTER"
+            <Label fx:id="mainMenuLabel412" styleClass="grid-title" text="Reload" textAlignment="CENTER"
                    GridPane.rowIndex="7"/>
+            <Label fx:id="mainMenuLabel4121" layoutX="61.0" layoutY="295.0" styleClass="grid-title" text="Inventory"
+                   textAlignment="CENTER" GridPane.rowIndex="8"/>
             <Label fx:id="mainMenuLabel11" prefHeight="35.0" prefWidth="109.0" styleClass="grid-title" text="Action:"
                    textAlignment="CENTER"/>
             <Label fx:id="mainMenuLabel12" prefHeight="35.0" prefWidth="154.0" styleClass="grid-title" text="Keybind 1"
                    GridPane.columnIndex="1"/>
             <Label fx:id="mainMenuLabel121" prefHeight="35.0" prefWidth="154.0" styleClass="grid-title" text="Keybind 2"
                    GridPane.columnIndex="2"/>
-            <Button fx:id="moveUp1Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
-                    text="MoveUp1" onAction="#onActionButtonClick" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-            <Button fx:id="moveUp2Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
-                    text="MoveUp2" onAction="#onActionButtonClick" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-            <Button fx:id="moveDown1Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
-                    text="MoveDown1" onAction="#onActionButtonClick" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-            <Button fx:id="moveDown2Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
-                    text="MoveDown2" onAction="#onActionButtonClick" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-            <Button fx:id="moveLeft1Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
-                    text="MoveLeft1" onAction="#onActionButtonClick" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-            <Button fx:id="moveRight1Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
-                    text="MoveRight1" onAction="#onActionButtonClick" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-            <Button fx:id="moveLeft2Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
-                    text="MoveLeft2" onAction="#onActionButtonClick" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
-            <Button fx:id="moveRight2Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
-                    text="MoveRight2" onAction="#onActionButtonClick" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
-            <Button fx:id="shoot1Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
-                    text="Shoot1" onAction="#onActionButtonClick" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-            <Button fx:id="shoot2Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
-                    text="Shoot2" onAction="#onActionButtonClick" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
-            <Button fx:id="aim1Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
-                    text="Aim1" onAction="#onActionButtonClick" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
-            <Button fx:id="aim2Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
-                    text="Aim2" onAction="#onActionButtonClick" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
-            <Button fx:id="inventory1Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
-                    text="Inventory1" onAction="#onActionButtonClick" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
-            <Button fx:id="inventory2Button" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" styleClass="menu-button"
-                    text="Inventory2" onAction="#onActionButtonClick" GridPane.columnIndex="2" GridPane.rowIndex="7"/>
+            <Button fx:id="moveUp1Button" mnemonicParsing="false" onAction="#onActionButtonClick" prefHeight="20.0"
+                    prefWidth="159.0" styleClass="keybind-button" text="MoveUp1" GridPane.columnIndex="1"
+                    GridPane.rowIndex="1"/>
+            <Button fx:id="moveUp2Button" mnemonicParsing="false" onAction="#onActionButtonClick" prefHeight="20.0"
+                    prefWidth="159.0" styleClass="keybind-button" text="MoveUp2" GridPane.columnIndex="2"
+                    GridPane.rowIndex="1"/>
+            <Button fx:id="moveDown1Button" mnemonicParsing="false" onAction="#onActionButtonClick" prefHeight="20.0"
+                    prefWidth="159.0" styleClass="keybind-button" text="MoveDown1" GridPane.columnIndex="1"
+                    GridPane.rowIndex="2"/>
+            <Button fx:id="moveDown2Button" mnemonicParsing="false" onAction="#onActionButtonClick" prefHeight="20.0"
+                    prefWidth="159.0" styleClass="keybind-button" text="MoveDown2" GridPane.columnIndex="2"
+                    GridPane.rowIndex="2"/>
+            <Button fx:id="moveLeft1Button" mnemonicParsing="false" onAction="#onActionButtonClick" prefHeight="20.0"
+                    prefWidth="159.0" styleClass="keybind-button" text="MoveLeft1" GridPane.columnIndex="1"
+                    GridPane.rowIndex="3"/>
+            <Button fx:id="moveRight1Button" mnemonicParsing="false" onAction="#onActionButtonClick" prefHeight="20.0"
+                    prefWidth="159.0" styleClass="keybind-button" text="MoveRight1" GridPane.columnIndex="1"
+                    GridPane.rowIndex="4"/>
+            <Button fx:id="moveLeft2Button" mnemonicParsing="false" onAction="#onActionButtonClick" prefHeight="20.0"
+                    prefWidth="159.0" styleClass="keybind-button" text="MoveLeft2" GridPane.columnIndex="2"
+                    GridPane.rowIndex="3"/>
+            <Button fx:id="moveRight2Button" mnemonicParsing="false" onAction="#onActionButtonClick" prefHeight="20.0"
+                    prefWidth="159.0" styleClass="keybind-button" text="MoveRight2" GridPane.columnIndex="2"
+                    GridPane.rowIndex="4"/>
+            <Button fx:id="shoot1Button" mnemonicParsing="false" onAction="#onActionButtonClick" prefHeight="20.0"
+                    prefWidth="159.0" styleClass="keybind-button" text="Shoot1" GridPane.columnIndex="1"
+                    GridPane.rowIndex="5"/>
+            <Button fx:id="shoot2Button" mnemonicParsing="false" onAction="#onActionButtonClick" prefHeight="20.0"
+                    prefWidth="159.0" styleClass="keybind-button" text="Shoot2" GridPane.columnIndex="2"
+                    GridPane.rowIndex="5"/>
+            <Button fx:id="aim1Button" mnemonicParsing="false" onAction="#onActionButtonClick" prefHeight="20.0"
+                    prefWidth="159.0" styleClass="keybind-button" text="Aim1" GridPane.columnIndex="1"
+                    GridPane.rowIndex="6"/>
+            <Button fx:id="aim2Button" mnemonicParsing="false" onAction="#onActionButtonClick" prefHeight="20.0"
+                    prefWidth="159.0" styleClass="keybind-button" text="Aim2" GridPane.columnIndex="2"
+                    GridPane.rowIndex="6"/>
+            <Button fx:id="reload1Button" mnemonicParsing="false" onAction="#onActionButtonClick" prefHeight="20.0"
+                    prefWidth="159.0" styleClass="keybind-button" text="Reload1" GridPane.columnIndex="1"
+                    GridPane.rowIndex="7"/>
+            <Button fx:id="reload2Button" mnemonicParsing="false" onAction="#onActionButtonClick" prefHeight="20.0"
+                    prefWidth="159.0" styleClass="keybind-button" text="Reload2" GridPane.columnIndex="2"
+                    GridPane.rowIndex="7"/>
+            <Button fx:id="inventory1Button" layoutX="196.0" layoutY="293.0" mnemonicParsing="false"
+                    onAction="#onActionButtonClick" prefHeight="20.0" prefWidth="159.0" styleClass="keybind-button"
+                    text="Inventory1" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+            <Button fx:id="inventory2Button" layoutX="196.0" layoutY="334.0" mnemonicParsing="false"
+                    onAction="#onActionButtonClick" prefHeight="20.0" prefWidth="159.0" styleClass="keybind-button"
+                    text="Inventory2" GridPane.columnIndex="2" GridPane.rowIndex="8"/>
+
         </children>
     </GridPane>
 

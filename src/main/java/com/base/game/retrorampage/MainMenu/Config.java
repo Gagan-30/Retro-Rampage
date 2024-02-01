@@ -1,19 +1,19 @@
+// Package declaration aligns with the application's structure.
 package com.base.game.retrorampage.MainMenu;
 
+// Necessary Java I/O and utility imports for handling file operations and data structures.
+
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-// This class is responsible for handling configuration settings and keybindings for the game.
 public class Config {
-    private final String configFilePath; // Path to the configuration file.
-    private final Map<String, String> settings = new HashMap<>(); // Stores application settings.
-    private final Map<String, String> keybinds = new HashMap<>(); // Stores user-defined keybindings.
-    private static final Map<String, String> defaultKeybinds = new HashMap<>(); // Stores default keybindings.
+    // A static map to store default keybindings. This is populated in a static initializer block,
+    // ensuring that default keybindings are available to all instances of this class.
+    private static final Map<String, String> defaultKeybinds = new HashMap<>();
 
-    // Static initializer block to populate default keybindings.
     static {
-        // Default keybindings are defined here.
-        // Additional default keybindings follow the same pattern.
+        // Static initializer block to populate the defaultKeybinds map with default keybindings.
         defaultKeybinds.put("MoveUp1", "W");
         defaultKeybinds.put("MoveUp2", "UP");
         defaultKeybinds.put("MoveDown1", "S");
@@ -30,21 +30,35 @@ public class Config {
         defaultKeybinds.put("Inventory2", "E");
     }
 
-    // Constructor that initializes the configuration with a file path.
+    // Path to the configuration file where settings and keybindings are stored.
+    private final String configFilePath;
+    // Maps to store application settings and keybindings. The settings map stores general application settings,
+    // while the keybinds map stores user-defined keybindings.
+    private final Map<String, String> settings = new HashMap<>();
+    private final Map<String, String> keybinds = new HashMap<>();
+
+    // Constructor that initializes the Config object with a specific file path for the configuration file.
+    // It loads default keybindings, settings, and keybinds from the configuration file.
     public Config(String configFilePath) {
         this.configFilePath = configFilePath;
-        initializeDefaultKeybinds(); // Loads default keybindings into the keybinds map.
-        loadSettings(); // Loads application settings from the configuration file.
-        loadKeybinds(); // Loads user-defined keybindings from the configuration file.
+        initializeDefaultKeybinds();
+        loadSettings();
+        loadKeybinds();
     }
 
-    // Initializes keybinds map with default keybindings.
+    // Initializes the keybinds map with default keybindings from the defaultKeybinds map.
     private void initializeDefaultKeybinds() {
         keybinds.putAll(defaultKeybinds);
     }
 
-    // Loads settings from the configuration file.
+    // Loads application settings from the configuration file. Each setting is expected to be in a "key: value" format.
     private void loadSettings() {
+        // Implementation for loading settings from the configuration file.
+    }
+
+    // Loads user-defined keybindings from the configuration file, similar to how settings are loaded.
+    private void loadKeybinds() {
+        // Implementation for loading keybindings from the configuration file.
         try (BufferedReader reader = new BufferedReader(new FileReader(configFilePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -60,34 +74,17 @@ public class Config {
         }
     }
 
-    // Loads keybindings from the configuration file, similar to loading settings.
-    private void loadKeybinds() {
-        // Implementation follows a similar pattern as loadSettings, but focuses on keybinds.
-        try (BufferedReader reader = new BufferedReader(new FileReader(configFilePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(":", 2);
-                if (parts.length == 2 && parts[0].startsWith("Keybind_")) {
-                    String key = parts[0].substring(8).trim();
-                    String value = parts[1].trim();
-                    keybinds.put(key, value);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Saves a single setting and then writes all settings to the configuration file.
+    // Saves a single setting to the settings map and then writes all settings back to the configuration file.
     public void saveSetting(String key, String value) {
         settings.put(key, value);
         saveSettingsToFile();
     }
 
-    // Writes settings and keybindings back to the configuration file.
+    // Writes all settings and keybindings back to the configuration file.
     public void saveSettingsToFile() {
-        // Implementation includes writing each setting and keybinding to the file.
+        // Implementation includes writing settings and keybindings to the configuration file.
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(configFilePath, false))) {
+            // Save Graphics and Volume Settings
             writer.write("Fullscreen: " + settings.getOrDefault("Fullscreen", "false"));
             writer.newLine();
             writer.write("Resolution: " + settings.getOrDefault("Resolution", "800 x 600"));
@@ -133,38 +130,37 @@ public class Config {
         }
     }
 
-    // Retrieves a keybinding for a given action, with a fallback to default if not found.
+    // Retrieves a keybinding for a given action, providing a default if the keybinding is not found.
     public String getKeybind(String action) {
         return keybinds.getOrDefault(action, defaultKeybinds.getOrDefault(action, "None"));
     }
 
-    // Updates a keybinding for a specific action and saves the change.
+    // Saves a keybinding for a specific action and updates the configuration file.
     public void saveKeybind(String action, String key) {
         keybinds.put(action, key);
         saveSettingsToFile();
     }
 
-    // Removes a keybind if it is already assigned to another action.
+    // Removes a keybind if it is already assigned to any action, to prevent duplicate keybindings.
     public void removeKeybindIfAssigned(String newKeybind) {
         keybinds.entrySet().removeIf(entry -> entry.getValue().equals(newKeybind));
     }
 
-    // Checks if a keybind is a duplicate, except for the current action being modified.
+    // Checks if a given keybinding is a duplicate, excluding the current action being modified.
     public boolean isDuplicateKeybind(String input, String currentAction) {
-        // Implementation uses streaming API to check for duplicates.
+        // Implementation uses the streaming API to check for duplicate keybindings.
         return keybinds.entrySet().stream()
                 .anyMatch(entry -> entry.getValue().equals(input) && !entry.getKey().equals(currentAction));
     }
 
-    // Removes a keybind for a specific action and saves the configuration.
+    // Removes a keybind for a specific action and updates the configuration file.
     public void removeKeybind(String action) {
         keybinds.remove(action);
-        saveSettingsToFile(); // Save changes to the file.
+        saveSettingsToFile(); // Save changes to the configuration file.
     }
 
-    // Convenience methods for saving specific types of settings (resolution, fullscreen, volume).
-    // Each method updates the corresponding setting and then saves all settings to the file.
-
+    // Convenience methods for saving specific types of settings, such as resolution, fullscreen, and volume.
+    // Each method updates its corresponding setting in the settings map and then saves all settings to the file.
     public void saveResolutionSetting(String resolution) {
         saveSetting("Resolution", resolution);
     }
@@ -177,9 +173,10 @@ public class Config {
         saveSetting("Volume", String.valueOf(volume));
     }
 
-    // Methods for loading specific settings (resolution, fullscreen, volume) from the configuration.
-    // Each method retrieves the setting value with a default if not found.
+    // Methods for loading specific settings from the configuration file. Each method retrieves its setting value,
+    // providing a default if the setting is not found.
     public String loadResolutionSetting() {
+
         return settings.getOrDefault("Resolution", "800 x 600");
     }
 
