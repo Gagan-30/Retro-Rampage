@@ -99,7 +99,7 @@ public class KeybindController {
     private void delayReadyToCaptureClick() {
         new Thread(() -> {
             try {
-                Thread.sleep(200); // Waits for 200 milliseconds.
+                Thread.sleep(100); // Waits for 100 milliseconds.
                 javafx.application.Platform.runLater(() -> readyToCaptureClick = true);
             } catch (InterruptedException e) {
                 e.printStackTrace();
