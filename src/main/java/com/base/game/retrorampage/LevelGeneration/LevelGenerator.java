@@ -2,6 +2,7 @@ package com.base.game.retrorampage.LevelGeneration;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -61,8 +62,35 @@ public class LevelGenerator {
 
 
     private void separateCells() {
-        // Implement logic to separate overlapping cells
+        final int maxIterations = 1000;
+        int iterations = 0;
+        boolean overlapExists;
+
+        do {
+            overlapExists = false;
+            for (int i = 0; i < cells.size(); i++) {
+                Cell cellA = cells.get(i);
+                for (int j = i + 1; j < cells.size(); j++) {
+                    Cell cellB = cells.get(j);
+                    if (cellA.overlaps(cellB)) {
+                        overlapExists = true;
+                        double dx = cellA.getX() - cellB.getX();
+                        double dy = cellA.getY() - cellB.getY();
+                        double distance = Math.sqrt(dx * dx + dy * dy);
+                        double overlap = 0.5 * (distance - cellA.getWidth() / 2 - cellB.getWidth() / 2);
+
+                        // Move cells away from each other
+                        cellA.setX(cellA.getX() + overlap * dx / distance);
+                        cellA.setY(cellA.getY() + overlap * dy / distance);
+                        cellB.setX(cellB.getX() - overlap * dx / distance);
+                        cellB.setY(cellB.getY() - overlap * dy / distance);
+                    }
+                }
+            }
+            iterations++;
+        } while (overlapExists && iterations < maxIterations);
     }
+
 
     private void identifyRooms() {
         // Implement logic to identify which cells are large enough to be rooms
