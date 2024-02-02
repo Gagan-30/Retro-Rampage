@@ -17,7 +17,6 @@ public class LevelGenerator {
     public Scene generateLevel() {
         Pane root = new Pane();
         generateCells(root);
-        generateCells(root);
         separateCells();
         identifyRooms();
         buildGraph();
@@ -26,16 +25,40 @@ public class LevelGenerator {
     }
 
     private void generateCells(Pane root) {
+        final int sceneWidth = 800;
+        final int sceneHeight = 600;
+        final int padding = 10; // Padding to reduce likelihood of immediate overlap
+
         for (int i = 0; i < numberOfCells; i++) {
             double width = 20 + random.nextDouble() * 80; // Random width between 20 and 100
             double height = 20 + random.nextDouble() * 80; // Random height between 20 and 100
-            double x = random.nextDouble() * (800 - width); // Ensure cell fits within the scene
-            double y = random.nextDouble() * (600 - height); // Ensure cell fits within the scene
+
+            // Attempt to place cells with some padding to reduce overlap
+            double x = padding + random.nextDouble() * (sceneWidth - width - 2 * padding);
+            double y = padding + random.nextDouble() * (sceneHeight - height - 2 * padding);
+
+            // Simple check to avoid placing a new cell on top of an existing one
+            boolean overlap;
+            do {
+                overlap = false;
+                x = padding + random.nextDouble() * (sceneWidth - width - 2 * padding);
+                y = padding + random.nextDouble() * (sceneHeight - height - 2 * padding);
+
+                for (Cell cell : cells) {
+                    if (x < cell.getX() + cell.getWidth() + padding && x + width + padding > cell.getX() &&
+                            y < cell.getY() + cell.getHeight() + padding && y + height + padding > cell.getY()) {
+                        overlap = true;
+                        break;
+                    }
+                }
+            } while (overlap);
+
             Cell cell = new Cell(x, y, width, height);
             cells.add(cell);
             cell.draw(root);
         }
     }
+
 
     private void separateCells() {
         // Implement logic to separate overlapping cells
