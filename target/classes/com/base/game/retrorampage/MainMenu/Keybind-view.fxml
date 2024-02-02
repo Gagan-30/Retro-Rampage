@@ -7,9 +7,9 @@
       minWidth="-Infinity" prefHeight="605.0" prefWidth="600.0" spacing="10" xmlns="http://javafx.com/javafx/17.0.2-ea"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.base.game.retrorampage.MainMenu.KeybindController">
 
-    <!--<stylesheets>
+    <stylesheets>
         <URL value="@styles.css"/>
-    </stylesheets>-->
+    </stylesheets>
 
     <Label fx:id="mainMenuLabel" prefHeight="66.0" prefWidth="192.0" styleClass="main-title" text="Keybinds"/>
     <GridPane alignment="CENTER" prefHeight="387.0" prefWidth="600.0">

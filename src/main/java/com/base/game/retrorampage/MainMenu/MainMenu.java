@@ -1,20 +1,24 @@
 package com.base.game.retrorampage.MainMenu;
 
-// Necessary imports for JavaFX functionality and exception handling
-
+import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.util.Objects;
 
-public class MainMenu {
+public class MainMenu extends Application {
 
-    // Method to create and return the main menu scene for the provided stage, configured according to the given config object
-    public Scene createMainMenuScene(Stage stage, Config config) throws IOException {
+    // Entry point for the JavaFX application. This method is called after the application starts.
+    @Override
+    public void start(Stage stage) throws IOException {
+        // Create a Config object to read settings from a file named "config.txt"
+        Config config = new Config("config.txt");
+        // Apply settings from the config file to the primary stage of the application
+        applySettingsToStage(stage, config);
+
         // Load the main menu's layout from an FXML file
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MainMenu-view.fxml"));
         Parent root = fxmlLoader.load();
@@ -22,9 +26,6 @@ public class MainMenu {
         // Obtain the controller for the main menu and set the main stage on it
         MainMenuController mainMenuController = fxmlLoader.getController();
         mainMenuController.setMainStage(stage);
-
-        // Apply settings from the config object to the stage
-        applySettingsFromConfig(stage, config);
 
         // Create a new scene with the loaded layout
         Scene scene = new Scene(root);
@@ -35,12 +36,14 @@ public class MainMenu {
 
         // Add a stylesheet to the scene for styling the UI
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
-        // Return the constructed scene
-        return scene;
+
+        // Display the main menu scene on the stage
+        stage.setScene(scene);
+        stage.show();
     }
 
     // Helper method to apply configuration settings to the stage, such as resolution and fullscreen mode
-    private void applySettingsFromConfig(Stage stage, Config config) {
+    private void applySettingsToStage(Stage stage, Config config) {
         // Parse the resolution setting from the config
         String resolution = config.loadResolutionSetting();
         String[] parts = resolution.split(" x ");
@@ -55,5 +58,10 @@ public class MainMenu {
         stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
         // Apply the fullscreen setting from the config
         stage.setFullScreen(config.loadFullscreenSetting());
+    }
+
+    // The main method that launches the JavaFX application
+    public static void main(String[] args) {
+        launch(args);
     }
 }

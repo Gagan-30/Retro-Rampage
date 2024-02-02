@@ -54,10 +54,10 @@ public class ExitController {
     @FXML
     public void onReturnButtonClick() {
         if (previousScene != null && stage != null) {
+            boolean wasFullScreen = stage.isFullScreen(); // Check if fullscreen is active before switching scenes
             stage.setScene(previousScene);
-            boolean wasFullScreen = stage.isFullScreen();
             if (wasFullScreen) {
-                stage.setFullScreen(true);
+                stage.setFullScreen(true); // Re-enable fullscreen if it was previously active
             }
             updateTitle("Main Menu");
         }
