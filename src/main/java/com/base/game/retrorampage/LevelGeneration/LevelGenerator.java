@@ -22,33 +22,18 @@ public class LevelGenerator {
     private double positionStandardDeviation = 100.0; // Adjust based on scene size
     private double meanSize = 50.0; // Average size for width and height
     private double sizeStandardDeviation = 15.0; // Standard deviation to control the spread of sizes
-    private boolean[][] grid;
-
 
     public LevelGenerator(int numberOfCells) {
         this.numberOfCells = numberOfCells;
     }
 
     public Scene generateLevel() {
-        initializeGrid();
         generateCells();
-        markOccupiedCells();
         separateCells();
         identifyRooms();
-        fillGapsWithCells();
         buildGraph();
         constructCorridors();
         return new Scene(root, sceneWidth, sceneHeight);
-    }
-
-    private void initializeGrid() {
-        grid = new boolean[sceneWidth][sceneHeight];
-        // Initially mark all grid cells as false, indicating they are empty
-        for (int x = 0; x < sceneWidth; x++) {
-            for (int y = 0; y < sceneHeight; y++) {
-                grid[x][y] = false;
-            }
-        }
     }
 
     private void generateCells() {
@@ -67,22 +52,6 @@ public class LevelGenerator {
             }
         }
     }
-
-    private void markOccupiedCells() {
-        for (Cell cell : cells) {
-            int startX = (int) Math.round(cell.getX());
-            int endX = (int) Math.round(cell.getX() + cell.getWidth());
-            int startY = (int) Math.round(cell.getY());
-            int endY = (int) Math.round(cell.getY() + cell.getHeight());
-
-            for (int x = startX; x < endX && x < sceneWidth; x++) {
-                for (int y = startY; y < endY && y < sceneHeight; y++) {
-                    grid[x][y] = true; // Mark cell as occupied
-                }
-            }
-        }
-    }
-
 
     private double getRandomDimension() {
         // Generate a normally distributed value centered around meanSize
@@ -134,18 +103,6 @@ public class LevelGenerator {
                 cell.setRoom(true);
             }
         });
-    }
-
-    private void fillGapsWithCells() {
-        for (int x = 0; x < sceneWidth; x++) {
-            for (int y = 0; y < sceneHeight; y++) {
-                if (!grid[x][y]) { // If the cell is not occupied
-                    Cell smallCell = new Cell(x, y, 1, 1); // Create a 1x1 cell
-                    smallCell.draw(root); // Optionally draw this cell or handle it according to your needs
-                    // No need to add to cells list if you're just visualizing them
-                }
-            }
-        }
     }
 
     private void constructCorridors() {
