@@ -7,100 +7,109 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class LevelGenerator {
-    private int numberOfCells;
-    private ArrayList<Cell> cells = new ArrayList<>();
-    private Random random = new Random();
+    private final int numberOfCells;
+    private final ArrayList<Cell> cells = new ArrayList<>();
+    private final Random random = new Random();
+    private final Pane root = new Pane();
+    private final int sceneWidth = 800;
+    private final int sceneHeight = 600;
+    private final int padding = 10; // Padding to reduce likelihood of immediate overlap
+    private final int maxIterations = 1000; // Example value
+    private final double roomWidthThreshold = 50; // Example threshold value
+    private final double roomHeightThreshold = 50; // Example threshold value
+    private double sceneCenterX = sceneWidth / 2.0;
+    private double sceneCenterY = sceneHeight / 2.0;
+    private double positionStandardDeviation = 100.0; // Adjust based on scene size
+
+
+    private double meanSize = 50.0; // Average size for width and height
+    private double sizeStandardDeviation = 15.0; // Standard deviation to control the spread of sizes
 
     public LevelGenerator(int numberOfCells) {
         this.numberOfCells = numberOfCells;
     }
 
     public Scene generateLevel() {
-        Pane root = new Pane();
-        generateCells(root);
+        generateCells();
         separateCells();
         identifyRooms();
         buildGraph();
         constructCorridors();
-        return new Scene(root, 800, 600);
+        return new Scene(root, sceneWidth, sceneHeight);
     }
 
-    private void generateCells(Pane root) {
-        final int sceneWidth = 800;
-        final int sceneHeight = 600;
-        final int padding = 10; // Padding to reduce likelihood of immediate overlap
-
+    private void generateCells() {
         for (int i = 0; i < numberOfCells; i++) {
-            double width = 20 + random.nextDouble() * 80; // Random width between 20 and 100
-            double height = 20 + random.nextDouble() * 80; // Random height between 20 and 100
-
-            // Attempt to place cells with some padding to reduce overlap
-            double x = padding + random.nextDouble() * (sceneWidth - width - 2 * padding);
-            double y = padding + random.nextDouble() * (sceneHeight - height - 2 * padding);
-
-            // Simple check to avoid placing a new cell on top of an existing one
-            boolean overlap;
-            do {
-                overlap = false;
-                x = padding + random.nextDouble() * (sceneWidth - width - 2 * padding);
-                y = padding + random.nextDouble() * (sceneHeight - height - 2 * padding);
-
-                for (Cell cell : cells) {
-                    if (x < cell.getX() + cell.getWidth() + padding && x + width + padding > cell.getX() &&
-                            y < cell.getY() + cell.getHeight() + padding && y + height + padding > cell.getY()) {
-                        overlap = true;
-                        break;
-                    }
-                }
-            } while (overlap);
+            double width = getRandomDimension();
+            double height = getRandomDimension();
+            double x = getRandomPosition(positionStandardDeviation, sceneWidth - width); // Adjusted for cell width
+            double y = getRandomPosition(positionStandardDeviation, sceneHeight - height); // Adjusted for cell height
 
             Cell cell = new Cell(x, y, width, height);
-            cells.add(cell);
-            cell.draw(root);
+            if (!isOverlapping(cell)) {
+                cells.add(cell);
+                cell.draw(root);
+            } else {
+                i--; // Retry this cell generation if overlap detected
+            }
         }
     }
 
+    private double getRandomDimension() {
+        // Generate a normally distributed value centered around meanSize
+        double dimension = meanSize + (random.nextGaussian() * sizeStandardDeviation);
+        // Ensure the dimension falls within your desired range
+        return Math.max(20, Math.min(100, dimension));
+    }
+
+    private double getRandomPosition(double standardDeviation, double sceneSize) {
+        // Generate a normally distributed position around the center of the scene
+        double position = (sceneSize / 2.0) + (random.nextGaussian() * standardDeviation);
+        // Clamp the position to ensure it's within the scene bounds
+        return Math.max(padding, Math.min(sceneSize - padding, position));
+    }
+
+
+    private boolean isOverlapping(Cell newCell) {
+        for (Cell cell : cells) {
+            if (newCell.overlaps(cell)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private void separateCells() {
-        final int maxIterations = 1000;
         int iterations = 0;
         boolean overlapExists;
-
         do {
-            overlapExists = false;
-            for (int i = 0; i < cells.size(); i++) {
-                Cell cellA = cells.get(i);
-                for (int j = i + 1; j < cells.size(); j++) {
-                    Cell cellB = cells.get(j);
-                    if (cellA.overlaps(cellB)) {
-                        overlapExists = true;
-                        double dx = cellA.getX() - cellB.getX();
-                        double dy = cellA.getY() - cellB.getY();
-                        double distance = Math.sqrt(dx * dx + dy * dy);
-                        double overlap = 0.5 * (distance - cellA.getWidth() / 2 - cellB.getWidth() / 2);
-
-                        // Move cells away from each other
-                        cellA.setX(cellA.getX() + overlap * dx / distance);
-                        cellA.setY(cellA.getY() + overlap * dy / distance);
-                        cellB.setX(cellB.getX() - overlap * dx / distance);
-                        cellB.setY(cellB.getY() - overlap * dy / distance);
-                    }
-                }
-            }
+            overlapExists = adjustOverlappingCells();
             iterations++;
         } while (overlapExists && iterations < maxIterations);
     }
 
-
-    private void identifyRooms() {
-        // Implement logic to identify which cells are large enough to be rooms
+    private boolean adjustOverlappingCells() {
+        for (int i = 0; i < cells.size(); i++) {
+            for (int j = i + 1; j < cells.size(); j++) {
+                if (cells.get(i).adjustIfOverlaps(cells.get(j))) {
+                    return true; // Overlap found and adjustments made
+                }
+            }
+        }
+        return false; // No overlaps found
     }
 
-    private void buildGraph() {
-        // Implement Delaunay Triangulation and Minimal Spanning Tree construction
+    private void identifyRooms() {
+        cells.forEach(cell -> {
+            if (cell.getWidth() >= roomWidthThreshold && cell.getHeight() >= roomHeightThreshold) {
+                cell.setRoom(true);
+            }
+        });
     }
 
     private void constructCorridors() {
-        // Implement corridor construction between rooms
+    }
+
+    private void buildGraph() {
     }
 }
