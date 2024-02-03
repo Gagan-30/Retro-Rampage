@@ -20,8 +20,6 @@ public class LevelGenerator {
     private double sceneCenterX = sceneWidth / 2.0;
     private double sceneCenterY = sceneHeight / 2.0;
     private double positionStandardDeviation = 100.0; // Adjust based on scene size
-
-
     private double meanSize = 50.0; // Average size for width and height
     private double sizeStandardDeviation = 15.0; // Standard deviation to control the spread of sizes
 
