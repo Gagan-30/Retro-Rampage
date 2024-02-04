@@ -17,8 +17,8 @@ public class LevelGenerator {
     private final ArrayList<Cell> cells = new ArrayList<>();
     private final Random random = new Random();
     private final Pane root = new Pane();
-    private final int sceneWidth = 1920;
-    private final int sceneHeight = 1080;
+    private final int sceneWidth = 800;
+    private final int sceneHeight = 600;
     private final int padding = 10; // Padding to reduce likelihood of immediate overlap
     private final int maxIterations = 1000; // Example value
     private final double roomWidthThreshold = 50; // Example threshold value
@@ -27,7 +27,7 @@ public class LevelGenerator {
     private double sceneCenterY = sceneHeight / 2.0;
     private double positionStandardDeviation = 100.0; // Adjust based on scene size
     private double meanSize = 50.0; // Average size for width and height
-    private double sizeStandardDeviation = 35.0; // Standard deviation to control the spread of sizes
+    private double sizeStandardDeviation = 15.0; // Standard deviation to control the spread of sizes
     private Map<Coordinate, Cell> pointToCellMap = new HashMap<>();
 
     public LevelGenerator(int numberOfCells) {
@@ -118,11 +118,13 @@ public class LevelGenerator {
     private List<Coordinate> prepareRoomCenters() {
         List<Coordinate> roomCenters = new ArrayList<>();
         for (Cell cell : cells) {
-            double centerX = cell.getX() + cell.getWidth() / 2.0;
-            double centerY = cell.getY() + cell.getHeight() / 2.0;
-            Coordinate center = new Coordinate(centerX, centerY);
-            roomCenters.add(center);
-            pointToCellMap.put(center, cell); // Map the center Coordinate back to its cell
+            if (cell.isRoom()) {
+                double centerX = cell.getX() + cell.getWidth() / 2.0;
+                double centerY = cell.getY() + cell.getHeight() / 2.0;
+                Coordinate center = new Coordinate(centerX, centerY);
+                roomCenters.add(center);
+                pointToCellMap.put(center, cell); // Map the center Coordinate back to its cell
+            }
         }
         return roomCenters;
     }
