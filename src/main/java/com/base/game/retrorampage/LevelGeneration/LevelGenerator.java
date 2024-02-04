@@ -2,17 +2,23 @@ package com.base.game.retrorampage.LevelGeneration;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Line;
 
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
+
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.triangulate.DelaunayTriangulationBuilder;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 
 public class LevelGenerator {
     private final int numberOfCells;
     private final ArrayList<Cell> cells = new ArrayList<>();
     private final Random random = new Random();
     private final Pane root = new Pane();
-    private final int sceneWidth = 800;
-    private final int sceneHeight = 600;
+    private final int sceneWidth = 1920;
+    private final int sceneHeight = 1080;
     private final int padding = 10; // Padding to reduce likelihood of immediate overlap
     private final int maxIterations = 1000; // Example value
     private final double roomWidthThreshold = 50; // Example threshold value
@@ -21,7 +27,8 @@ public class LevelGenerator {
     private double sceneCenterY = sceneHeight / 2.0;
     private double positionStandardDeviation = 100.0; // Adjust based on scene size
     private double meanSize = 50.0; // Average size for width and height
-    private double sizeStandardDeviation = 15.0; // Standard deviation to control the spread of sizes
+    private double sizeStandardDeviation = 35.0; // Standard deviation to control the spread of sizes
+    private Map<Coordinate, Cell> pointToCellMap = new HashMap<>();
 
     public LevelGenerator(int numberOfCells) {
         this.numberOfCells = numberOfCells;
@@ -31,10 +38,13 @@ public class LevelGenerator {
         generateCells();
         separateCells();
         identifyRooms();
+        List<Coordinate> roomCenters = prepareRoomCenters();
+        List<Coordinate[]> triangleGeometries = triangulateRooms(roomCenters); // Use JTS Geometry objects
+        constructCorridors(triangleGeometries); // Pass JTS Geometry objects
         buildGraph();
-        constructCorridors();
         return new Scene(root, sceneWidth, sceneHeight);
     }
+
 
     private void generateCells() {
         for (int i = 0; i < numberOfCells; i++) {
@@ -105,7 +115,59 @@ public class LevelGenerator {
         });
     }
 
-    private void constructCorridors() {
+    private List<Coordinate> prepareRoomCenters() {
+        List<Coordinate> roomCenters = new ArrayList<>();
+        for (Cell cell : cells) {
+            double centerX = cell.getX() + cell.getWidth() / 2.0;
+            double centerY = cell.getY() + cell.getHeight() / 2.0;
+            Coordinate center = new Coordinate(centerX, centerY);
+            roomCenters.add(center);
+            pointToCellMap.put(center, cell); // Map the center Coordinate back to its cell
+        }
+        return roomCenters;
+    }
+
+    private List<Coordinate[]> triangulateRooms(List<Coordinate> roomCenters) {
+        GeometryFactory geometryFactory = new GeometryFactory();
+        DelaunayTriangulationBuilder builder = new DelaunayTriangulationBuilder();
+
+        builder.setSites(geometryFactory.createMultiPointFromCoords(roomCenters.toArray(new Coordinate[0])));
+        org.locationtech.jts.geom.Geometry triangles = builder.getTriangles(geometryFactory);
+
+        List<Coordinate[]> triangleCoordinates = new ArrayList<>();
+        for (int i = 0; i < triangles.getNumGeometries(); i++) {
+            org.locationtech.jts.geom.Polygon triangle = (org.locationtech.jts.geom.Polygon) triangles.getGeometryN(i);
+            triangleCoordinates.add(triangle.getCoordinates());
+        }
+
+        return triangleCoordinates;
+    }
+
+    private void constructCorridors(List<Coordinate[]> triangleCoordinates) {
+        Set<Edge> edges = new HashSet<>();
+
+        for (Coordinate[] triangle : triangleCoordinates) {
+            for (int i = 0; i < triangle.length - 1; i++) {
+                Coordinate start = triangle[i];
+                Coordinate end = triangle[(i + 1) % triangle.length];
+                edges.add(new Edge(start, end));
+            }
+        }
+
+        for (Edge edge : edges) {
+            createCorridor(edge.start, edge.end);
+        }
+    }
+
+    private void createCorridor(Coordinate start, Coordinate end) {
+        Cell startCell = pointToCellMap.get(start);
+        Cell endCell = pointToCellMap.get(end);
+
+        if (startCell != null && endCell != null) {
+            Line corridor = new Line(startCell.getCenterX(), startCell.getCenterY(), endCell.getCenterX(), endCell.getCenterY());
+            corridor.setStrokeWidth(2);
+            root.getChildren().add(corridor);
+        }
     }
 
     private void buildGraph() {

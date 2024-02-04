@@ -50,6 +50,10 @@ public class Cell {
     public double getX() {
         return x;
     }
+    // Method to get the center X coordinate of the cell
+    public double getCenterX() {
+        return this.x + this.width / 2.0;
+    }
 
     public void setX(double x) {
         this.x = x;
@@ -57,6 +61,11 @@ public class Cell {
 
     public double getY() {
         return y;
+    }
+
+    // Method to get the center Y coordinate of the cell
+    public double getCenterY() {
+        return this.y + this.height / 2.0;
     }
 
     public void setY(double y) {

@@ -2,7 +2,7 @@ module com.base.game.retrorampage {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.graphics;
-    requires poly2tri.core; // Ensure this is included if you're using JavaFX Graphics components
+    requires org.locationtech.jts; // Ensure this is included if you're using JavaFX Graphics components
 
     // Export the MainMenu package if it contains classes that need to be accessible to other modules or JavaFX.
     exports com.base.game.retrorampage.MainMenu;
