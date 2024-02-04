@@ -2,10 +2,12 @@ package com.base.game.retrorampage.LevelGeneration;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 import java.util.*;
 
+import javafx.scene.shape.Rectangle;
 import org.locationtech.jts.triangulate.DelaunayTriangulationBuilder;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -38,6 +40,7 @@ public class LevelGenerator {
         List<Edge> mstEdges = generateAndVisualizeMST(allEdges); // This should return the MST edges
         constructCorridors(mstEdges); // Using MST edges to construct corridors
         reintroduceLoops(mstEdges, triangleGeometries, 0.15); // Introduce loops, for example, 15% of the non-MST edges
+        incorporateUnusedCells();
         buildGraph();
         return new Scene(root, sceneWidth, sceneHeight);
     }
@@ -59,6 +62,7 @@ public class LevelGenerator {
                 i--; // Retry this cell generation if overlap detected
             }
         }
+        incorporateUnusedCells();
     }
 
     private double getRandomDimension() {
@@ -242,25 +246,50 @@ public class LevelGenerator {
     }
 
 
-    // Assuming `triangulateRooms` method returns a list of Edges for simplicity
-    private List<Edge> generateAndVisualizeMST(List<Edge> edges) {
+    // Assuming `generateAndVisualizeMST` method returns a list of MST edges
+    private List<Edge> generateAndVisualizeMST(List<Edge> allEdges) {
+        List<Edge> mstEdges = new ArrayList<>();
         // Initialize each node's parent to itself
-        for (Edge edge : edges) {
+        for (Edge edge : allEdges) {
             parent.putIfAbsent(edge.start, edge.start);
             parent.putIfAbsent(edge.end, edge.end);
         }
 
         // Kruskal's algorithm to construct MST
-        for (Edge edge : edges) {
+        Collections.sort(allEdges);
+        for (Edge edge : allEdges) {
             Coordinate root1 = find(edge.start);
             Coordinate root2 = find(edge.end);
 
             if (!root1.equals(root2)) {
                 createCorridor(edge.start, edge.end); // Visualize the corridor
                 union(root1, root2);
+                mstEdges.add(edge); // Add edge to MST list
             }
         }
-        return edges;
+        return mstEdges; // Return the list of MST edges
+    }
+
+    // New method to incorporate unused cells
+    private void incorporateUnusedCells() {
+        Set<Coordinate> usedCoordinates = new HashSet<>();
+        for (Cell cell : cells) {
+            if (cell.isRoom()) {
+                usedCoordinates.add(new Coordinate(cell.getCenterX(), cell.getCenterY()));
+            }
+        }
+
+        // Any cell not in usedCoordinates is considered unused
+        for (Cell cell : cells) {
+            Coordinate center = new Coordinate(cell.getCenterX(), cell.getCenterY());
+            if (!usedCoordinates.contains(center)) {
+                // This is an unused cell; you can now decide how to incorporate it
+                // For example, if you want to turn it into an obstacle:
+                Rectangle obstacle = new Rectangle(cell.getX(), cell.getY(), cell.getWidth(), cell.getHeight());
+                obstacle.setFill(Color.GREY); // Just as an example, mark unused cells with grey
+                root.getChildren().add(obstacle);
+            }
+        }
     }
 
     private void buildGraph() {
