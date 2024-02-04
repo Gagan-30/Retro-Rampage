@@ -18,30 +18,6 @@ public class Point {
         this.parent = null;
     }
 
-    public double getGScore() {
-        return gScore;
-    }
-
-    public void setGScore(double gScore) {
-        this.gScore = gScore;
-    }
-
-    public double getHScore() {
-        return hScore;
-    }
-
-    public void setHScore(double hScore) {
-        this.hScore = hScore;
-    }
-
-    public double getFScore() {
-        return fScore;
-    }
-
-    public void setFScore(double fScore) {
-        this.fScore = fScore;
-    }
-
     public Point getParent() {
         return parent;
     }

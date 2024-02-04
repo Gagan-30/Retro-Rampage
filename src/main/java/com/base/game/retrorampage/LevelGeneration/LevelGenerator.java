@@ -88,7 +88,7 @@ public class LevelGenerator {
         // meanSize and sizeStandardDeviation are used in normal distribution for cell size.
         double meanSize = 50.0;
         // Standard deviation to control the spread of sizes
-        double sizeStandardDeviation = 15.0;
+        double sizeStandardDeviation = 35.0;
         double dimension = meanSize + (random.nextGaussian() * sizeStandardDeviation);
         // Ensure the dimension falls within your desired range
         return Math.max(20, Math.min(100, dimension));
@@ -199,7 +199,7 @@ public class LevelGenerator {
 
     private void constructCorridors(List<Edge> edges) {
         for (Edge edge : edges) {
-            createCorridor(edge.start, edge.end); // Use the existing method to draw corridors
+            createWideCorridor(edge.start, edge.end,15); // Use the existing method to draw corridors
         }
     }
 
@@ -230,7 +230,7 @@ public class LevelGenerator {
             // Create a line representing the hallway
             Line corridor = new Line(startCell.getCenterX(), startCell.getCenterY(), endCell.getCenterX(), endCell.getCenterY());
             corridor.setStrokeWidth(2); // Set the width of the hallway line
-            corridor.setStroke(Color.BLACK); // Set the color of the hallway line
+            corridor.setStroke(Color.TRANSPARENT); // Set the color of the hallway line
 
             // Add the line to the root pane
             root.getChildren().add(corridor);
@@ -393,26 +393,47 @@ public class LevelGenerator {
             // Calculate the angle between the start and end points
             double angle = Math.atan2(endCell.getCenterY() - startCell.getCenterY(), endCell.getCenterX() - startCell.getCenterX());
 
-            // Calculate the four corners of the hallway
+            // Calculate the four corners of the wide corridor
             double sin = Math.sin(angle);
             double cos = Math.cos(angle);
 
-            double x1 = startCell.getCenterX() - sin * width / 2;
-            double y1 = startCell.getCenterY() + cos * width / 2;
+            // Create the points for the wide corridor
+            Point2D[] corridorPoints = new Point2D[4];
+            corridorPoints[0] = new Point2D(startCell.getCenterX() - sin * width / 2, startCell.getCenterY() + cos * width / 2);
+            corridorPoints[1] = new Point2D(startCell.getCenterX() + sin * width / 2, startCell.getCenterY() - cos * width / 2);
+            corridorPoints[2] = new Point2D(endCell.getCenterX() + sin * width / 2, endCell.getCenterY() - cos * width / 2);
+            corridorPoints[3] = new Point2D(endCell.getCenterX() - sin * width / 2, endCell.getCenterY() + cos * width / 2);
 
-            double x2 = startCell.getCenterX() + sin * width / 2;
-            double y2 = startCell.getCenterY() - cos * width / 2;
+            // Check for intersections and adjust points
+            List<Point2D> adjustedPoints = new ArrayList<>();
+            for (int i = 0; i < corridorPoints.length; i++) {
+                int nextIndex = (i + 1) % corridorPoints.length;
+                Line corridorEdge = new Line(corridorPoints[i].getX(), corridorPoints[i].getY(), corridorPoints[nextIndex].getX(), corridorPoints[nextIndex].getY());
+                boolean intersectionFound = false;
 
-            double x3 = endCell.getCenterX() + sin * width / 2;
-            double y3 = endCell.getCenterY() - cos * width / 2;
+                for (Cell cell : cells) {
+                    Rectangle cellBounds = new Rectangle(cell.getX(), cell.getY(), cell.getWidth(), cell.getHeight());
+                    Point2D intersection = calculateIntersection(corridorEdge, cellBounds);
+                    if (intersection != null) {
+                        // Adjust the corridor edge to end at the intersection point
+                        adjustedPoints.add(corridorPoints[i]);
+                        adjustedPoints.add(intersection);
+                        intersectionFound = true;
+                        break;
+                    }
+                }
 
-            double x4 = endCell.getCenterX() - sin * width / 2;
-            double y4 = endCell.getCenterY() + cos * width / 2;
+                if (!intersectionFound) {
+                    adjustedPoints.add(corridorPoints[i]);
+                }
+            }
 
-            // Create a polygon representing the hallway
+            // Create a polygon representing the adjusted wide corridor
             Polygon hallway = new Polygon();
-            hallway.getPoints().addAll(x1, y1, x2, y2, x3, y3, x4, y4);
-            hallway.setFill(Color.LIGHTGRAY); // Set the color of the hallway
+            for (Point2D p : adjustedPoints) {
+                hallway.getPoints().addAll(p.getX(), p.getY());
+            }
+            hallway.setFill(Color.LIGHTGRAY);
 
             // Add the polygon to the root pane
             root.getChildren().add(hallway);
@@ -451,30 +472,4 @@ public class LevelGenerator {
 
         return new Point2D(xi, yi);
     }
-
-    private void createAdjustedCorridor(Coordinate start, Coordinate end) {
-        Cell startCell = pointToCellMap.get(start);
-        Cell endCell = pointToCellMap.get(end);
-
-        if (startCell != null && endCell != null) {
-            Line corridor = new Line(startCell.getCenterX(), startCell.getCenterY(), endCell.getCenterX(), endCell.getCenterY());
-
-            // Check if the corridor intersects with the end cell and adjust if necessary
-            Point2D intersection = calculateIntersection(corridor, new Rectangle(endCell.getX(), endCell.getY(), endCell.getWidth(), endCell.getHeight()));
-            if (intersection != null) {
-                // Adjust the end of the corridor to the intersection point
-                corridor.setEndX(intersection.getX());
-                corridor.setEndY(intersection.getY());
-            }
-
-            // Set the visual properties of the corridor
-            corridor.setStrokeWidth(2); // Set the width of the corridor line
-            corridor.setStroke(Color.GREY); // Set the color of the corridor line
-
-            // Add the corridor to the root pane to be drawn
-            root.getChildren().add(corridor);
-        }
-    }
-
-
 }

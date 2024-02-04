@@ -64,10 +64,6 @@ public class Cell {
         return y;
     }
 
-    public void setY(double y) {
-        this.y = y;
-    }
-
     // Method to get the center Y coordinate of the cell
     public double getCenterY() {
         return this.y + this.height / 2.0;
@@ -83,10 +79,6 @@ public class Cell {
 
     public double getHeight() {
         return height;
-    }
-
-    public void setHeight(double height) {
-        this.height = height;
     }
 
     // Determines if the cell is marked as a room
