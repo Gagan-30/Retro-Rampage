@@ -39,26 +39,12 @@ public class LevelGenerator {
         List<Coordinate> roomCenters = prepareRoomCenters();
         List<Coordinate[]> triangleGeometries = triangulateRooms(roomCenters);
         List<Edge> allEdges = convertTrianglesToEdges(triangleGeometries);
-        List<Edge> mstEdges = generateAndVisualizeMST(allEdges); // This should return the MST edges
-        constructCorridors(mstEdges); // Using MST edges to construct corridors
-        reintroduceLoops(mstEdges, triangleGeometries, 0.15); // Introduce loops, for example, 15% of the non-MST edges
+        List<Edge> mstEdges = generateAndVisualizeMST(allEdges);
+        List<Edge> additionalEdges = reintroduceLoops(mstEdges, triangleGeometries, 0.125); // 12.5% chance
+        List<Edge> allCorridorEdges = new ArrayList<>(mstEdges);
+        allCorridorEdges.addAll(additionalEdges);
+        constructCorridors(allCorridorEdges);
         incorporateUnusedCells();
-
-        Set<Point> obstacles = new HashSet<>(); // You need to fill this with actual obstacles
-        for (int i = 0; i < roomCenters.size(); i++) {
-            for (int j = i + 1; j < roomCenters.size(); j++) {
-                Point start = new Point((int) roomCenters.get(i).x, (int) roomCenters.get(i).y);
-                Point goal = new Point((int) roomCenters.get(j).x, (int) roomCenters.get(j).y);
-                List<Point> path = findPath(start, goal, obstacles); // Implement findPath method
-
-                // Now create corridors along the path
-                for (Point point : path) {
-                    // Convert point to Coordinate if necessary
-                    // Draw or construct corridor segment here
-                }
-            }
-        }
-
 
         return new Scene(root, sceneWidth, sceneHeight);
     }
@@ -197,14 +183,51 @@ public class LevelGenerator {
         return triangleCoordinates;
     }
 
-    private void constructCorridors(List<Edge> edges) {
-        for (Edge edge : edges) {
-            createWideCorridor(edge.start, edge.end,15); // Use the existing method to draw corridors
+    /// This method updates the map with the new corridor, making it cheaper to go through existing corridors
+    private void updateMapWithCorridor(List<Point> corridor) {
+        for (Point p : corridor) {
+            Cell cell = pointToCellMap.get(new Coordinate(p.x, p.y));
+            if (cell != null && !cell.isObstacle()) {
+                cell.setOccupied(true);
+                cell.setPassageCost(0.5); // For example, make it half as costly to pass through
+            }
         }
     }
 
+    private void constructCorridors(List<Edge> edges) {
+        Set<Point> obstacles = getObstacles();
+        for (Edge edge : edges) {
+            Point start = new Point((int) edge.start.x, (int) edge.start.y);
+            Point goal = new Point((int) edge.end.x, (int) edge.end.y);
+            List<Point> path = findPath(start, goal, obstacles);
+            for (Point point : path) {
+                drawCorridorSegment(point);
+            }
+            updateMapWithCorridor(path);
+        }
+    }
 
-    private void reintroduceLoops(List<Edge> mstEdges, List<Coordinate[]> triangleGeometries, double percentage) {
+    private Set<Point> getObstacles() {
+        Set<Point> obstacles = new HashSet<>();
+        for (Cell cell : cells) {
+            if (cell.isObstacle()) {
+                Point p = new Point((int) cell.getCenterX(), (int) cell.getCenterY());
+                obstacles.add(p);
+            }
+        }
+        return obstacles;
+    }
+
+    private void drawCorridorSegment(Point point) {
+        Cell cell = pointToCellMap.get(new Coordinate(point.x, point.y));
+        if (cell != null && !cell.isObstacle()) {
+            Rectangle corridorSegment = new Rectangle(cell.getX(), cell.getY(), cell.getWidth(), cell.getHeight());
+            corridorSegment.setFill(Color.DARKGRAY);
+            root.getChildren().add(corridorSegment);
+        }
+    }
+
+    private List<Edge> reintroduceLoops(List<Edge> mstEdges, List<Coordinate[]> triangleGeometries, double percentage) {
         List<Edge> allEdges = convertTrianglesToEdges(triangleGeometries);
         List<Edge> nonMstEdges = new ArrayList<>(allEdges);
         nonMstEdges.removeAll(mstEdges); // Remove all MST edges to get the non-MST edges
@@ -219,6 +242,7 @@ public class LevelGenerator {
             createCorridor(edge.start, edge.end); // This will use the original corridor creation method, which uses black by default
             createWideCorridor(edge.start, edge.end, 10); // Adjust the width as needed
         }
+        return allEdges;
     }
 
     // Overloaded method to create corridors with specified color
@@ -315,9 +339,9 @@ public class LevelGenerator {
         }
     }
 
-    // A* Pathfinding between two points
+    // A* Pathfinding between two points that also avoids collisions with cells
     public List<Point> findPath(Point start, Point goal, Set<Point> obstacles) {
-        PriorityQueue<Point> openSet = new PriorityQueue<>(Comparator.comparingDouble(p -> heuristic(p, goal)));
+        PriorityQueue<Point> openSet = new PriorityQueue<>(Comparator.comparingDouble(p -> p.fScore));
         Map<Point, Point> cameFrom = new HashMap<>();
         Map<Point, Double> gScore = new HashMap<>();
         Map<Point, Double> fScore = new HashMap<>();
@@ -334,14 +358,18 @@ public class LevelGenerator {
                 return reconstructPath(cameFrom, current);
             }
 
-            for (Point neighbor : getNeighbors(current, obstacles)) {
-                double tentativeGScore = gScore.getOrDefault(current, Double.MAX_VALUE) + distance(current, neighbor);
-                if (tentativeGScore < gScore.getOrDefault(neighbor, Double.MAX_VALUE)) {
-                    cameFrom.put(neighbor, current);
-                    gScore.put(neighbor, tentativeGScore);
-                    fScore.put(neighbor, tentativeGScore + heuristic(neighbor, goal));
-                    if (!openSet.contains(neighbor)) {
-                        openSet.add(neighbor);
+            for (Point neighbour : getNeighbours(current, obstacles)) {
+                if (isWithinAnyCell(neighbour)) {
+                    continue; // Skip neighbours that are within a cell
+                }
+
+                double tentativeGScore = gScore.getOrDefault(current, Double.MAX_VALUE) + distance(current, neighbour);
+                if (tentativeGScore < gScore.getOrDefault(neighbour, Double.MAX_VALUE)) {
+                    cameFrom.put(neighbour, current);
+                    gScore.put(neighbour, tentativeGScore);
+                    fScore.put(neighbour, tentativeGScore + heuristic(neighbour, goal));
+                    if (!openSet.contains(neighbour)) {
+                        openSet.add(neighbour);
                     }
                 }
             }
@@ -350,14 +378,14 @@ public class LevelGenerator {
         return Collections.emptyList(); // Path not found
     }
 
-    private double heuristic(Point p1, Point p2) {
-        // Using Manhattan distance as heuristic
-        return Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y);
-    }
-
-    private double distance(Point p1, Point p2) {
-        // Using straight-line distance in this case
-        return Math.hypot(p1.x - p2.x, p1.y - p2.y);
+    // Helper method to check if a point is within any cell boundaries
+    private boolean isWithinAnyCell(Point point) {
+        for (Cell cell : cells) {
+            if (point.x > cell.getX() && point.x < cell.getX() + cell.getWidth() && point.y > cell.getY() && point.y < cell.getY() + cell.getHeight()) {
+                return true; // The point is inside a cell
+            }
+        }
+        return false; // The point is not inside any cell
     }
 
     private List<Point> reconstructPath(Map<Point, Point> cameFrom, Point current) {
@@ -371,18 +399,29 @@ public class LevelGenerator {
         return totalPath;
     }
 
-    private Set<Point> getNeighbors(Point current, Set<Point> obstacles) {
-        // Get all neighbors for the current point, excluding obstacles
-        Set<Point> neighbors = new HashSet<>();
+    private Set<Point> getNeighbours(Point current, Set<Point> obstacles) {
+        // Get all neighbours for the current point, excluding obstacles
+        Set<Point> neighbours = new HashSet<>();
         // Assuming a 4-directional movement
         int[][] directions = new int[][]{{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
         for (int[] dir : directions) {
-            Point neighbor = new Point(current.x + dir[0], current.y + dir[1]);
-            if (!obstacles.contains(neighbor)) {
-                neighbors.add(neighbor);
+            Point neighbour = new Point(current.x + dir[0], current.y + dir[1]);
+            if (!obstacles.contains(neighbour)) {
+                neighbours.add(neighbour);
             }
         }
-        return neighbors;
+        return neighbours;
+    }
+
+    // This method calculates the heuristic, Manhattan  distance
+    private double heuristic(Point p1, Point p2) {
+        return Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y);
+    }
+
+    // This method calculates the distance between two points
+    private double distance(Point p1, Point p2) {
+        // You can use Euclidean distance or another metric appropriate for your grid
+        return Math.hypot(p1.x - p2.x, p1.y - p2.y);
     }
 
     private void createWideCorridor(Coordinate start, Coordinate end, double width) {
@@ -391,7 +430,8 @@ public class LevelGenerator {
 
         if (startCell != null && endCell != null) {
             // Calculate the angle between the start and end points
-            double angle = Math.atan2(endCell.getCenterY() - startCell.getCenterY(), endCell.getCenterX() - startCell.getCenterX());
+            double angle = Math.atan2(endCell.getCenterY() - startCell.getCenterY(),
+                    endCell.getCenterX() - startCell.getCenterX());
 
             // Calculate the four corners of the wide corridor
             double sin = Math.sin(angle);
@@ -399,16 +439,21 @@ public class LevelGenerator {
 
             // Create the points for the wide corridor
             Point2D[] corridorPoints = new Point2D[4];
-            corridorPoints[0] = new Point2D(startCell.getCenterX() - sin * width / 2, startCell.getCenterY() + cos * width / 2);
-            corridorPoints[1] = new Point2D(startCell.getCenterX() + sin * width / 2, startCell.getCenterY() - cos * width / 2);
-            corridorPoints[2] = new Point2D(endCell.getCenterX() + sin * width / 2, endCell.getCenterY() - cos * width / 2);
-            corridorPoints[3] = new Point2D(endCell.getCenterX() - sin * width / 2, endCell.getCenterY() + cos * width / 2);
+            corridorPoints[0] = new Point2D(startCell.getCenterX() - sin * width / 2,
+                    startCell.getCenterY() + cos * width / 2);
+            corridorPoints[1] = new Point2D(startCell.getCenterX() + sin * width / 2,
+                    startCell.getCenterY() - cos * width / 2);
+            corridorPoints[2] = new Point2D(endCell.getCenterX() + sin * width / 2,
+                    endCell.getCenterY() - cos * width / 2);
+            corridorPoints[3] = new Point2D(endCell.getCenterX() - sin * width / 2,
+                    endCell.getCenterY() + cos * width / 2);
 
             // Check for intersections and adjust points
             List<Point2D> adjustedPoints = new ArrayList<>();
             for (int i = 0; i < corridorPoints.length; i++) {
                 int nextIndex = (i + 1) % corridorPoints.length;
-                Line corridorEdge = new Line(corridorPoints[i].getX(), corridorPoints[i].getY(), corridorPoints[nextIndex].getX(), corridorPoints[nextIndex].getY());
+                Line corridorEdge = new Line(corridorPoints[i].getX(), corridorPoints[i].getY(),
+                        corridorPoints[nextIndex].getX(), corridorPoints[nextIndex].getY());
                 boolean intersectionFound = false;
 
                 for (Cell cell : cells) {
@@ -443,9 +488,11 @@ public class LevelGenerator {
     private Point2D calculateIntersection(Line corridor, Rectangle cell) {
         // Define the four edges of the cell
         Line topEdge = new Line(cell.getX(), cell.getY(), cell.getX() + cell.getWidth(), cell.getY());
-        Line bottomEdge = new Line(cell.getX(), cell.getY() + cell.getHeight(), cell.getX() + cell.getWidth(), cell.getY() + cell.getHeight());
+        Line bottomEdge = new Line(cell.getX(), cell.getY() + cell.getHeight(), cell.getX() +
+                cell.getWidth(), cell.getY() + cell.getHeight());
         Line leftEdge = new Line(cell.getX(), cell.getY(), cell.getX(), cell.getY() + cell.getHeight());
-        Line rightEdge = new Line(cell.getX() + cell.getWidth(), cell.getY(), cell.getX() + cell.getWidth(), cell.getY() + cell.getHeight());
+        Line rightEdge = new Line(cell.getX() + cell.getWidth(), cell.getY(), cell.getX() +
+                cell.getWidth(), cell.getY() + cell.getHeight());
 
         // Check for intersection with each of the edges
         Point2D intersection = null;
@@ -464,11 +511,14 @@ public class LevelGenerator {
 
     private Point2D intersectionPoint(Line a, Line b) {
         // Formula to calculate intersection point
-        double d = (a.getStartX() - a.getEndX()) * (b.getStartY() - b.getEndY()) - (a.getStartY() - a.getEndY()) * (b.getStartX() - b.getEndX());
+        double d = (a.getStartX() - a.getEndX()) * (b.getStartY() - b.getEndY()) - (a.getStartY() - a.getEndY()) *
+                (b.getStartX() - b.getEndX());
         if (d == 0) return null; // Lines are parallel
 
-        double xi = ((b.getStartX() - b.getEndX()) * (a.getStartX() * a.getEndY() - a.getStartY() * a.getEndX()) - (a.getStartX() - a.getEndX()) * (b.getStartX() * b.getEndY() - b.getStartY() * b.getEndX())) / d;
-        double yi = ((b.getStartY() - b.getEndY()) * (a.getStartX() * a.getEndY() - a.getStartY() * a.getEndX()) - (a.getStartY() - a.getEndY()) * (b.getStartX() * b.getEndY() - b.getStartY() * b.getEndX())) / d;
+        double xi = ((b.getStartX() - b.getEndX()) * (a.getStartX() * a.getEndY() - a.getStartY() * a.getEndX())
+                - (a.getStartX() - a.getEndX()) * (b.getStartX() * b.getEndY() - b.getStartY() * b.getEndX())) / d;
+        double yi = ((b.getStartY() - b.getEndY()) * (a.getStartX() * a.getEndY() - a.getStartY() * a.getEndX())
+                - (a.getStartY() - a.getEndY()) * (b.getStartX() * b.getEndY() - b.getStartY() * b.getEndX())) / d;
 
         return new Point2D(xi, yi);
     }

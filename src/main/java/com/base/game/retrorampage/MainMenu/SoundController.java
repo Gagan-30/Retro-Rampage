@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
@@ -60,8 +61,20 @@ public class SoundController {
 
     // Handle changes in the volume text field
     public void onVolumeTextFieldChanged(KeyEvent event) {
-        if (event.getCode().isDigitKey() || event.getCode().isArrowKey()) {
-            syncSliderWithTextField();
+        // Check if the key released is a digit, arrow, backspace, or delete key
+        if (event.getCode().isDigitKey() || event.getCode().isArrowKey() || event.getCode() == KeyCode.BACK_SPACE || event.getCode() == KeyCode.DELETE) {
+            try {
+                int value = Integer.parseInt(volumeTextField.getText()); // Convert the text field content to integer
+                if (value < 0) {
+                    volumeSlider.setValue(0); // Set slider to minimum if value is below range
+                } else if (value > 100) {
+                    volumeSlider.setValue(100); // Set slider to maximum if value is above range
+                } else {
+                    volumeSlider.setValue(value); // Set slider to entered value if within range
+                }
+            } catch (NumberFormatException e) {
+                volumeTextField.setText(String.valueOf((int) volumeSlider.getValue())); // Reset to slider's value on invalid input
+            }
         }
     }
 
@@ -80,7 +93,7 @@ public class SoundController {
         int currentVolume = (int) volumeSlider.getValue(); // Get current volume value
         new Thread(() -> {
             config.saveVolumeSetting(currentVolume); // Save the volume setting in a separate thread
-            System.out.println("Volume saved: " + currentVolume); // Print a message to the console
+            System.out.println("Volume saved: " + currentVolume);
         }).start();
     }
 
