@@ -230,7 +230,7 @@ public class LevelGenerator {
     private List<Edge> reintroduceLoops(List<Edge> mstEdges, List<Coordinate[]> triangleGeometries, double percentage) {
         List<Edge> allEdges = convertTrianglesToEdges(triangleGeometries);
         List<Edge> nonMstEdges = new ArrayList<>(allEdges);
-        allEdges.removeAll(nonMstEdges); // Remove all MST edges to get the non-MST edges
+        allEdges.removeAll(nonMstEdges); // Remove all non MST edges to get the MST edges
 
         // Shuffle and take a percentage of the non-MST edges
         Collections.shuffle(nonMstEdges);
