@@ -134,9 +134,9 @@ public class LevelGenerator {
 
         // Iterate over each cell in the level.
         for (Cell cell : cells) {
-            // Calculate the center x-coordinate of the cell by adding half the width to the x-coordinate.
+            // Calculate the center x-coordinate of the cell by adding half the width to the x-coordinate
             double centerX = cell.getX() + cell.getWidth() / 2.0;
-            // Calculate the center y-coordinate of the cell by adding half the height to the y-coordinate.
+            // Calculate the center y-coordinate of the cell by adding half the height to the y-coordinate
             double centerY = cell.getY() + cell.getHeight() / 2.0;
 
             // Create a new Coordinate object using the center x and y values.
@@ -230,7 +230,7 @@ public class LevelGenerator {
     private List<Edge> reintroduceLoops(List<Edge> mstEdges, List<Coordinate[]> triangleGeometries, double percentage) {
         List<Edge> allEdges = convertTrianglesToEdges(triangleGeometries);
         List<Edge> nonMstEdges = new ArrayList<>(allEdges);
-        nonMstEdges.removeAll(mstEdges); // Remove all MST edges to get the non-MST edges
+        allEdges.removeAll(nonMstEdges); // Remove all MST edges to get the non-MST edges
 
         // Shuffle and take a percentage of the non-MST edges
         Collections.shuffle(nonMstEdges);
