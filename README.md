@@ -4,7 +4,7 @@ DWHS Computer Science NEA
 **Languages/Libraries:**
 
 * Java - openJDK 21
-* poly2tri library for Delaunay Triangulation (https://github.com/orbisgis/poly2tri.java)
+* JTS library for Delaunay Triangulation (https://github.com/locationtech/jts)
 * JavaFX
 * FXML for scene layout
 * CSS for scene design
