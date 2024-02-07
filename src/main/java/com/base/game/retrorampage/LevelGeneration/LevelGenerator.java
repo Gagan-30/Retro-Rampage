@@ -37,7 +37,7 @@ public class LevelGenerator {
         separateCells();
         identifyRooms();
         List<Coordinate> roomCenters = prepareRoomCenters();
-        List<Coordinate[]> triangleGeometries = triangulateRooms(roomCenters);
+        List<Coordinate[]> triangleGeometries =
         List<Edge> allEdges = convertTrianglesToEdges(triangleGeometries);
         List<Edge> mstEdges = generateAndVisualizeMST(allEdges);
         List<Edge> additionalEdges = reintroduceLoops(mstEdges, triangleGeometries, 0.125); // 12.5% chance
@@ -154,35 +154,6 @@ public class LevelGenerator {
         return roomCenters;
     }
 
-    private List<Coordinate[]> triangulateRooms(List<Coordinate> roomCenters) {
-        // Create an instance of GeometryFactory, which is a utility class to create geometry objects.
-        GeometryFactory geometryFactory = new GeometryFactory();
-
-        // Instantiate DelaunayTriangulationBuilder, a class that builds the Delaunay triangulation for a set of points.
-        DelaunayTriangulationBuilder builder = new DelaunayTriangulationBuilder();
-
-        // Convert the list of room center points into a MultiPoint geometry and set it as the input for triangulation.
-        builder.setSites(geometryFactory.createMultiPointFromCoords(roomCenters.toArray(new Coordinate[0])));
-
-        // Perform the triangulation and retrieve a Geometry collection representing the triangles.
-        org.locationtech.jts.geom.Geometry triangles = builder.getTriangles(geometryFactory);
-
-        // Prepare a list to hold the coordinates of each triangle's vertices.
-        List<Coordinate[]> triangleCoordinates = new ArrayList<>();
-
-        // Iterate through each geometry in the collection, which represents a triangle.
-        for (int i = 0; i < triangles.getNumGeometries(); i++) {
-            // Cast the geometry to a Polygon object to access its vertices (each triangle is represented as a polygon).
-            org.locationtech.jts.geom.Polygon triangle = (org.locationtech.jts.geom.Polygon) triangles.getGeometryN(i);
-
-            // Extract the coordinates of the triangle's vertices and add them to the list.
-            triangleCoordinates.add(triangle.getCoordinates());
-        }
-
-        // Return the list of triangles represented by arrays of coordinates.
-        return triangleCoordinates;
-    }
-
     /// This method updates the map with the new corridor, making it cheaper to go through existing corridors
     private void updateMapWithCorridor(List<Point> corridor) {
         for (Point p : corridor) {
@@ -199,7 +170,7 @@ public class LevelGenerator {
         for (Edge edge : edges) {
             Point start = new Point((int) edge.start.x, (int) edge.start.y);
             Point goal = new Point((int) edge.end.x, (int) edge.end.y);
-            List<Point> path = findPath(start, goal, obstacles);
+            List<Point> path = AStarPathFinder.findPath(start, goal, obstacles);
             for (Point point : path) {
                 drawCorridorSegment(point);
             }
@@ -292,31 +263,6 @@ public class LevelGenerator {
         return new ArrayList<>(edges); // Convert the set back to a list
     }
 
-
-    // Assuming `generateAndVisualizeMST` method returns a list of MST edges
-    private List<Edge> generateAndVisualizeMST(List<Edge> allEdges) {
-        List<Edge> mstEdges = new ArrayList<>();
-        // Initialize each node's parent to itself
-        for (Edge edge : allEdges) {
-            parent.putIfAbsent(edge.start, edge.start);
-            parent.putIfAbsent(edge.end, edge.end);
-        }
-
-        // Kruskal's algorithm to construct MST
-        Collections.sort(allEdges);
-        for (Edge edge : allEdges) {
-            Coordinate root1 = find(edge.start);
-            Coordinate root2 = find(edge.end);
-
-            if (!root1.equals(root2)) {
-                createWideCorridor(edge.start, edge.end, 10); // Width is just an example, adjust as needed
-                union(root1, root2);
-                mstEdges.add(edge); // Add edge to MST list
-            }
-        }
-        return mstEdges; // Return the list of MST edges
-    }
-
     // New method to incorporate unused cells
     private void incorporateUnusedCells() {
         Set<Coordinate> usedCoordinates = new HashSet<>();
@@ -339,45 +285,6 @@ public class LevelGenerator {
         }
     }
 
-    // A* Pathfinding between two points that also avoids collisions with cells
-    public List<Point> findPath(Point start, Point goal, Set<Point> obstacles) {
-        PriorityQueue<Point> openSet = new PriorityQueue<>(Comparator.comparingDouble(p -> p.fScore));
-        Map<Point, Point> cameFrom = new HashMap<>();
-        Map<Point, Double> gScore = new HashMap<>();
-        Map<Point, Double> fScore = new HashMap<>();
-
-        gScore.put(start, 0.0);
-        fScore.put(start, heuristic(start, goal));
-
-        openSet.add(start);
-
-        while (!openSet.isEmpty()) {
-            Point current = openSet.poll();
-
-            if (current.equals(goal)) {
-                return reconstructPath(cameFrom, current);
-            }
-
-            for (Point neighbour : getNeighbours(current, obstacles)) {
-                if (isWithinAnyCell(neighbour)) {
-                    continue; // Skip neighbours that are within a cell
-                }
-
-                double tentativeGScore = gScore.getOrDefault(current, Double.MAX_VALUE) + distance(current, neighbour);
-                if (tentativeGScore < gScore.getOrDefault(neighbour, Double.MAX_VALUE)) {
-                    cameFrom.put(neighbour, current);
-                    gScore.put(neighbour, tentativeGScore);
-                    fScore.put(neighbour, tentativeGScore + heuristic(neighbour, goal));
-                    if (!openSet.contains(neighbour)) {
-                        openSet.add(neighbour);
-                    }
-                }
-            }
-        }
-
-        return Collections.emptyList(); // Path not found
-    }
-
     // Helper method to check if a point is within any cell boundaries
     private boolean isWithinAnyCell(Point point) {
         for (Cell cell : cells) {
@@ -388,41 +295,6 @@ public class LevelGenerator {
         return false; // The point is not inside any cell
     }
 
-    private List<Point> reconstructPath(Map<Point, Point> cameFrom, Point current) {
-        List<Point> totalPath = new ArrayList<>();
-        totalPath.add(current);
-        while (cameFrom.containsKey(current)) {
-            current = cameFrom.get(current);
-            totalPath.add(current);
-        }
-        Collections.reverse(totalPath);
-        return totalPath;
-    }
-
-    private Set<Point> getNeighbours(Point current, Set<Point> obstacles) {
-        // Get all neighbours for the current point, excluding obstacles
-        Set<Point> neighbours = new HashSet<>();
-        // Assuming a 4-directional movement
-        int[][] directions = new int[][]{{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
-        for (int[] dir : directions) {
-            Point neighbour = new Point(current.x + dir[0], current.y + dir[1]);
-            if (!obstacles.contains(neighbour)) {
-                neighbours.add(neighbour);
-            }
-        }
-        return neighbours;
-    }
-
-    // This method calculates the heuristic, Manhattan  distance
-    private double heuristic(Point p1, Point p2) {
-        return Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y);
-    }
-
-    // This method calculates the distance between two points
-    private double distance(Point p1, Point p2) {
-        // You can use Euclidean distance or another metric appropriate for your grid
-        return Math.hypot(p1.x - p2.x, p1.y - p2.y);
-    }
 
     private void createWideCorridor(Coordinate start, Coordinate end, double width) {
         Cell startCell = pointToCellMap.get(start);

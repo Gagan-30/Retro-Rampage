@@ -14,6 +14,30 @@ public class Edge implements Comparable<Edge> {
         this.weight = Math.sqrt(Math.pow(start.x - end.x, 2) + Math.pow(start.y - end.y, 2));
     }
 
+    public Coordinate getStart() {
+        return start;
+    }
+
+    public void setStart(Coordinate start) {
+        this.start = start;
+    }
+
+    public Coordinate getEnd() {
+        return end;
+    }
+
+    public void setEnd(Coordinate end) {
+        this.end = end;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
     @Override
     public int compareTo(Edge other) {
         return Double.compare(this.weight, other.weight);

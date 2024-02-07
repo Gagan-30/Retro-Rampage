@@ -8,7 +8,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Level Generator");
-        LevelGenerator levelGenerator = new LevelGenerator(15);
+        LevelGenerator levelGenerator = new LevelGenerator(5);
         primaryStage.setScene(levelGenerator.generateLevel());
         primaryStage.show();
     }

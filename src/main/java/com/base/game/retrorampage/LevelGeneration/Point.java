@@ -38,4 +38,16 @@ public class Point {
     public int hashCode() {
         return Objects.hash(x, y);
     }
+
+    public double getFScore() {
+        return  fScore;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 }
