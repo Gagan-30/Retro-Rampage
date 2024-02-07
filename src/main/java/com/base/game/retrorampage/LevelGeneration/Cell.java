@@ -103,7 +103,7 @@ public class Cell {
         this.isObstacle = isObstacle;
     }
 
-    // Method to check if the cell is occupied (part of a corridor)
+    // Method to check if the cell is occupied, part of a corridor
     public boolean isOccupied() {
         return isOccupied;
     }
