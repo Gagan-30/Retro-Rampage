@@ -1,6 +1,7 @@
 package com.base.game.retrorampage.LevelGeneration;
 
 import javafx.scene.Scene;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import org.locationtech.jts.geom.Coordinate;
 
@@ -17,6 +18,7 @@ public class LevelGenerator {
     // Thresholds could be constants or configurable parameters
     private final double roomWidthThreshold = 50.0;
     private final double roomHeightThreshold = 50.0;
+    private GraphicsContext gc;
 
     public LevelGenerator(int numberOfCells, int sceneWidth, int sceneHeight) {
         this.numberOfCells = numberOfCells;
@@ -25,30 +27,28 @@ public class LevelGenerator {
         this.root = new Pane();
     }
 
-    public Scene generateLevel() {
-        // Step 1: Generate cells
-        CellGenerator cellGenerator = new CellGenerator(numberOfCells, sceneWidth, sceneHeight, roomWidthThreshold, roomHeightThreshold);
-        List<Cell> cells = cellGenerator.generateCells(root); // Assume generateCells now correctly takes root as a parameter if needed for drawing
+        public Scene generateLevel() {
+            // Initialize CellGenerator with the proper arguments.
+            CellGenerator cellGenerator = new CellGenerator(numberOfCells, sceneWidth, sceneHeight, roomWidthThreshold, roomHeightThreshold);
 
-        // Convert cells to coordinates for triangulation
-        List<Coordinate> cellCenters = cellGenerator.getCellCenters(); // Assume getCellCenters now exists and is called correctly
+            // Generate cells and retrieve the needed data structures.
+            List<Cell> cells = cellGenerator.generateCells(root);
+            List<Coordinate> cellCenters = cellGenerator.getCellCenters();
 
-        // Step 2: Triangulate cells to create a Delaunay Triangulation
-        DelaunayTriangulator triangulator = new DelaunayTriangulator();
-        List<Coordinate[]> triangulationEdges = triangulator.triangulate(cellCenters); // Assume triangulate now correctly takes cellCenters as input and returns List<Edge>
+            /*
+            List<Coordinate[]> triangleGeometries = triangulateRooms(roomCenters); // Use JTS Geometry objects
+            constructCorridors(triangleGeometries); // Pass JTS Geometry objects
+            */
 
-        // Step 3: Generate the MST from the triangulation
-        MST mst = new MST(triangulationEdges);
-        List<Edge> mstEdges = mst.generateMST(triangulationEdges);
+            // DelaunayTriangulation and MST creation.
+            DelaunayTriangulator triangulator = new DelaunayTriangulator();
+            List<Coordinate[]> triangleGeometries = triangulator.triangulate(cellCenters);
 
-        // Step 4: Construct corridors using the MST (with or without loops)
-        Map<Coordinate, Cell> pointToCellMap = cellGenerator.getPointToCellMap(); // Assume getPointToCellMap now exists
-        Set<Point> obstacles = cellGenerator.getObstacles(); // Assume getObstacles now exists
-        CorridorConstructor corridorConstructor = new CorridorConstructor(root, pointToCellMap, obstacles); // Assume constructor now matches this signature
-        corridorConstructor.constructCorridors(mstEdges);
+            // Corridor construction.
+            CorridorConstructor corridorConstructor = new CorridorConstructor();
+            corridorConstructor.constructCorridors(triangleGeometries);
 
-        // Optional: Use AStarPathFinder for pathfinding if needed for NPCs or player movement
-
-        return new Scene(root, sceneWidth, sceneHeight);
+            // Return the Scene.
+            return new Scene(root, sceneWidth, sceneHeight);
+        }
     }
-}

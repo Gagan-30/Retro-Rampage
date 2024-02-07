@@ -61,24 +61,15 @@ public class CellGenerator {
         return false;
     }
 
-
-    public List<Coordinate> getCellCenters() {
-        // Convert cell positions to Coordinate objects for triangulation
-        return cells.stream().map(cell -> new Coordinate(cell.getX() + cell.getWidth() / 2, cell.getY() + cell.getHeight() / 2)).collect(Collectors.toList());
-    }
-
-    public Map<Coordinate, Cell> getPointToCellMap() {
-        // Fill the map linking cell center coordinates to cell objects
+    List<Coordinate> getCellCenters() {
+        List<Coordinate> roomCenters = new ArrayList<>();
         for (Cell cell : cells) {
-            Coordinate center = new Coordinate(cell.getX() + cell.getWidth() / 2, cell.getY() + cell.getHeight() / 2);
-            pointToCellMap.put(center, cell);
+            double centerX = cell.getX() + cell.getWidth() / 2.0;
+            double centerY = cell.getY() + cell.getHeight() / 2.0;
+            Coordinate center = new Coordinate(centerX, centerY);
+            roomCenters.add(center);
+            pointToCellMap.put(center, cell); // Map the center Coordinate back to its cell
         }
-        return pointToCellMap;
-    }
-
-    public Set<Point> getObstacles() {
-        // Define logic to determine obstacles based on cell properties or other criteria
-        // This is just a placeholder implementation
-        return cells.stream().filter(Cell::isObstacle).map(cell -> new Point((int)cell.getX(), (int)cell.getY())).collect(Collectors.toSet());
+        return roomCenters;
     }
 }

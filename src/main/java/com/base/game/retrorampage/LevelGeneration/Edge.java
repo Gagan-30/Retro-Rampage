@@ -2,6 +2,11 @@ package com.base.game.retrorampage.LevelGeneration;
 
 import org.locationtech.jts.geom.Coordinate;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class Edge implements Comparable<Edge> {
     Coordinate start;
     Coordinate end;
@@ -41,5 +46,20 @@ public class Edge implements Comparable<Edge> {
     @Override
     public int compareTo(Edge other) {
         return Double.compare(this.weight, other.weight);
+    }
+
+    private List<Edge> convertTrianglesToEdges(List<Coordinate[]> triangleCoordinates) {
+        Set<Edge> edges = new HashSet<>(); // Use a set to automatically avoid duplicate edges
+
+        for (Coordinate[] triangle : triangleCoordinates) {
+            for (int i = 0; i < triangle.length; i++) {
+                Coordinate start = triangle[i];
+                Coordinate end = triangle[(i + 1) % triangle.length]; // Ensure wrapping to the first coordinate
+                Edge edge = new Edge(start, end);
+                edges.add(edge);
+            }
+        }
+
+        return new ArrayList<>(edges); // Convert the set back to a list
     }
 }

@@ -1,51 +1,45 @@
 package com.base.game.retrorampage.LevelGeneration;
 
 import org.locationtech.jts.geom.Coordinate;
+
 import java.util.*;
 
 public class MST {
     private Map<Coordinate, Coordinate> parent = new HashMap<>();
 
-    public MST(List<Coordinate[]> triangulationEdges) {
-        // Constructor if needed
-    }
-
-    public List<Edge> generateMST(List<Coordinate[]> edges) {
-        List<Edge> mstEdges = new ArrayList<>();
-
+    // Assuming `triangulateRooms` method returns a list of Edges for simplicity
+    private List<Edge> generateAndVisualizeMST(List<Edge> edges) {
         // Initialize each node's parent to itself
         for (Edge edge : edges) {
-            parent.putIfAbsent(edge.getStart(), edge.getStart());
-            parent.putIfAbsent(edge.getEnd(), edge.getEnd());
+            parent.putIfAbsent(edge.start, edge.start);
+            parent.putIfAbsent(edge.end, edge.end);
         }
 
-        // Sort edges based on their weight
-        Collections.sort(edges);
-
-        // Kruskal's algorithm
+        // Kruskal's algorithm to construct MST
         for (Edge edge : edges) {
-            Coordinate root1 = find(edge.getStart());
-            Coordinate root2 = find(edge.getEnd());
+            Coordinate root1 = find(edge.start);
+            Coordinate root2 = find(edge.end);
 
             if (!root1.equals(root2)) {
+                //CorridorConstructor.createWideCorridor(edge.start, edge.end, 10); // Visualize the corridor
                 union(root1, root2);
-                mstEdges.add(edge); // Add edge to MST
             }
         }
-
-        return mstEdges;
+        return edges;
     }
 
-    private Coordinate find(Coordinate coordinate) {
-        if (!parent.get(coordinate).equals(coordinate)) {
-            parent.put(coordinate, find(parent.get(coordinate)));
+    // Find set with path compression
+    private Coordinate find(Coordinate i) {
+        if (!parent.get(i).equals(i)) {
+            parent.put(i, find(parent.get(i)));
         }
-        return parent.get(coordinate);
+        return parent.get(i);
     }
 
-    private void union(Coordinate coordinate1, Coordinate coordinate2) {
-        Coordinate root1 = find(coordinate1);
-        Coordinate root2 = find(coordinate2);
-        parent.put(root1, root2);
+    // Union by rank (simplified as naive union for this example)
+    private void union(Coordinate x, Coordinate y) {
+        Coordinate xRoot = find(x);
+        Coordinate yRoot = find(y);
+        parent.put(xRoot, yRoot);
     }
 }
