@@ -6,11 +6,11 @@ import java.util.*;
 public class MST {
     private Map<Coordinate, Coordinate> parent = new HashMap<>();
 
-    public MST() {
+    public MST(List<Coordinate[]> triangulationEdges) {
         // Constructor if needed
     }
 
-    public List<Edge> generateMST(List<Edge> edges) {
+    public List<Edge> generateMST(List<Coordinate[]> edges) {
         List<Edge> mstEdges = new ArrayList<>();
 
         // Initialize each node's parent to itself
