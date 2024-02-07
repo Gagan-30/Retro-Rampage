@@ -44,7 +44,6 @@ public class LevelGenerator {
         List<Edge> allCorridorEdges = new ArrayList<>(mstEdges);
         allCorridorEdges.addAll(additionalEdges);
         constructCorridors(allCorridorEdges);
-        incorporateUnusedCells();
 
         return new Scene(root, sceneWidth, sceneHeight);
     }
@@ -183,17 +182,6 @@ public class LevelGenerator {
         return triangleCoordinates;
     }
 
-    /// This method updates the map with the new corridor, making it cheaper to go through existing corridors
-    private void updateMapWithCorridor(List<Point> corridor) {
-        for (Point p : corridor) {
-            Cell cell = pointToCellMap.get(new Coordinate(p.x, p.y));
-            if (cell != null && !cell.isObstacle()) {
-                cell.setOccupied(true);
-                cell.setPassageCost(0.5); // For example, make it half as costly to pass through
-            }
-        }
-    }
-
     private void constructCorridors(List<Edge> edges) {
         Set<Point> obstacles = getObstacles();
         for (Edge edge : edges) {
@@ -206,6 +194,25 @@ public class LevelGenerator {
             updateMapWithCorridor(path);
         }
     }
+    private void drawCorridorSegment(Point point) {
+        Cell cell = pointToCellMap.get(new Coordinate(point.x, point.y));
+        if (cell != null && !cell.isObstacle()) {
+            Rectangle corridorSegment = new Rectangle(cell.getX(), cell.getY(), cell.getWidth(), cell.getHeight());
+            corridorSegment.setFill(Color.DARKGRAY);
+            root.getChildren().add(corridorSegment);
+        }
+    }
+
+    // This method updates the map with the new corridor, making it cheaper to go through existing corridors
+    private void updateMapWithCorridor(List<Point> corridor) {
+        for (Point p : corridor) {
+            Cell cell = pointToCellMap.get(new Coordinate(p.x, p.y));
+            if (cell != null && !cell.isObstacle()) {
+                cell.setOccupied(true);
+                cell.setPassageCost(0.5); // For example, make it half as costly to pass through
+            }
+        }
+    }
 
     private Set<Point> getObstacles() {
         Set<Point> obstacles = new HashSet<>();
@@ -216,15 +223,6 @@ public class LevelGenerator {
             }
         }
         return obstacles;
-    }
-
-    private void drawCorridorSegment(Point point) {
-        Cell cell = pointToCellMap.get(new Coordinate(point.x, point.y));
-        if (cell != null && !cell.isObstacle()) {
-            Rectangle corridorSegment = new Rectangle(cell.getX(), cell.getY(), cell.getWidth(), cell.getHeight());
-            corridorSegment.setFill(Color.DARKGRAY);
-            root.getChildren().add(corridorSegment);
-        }
     }
 
     private List<Edge> reintroduceLoops(List<Edge> mstEdges, List<Coordinate[]> triangleGeometries, double percentage) {
