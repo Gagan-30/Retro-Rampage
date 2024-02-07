@@ -279,7 +279,7 @@ public class LevelGenerator {
                 // This is an unused cell; you can now decide how to incorporate it
                 // For example, if you want to turn it into an obstacle:
                 Rectangle obstacle = new Rectangle(cell.getX(), cell.getY(), cell.getWidth(), cell.getHeight());
-                obstacle.setFill(Color.GREY); // Just as an example, mark unused cells with grey
+                obstacle.setFill(Color.GREY); //mark unused cells with grey
                 root.getChildren().add(obstacle);
             }
         }
