@@ -37,13 +37,17 @@ public class LevelGenerator {
         var roomCenters = roomManager.getRoomCenters();
         var triangleEdges = graphManager.triangulateRooms(roomCenters);
         var mstEdges = graphManager.generateMST(triangleEdges);
+        var loopedEdges = graphManager.reintroduceLoops(mstEdges, triangleEdges, 0.3);
+
+        corridorManager.createHallways(loopedEdges, 10); // 2 is the hallway width
 
         // 3. Create corridors based on MST edges and additional logic for loops
         corridorManager.createCorridors(mstEdges);
 
-        // 4. VisualizationManager can be used to further customize the scene if needed
+        // 4. Draw Rooms and Triangulation
         roomManager.drawRooms();
-        visualizationManager.drawDelaunayTriangulation(graphManager.getEdges()); // Ensure GraphManager exposes the edges
+        visualizationManager.drawDelaunayTriangulation(graphManager.getEdges()); // Ensure GraphManager exposes the edg
+        corridorManager.createHallways(loopedEdges, 5);
 
         // Return the scene containing the generated level
         return this.scene;

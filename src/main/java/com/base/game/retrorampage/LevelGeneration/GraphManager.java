@@ -5,11 +5,7 @@ import org.locationtech.jts.triangulate.DelaunayTriangulationBuilder;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Geometry;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class GraphManager {
     private GeometryFactory geometryFactory = new GeometryFactory();
@@ -72,6 +68,36 @@ public class GraphManager {
                 parent.put(xRoot, yRoot);
             }
         }
+    }
+
+    public List<Edge> reintroduceLoops(List<Edge> mstEdges, List<Edge> allEdges, double loopFactor) {
+        // loopFactor should be between 0 and 1, representing the percentage of additional edges to add
+
+        // Copy the MST edges to avoid modifying the original list
+        List<Edge> updatedEdges = new ArrayList<>(mstEdges);
+
+        // Create a copy of all edges and shuffle it to get a random order
+        List<Edge> shuffledAllEdges = new ArrayList<>(allEdges);
+        Collections.shuffle(shuffledAllEdges, new Random());
+
+        // Calculate the number of loops (additional edges) to add
+        int loopsToAdd = (int)(loopFactor * mstEdges.size());
+
+        // Iterate over the shuffled edges and add them if they don't already exist in the MST
+        for (Edge edge : shuffledAllEdges) {
+            if (loopsToAdd <= 0) {
+                break; // Stop if we've added the desired number of loops
+            }
+
+            // Check if the edge is not already part of the MST
+            if (!updatedEdges.contains(edge)) {
+                updatedEdges.add(edge); // Add the edge to introduce a loop
+                loopsToAdd--; // Decrement the number of loops left to add
+            }
+        }
+
+        // Return the updated list of edges with the loops reintroduced
+        return updatedEdges;
     }
 
     // Edge class to represent connections between points
