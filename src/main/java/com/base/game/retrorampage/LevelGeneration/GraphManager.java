@@ -33,7 +33,7 @@ public class GraphManager {
     public List<Edge> generateMST(List<Edge> edges) {
         // Implementing a simple version of Kruskal's algorithm for MST generation
         PriorityQueue<Edge> edgeQueue = new PriorityQueue<>(edges);
-        UnionFind unionFind = new UnionFind(edges.size());
+        UnionFind unionFind = new UnionFind();
         List<Edge> mstEdges = new ArrayList<>();
 
         while (!edgeQueue.isEmpty() && mstEdges.size() < edges.size() - 1) {
@@ -49,9 +49,6 @@ public class GraphManager {
     // Utility class for Union-Find operations
     private static class UnionFind {
         private Map<Coordinate, Coordinate> parent = new HashMap<>();
-
-        public UnionFind(int size) {
-        }
 
         public Coordinate find(Coordinate x) {
             parent.putIfAbsent(x, x);

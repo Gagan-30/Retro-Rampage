@@ -65,9 +65,9 @@ public class CorridorManager {
 
             // Set the fill color to transparent and the stroke to a visible color
             hallwayHorizontal.setFill(null);
-            hallwayHorizontal.setStroke(Color.BLACK);
+            hallwayHorizontal.setStroke(Color.GREEN);
             hallwayVertical.setFill(null);
-            hallwayVertical.setStroke(Color.BLACK);
+            hallwayVertical.setStroke(Color.GREEN);
 
             // Add the hallway segments to the root pane
             root.getChildren().addAll(hallwayHorizontal, hallwayVertical);

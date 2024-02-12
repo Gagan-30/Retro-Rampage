@@ -12,11 +12,6 @@ public class RoomManager {
     private final List<Cell> cells = new ArrayList<>();
     private final Random random = new Random();
 
-    // Define size thresholds for what constitutes a room
-    private final double roomWidthThreshold = 0.0;
-    private final double roomHeightThreshold = 0.0;
-
-
     public RoomManager(int numberOfCells, Pane root) {
         this.numberOfCells = numberOfCells;
         this.root = root;
@@ -38,6 +33,9 @@ public class RoomManager {
             Cell cell = new Cell(x, y, width, height);
 
             // Determine if the cell should be considered a room based on size thresholds
+            // Define size thresholds for what constitutes a room
+            double roomWidthThreshold = 30.0;
+            double roomHeightThreshold = 30.0;
             if (cell.getWidth() >= roomWidthThreshold && cell.getHeight() >= roomHeightThreshold) {
                 cell.setRoom(true);
             }
@@ -99,14 +97,14 @@ public class RoomManager {
         double moveBY = -moveAY;
 
         // Apply the calculated positions, ensuring cells stay within the pane's bounds
-        cellA.setX(clamp(cellA.getX() + moveAX, 0, root.getWidth() - cellA.getWidth()));
-        cellA.setY(clamp(cellA.getY() + moveAY, 0, root.getHeight() - cellA.getHeight()));
-        cellB.setX(clamp(cellB.getX() + moveBX, 0, root.getWidth() - cellB.getWidth()));
-        cellB.setY(clamp(cellB.getY() + moveBY, 0, root.getHeight() - cellB.getHeight()));
+        cellA.setX(clamp(cellA.getX() + moveAX, root.getWidth() - cellA.getWidth()));
+        cellA.setY(clamp(cellA.getY() + moveAY, root.getHeight() - cellA.getHeight()));
+        cellB.setX(clamp(cellB.getX() + moveBX, root.getWidth() - cellB.getWidth()));
+        cellB.setY(clamp(cellB.getY() + moveBY, root.getHeight() - cellB.getHeight()));
     }
 
-    private double clamp(double value, double min, double max) {
-        return Math.max(min, Math.min(max, value));
+    private double clamp(double value, double max) {
+        return Math.max(0, Math.min(max, value));
     }
 
 }
