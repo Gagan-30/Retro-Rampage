@@ -11,6 +11,8 @@ public class RoomManager {
     private final Pane root; // The pane on which rooms will be drawn
     private final List<Cell> cells = new ArrayList<>();
     private final Random random = new Random();
+    private final double minDisperseWidth = 60.0;
+    private final double minDisperseHeight = 60.0;
 
     public RoomManager(int numberOfCells, Pane root) {
         this.numberOfCells = numberOfCells;
@@ -23,8 +25,8 @@ public class RoomManager {
         double centerY = root.getHeight() / 2;
 
         for (int i = 0; i < numberOfCells; i++) {
-            double width = 30 + random.nextDouble() * (100 - 30); // Random width between 30 and 100
-            double height = 30 + random.nextDouble() * (100 - 30); // Random height between 30 and 100
+            double width = 50 + random.nextDouble() * (250 - 50); // Random width between 50 and 250
+            double height = 50 + random.nextDouble() * (250 - 50); // Random height between 50 and 250
 
             // Position the cell's center at the center of the pane
             double x = centerX - width / 2;
@@ -34,8 +36,8 @@ public class RoomManager {
 
             // Determine if the cell should be considered a room based on size thresholds
             // Define size thresholds for what constitutes a room
-            double roomWidthThreshold = 30.0;
-            double roomHeightThreshold = 30.0;
+            double roomWidthThreshold = 60.0;
+            double roomHeightThreshold = 60.0;
             if (cell.getWidth() >= roomWidthThreshold && cell.getHeight() >= roomHeightThreshold) {
                 cell.setRoom(true);
             }
@@ -87,8 +89,18 @@ public class RoomManager {
 
     private void adjustPositions(Cell cellA, Cell cellB) {
         // Calculate the overlap offsets for X and Y axes
-        double overlapX = (cellA.getWidth() / 2 + cellB.getWidth() / 2) - Math.abs(cellA.getCenterX() - cellB.getCenterX());
-        double overlapY = (cellA.getHeight() / 2 + cellB.getHeight() / 2) - Math.abs(cellA.getCenterY() - cellB.getCenterY());
+        double overlapX = (cellA.getWidth() / 2 + cellB.getWidth() / 2 + minDisperseWidth * 1.15)
+                - Math.abs(cellA.getCenterX() - cellB.getCenterX());
+        double overlapY = (cellA.getHeight() / 2 + cellB.getHeight() / 2 + minDisperseHeight * 1.15)
+                - Math.abs(cellA.getCenterY() - cellB.getCenterY());
+
+        // Ensure there's a minimum separation distance
+        if (overlapX < minDisperseWidth) {
+            overlapX += minDisperseWidth - overlapX;
+        }
+        if (overlapY < minDisperseHeight) {
+            overlapY += minDisperseHeight - overlapY;
+        }
 
         // Calculate the direction to move each cell
         double moveAX = overlapX * (cellA.getCenterX() < cellB.getCenterX() ? -1 : 1);
@@ -96,7 +108,7 @@ public class RoomManager {
         double moveBX = -moveAX;
         double moveBY = -moveAY;
 
-        // Apply the calculated positions, ensuring cells stay within the pane's bounds
+        // Apply the calculated positions, ensuring cells stay within the pane's bounds and maintain minimum separation
         cellA.setX(clamp(cellA.getX() + moveAX, root.getWidth() - cellA.getWidth()));
         cellA.setY(clamp(cellA.getY() + moveAY, root.getHeight() - cellA.getHeight()));
         cellB.setX(clamp(cellB.getX() + moveBX, root.getWidth() - cellB.getWidth()));

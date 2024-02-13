@@ -7,8 +7,8 @@ public class LevelGenerator {
     private final int numberOfCells;
     private Pane root;
     private Scene scene;
-    private int WIDTH = 800;
-    private int HEIGHT = 600;
+    private int WIDTH = 1920;
+    private int HEIGHT = 1080;
 
     // Initialize the managers
     private RoomManager roomManager;
