@@ -4,6 +4,8 @@ import javafx.scene.layout.Pane;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import javafx.scene.shape.Rectangle;
 import org.locationtech.jts.geom.Coordinate;
 
 public class RoomManager {
@@ -119,4 +121,15 @@ public class RoomManager {
         return Math.max(0, Math.min(max, value));
     }
 
+    public List<Rectangle> getRoomRectangles() {
+        List<Rectangle> roomRectangles = new ArrayList<>();
+        for (Cell cell : cells) {
+            if (cell.isRoom()) {
+                // Create a new Rectangle based on the cell's position and size
+                Rectangle roomRectangle = new Rectangle(cell.getX(), cell.getY(), cell.getWidth(), cell.getHeight());
+                roomRectangles.add(roomRectangle);
+            }
+        }
+        return roomRectangles;
+    }
 }

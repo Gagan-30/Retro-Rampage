@@ -2,6 +2,9 @@ package com.base.game.retrorampage.LevelGeneration;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
+
+import java.util.List;
 
 public class LevelGenerator {
     private final int numberOfCells;
@@ -31,7 +34,9 @@ public class LevelGenerator {
     public Scene generateLevel() {
         // 1. Generate and identify rooms
         roomManager.generateRooms();
+        List<Rectangle> roomRectangles = roomManager.getRoomRectangles();
         roomManager.disperseCells();
+        corridorManager.setRooms(roomRectangles);
 
         // 2. Perform triangulation and generate MST
         var roomCenters = roomManager.getRoomCenters();

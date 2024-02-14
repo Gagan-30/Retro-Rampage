@@ -9,6 +9,7 @@ import java.util.List;
 
 public class CorridorManager {
     private Pane root; // The JavaFX pane on which corridors will be drawn
+    private List<Rectangle> rooms;
 
     public CorridorManager(Pane root) {
         this.root = root;
@@ -63,6 +64,9 @@ public class CorridorManager {
             Rectangle hallwayHorizontal = new Rectangle(x1, y1, w1, h1);
             Rectangle hallwayVertical = new Rectangle(x2, y2, w2, h2);
 
+            adjustSegmentIfOverlapping(hallwayHorizontal);
+            adjustSegmentIfOverlapping(hallwayVertical);
+
             // Set the fill color to transparent and the stroke to a visible color
             hallwayHorizontal.setFill(null);
             hallwayHorizontal.setStroke(Color.GREEN);
@@ -72,5 +76,52 @@ public class CorridorManager {
             // Add the hallway segments to the root pane
             root.getChildren().addAll(hallwayHorizontal, hallwayVertical);
         }
+    }
+
+    private void adjustSegmentIfOverlapping(Rectangle hallwaySegment) {
+        for (Rectangle room : rooms) {
+            if (hallwaySegment.getBoundsInParent().intersects(room.getBoundsInParent())) {
+                // Calculate intersection details
+                double intersectionMinX = Math.max(hallwaySegment.getX(), room.getX());
+                double intersectionMaxX = Math.min(hallwaySegment.getX() + hallwaySegment.getWidth(), room.getX() + room.getWidth());
+                double intersectionMinY = Math.max(hallwaySegment.getY(), room.getY());
+                double intersectionMaxY = Math.min(hallwaySegment.getY() + hallwaySegment.getHeight(), room.getY() + room.getHeight());
+
+                // Determine if hallway segment is horizontal or vertical by comparing width and height
+                boolean isHorizontal = hallwaySegment.getWidth() > hallwaySegment.getHeight();
+
+                if (isHorizontal) {
+                    if (hallwaySegment.getX() < room.getX()) {
+                        // Hallway is to the left of the room, shorten it to end at the room's left edge
+                        hallwaySegment.setWidth(intersectionMinX - hallwaySegment.getX());
+                    } else {
+                        // Hallway is to the right of the room, move it to start at the room's right edge and adjust the width
+                        double newWidth = hallwaySegment.getWidth() - (intersectionMaxX - hallwaySegment.getX());
+                        hallwaySegment.setX(intersectionMaxX);
+                        hallwaySegment.setWidth(newWidth);
+                    }
+                } else { // Vertical hallway segment
+                    if (hallwaySegment.getY() < room.getY()) {
+                        // Hallway is above the room, shorten it to end at the room's top edge
+                        hallwaySegment.setHeight(intersectionMinY - hallwaySegment.getY());
+                    } else {
+                        // Hallway is below the room, move it to start at the room's bottom edge and adjust the height
+                        double newHeight = hallwaySegment.getHeight() - (intersectionMaxY - hallwaySegment.getY());
+                        hallwaySegment.setY(intersectionMaxY);
+                        hallwaySegment.setHeight(newHeight);
+                    }
+                }
+
+                // If the adjustment makes the width or height zero or negative, remove this segment
+                if (hallwaySegment.getWidth() <= 0 || hallwaySegment.getHeight() <= 0) {
+                    root.getChildren().remove(hallwaySegment);
+                    return;
+                }
+            }
+        }
+    }
+
+    public void setRooms(List<Rectangle> rooms) {
+        this.rooms = rooms;
     }
 }
