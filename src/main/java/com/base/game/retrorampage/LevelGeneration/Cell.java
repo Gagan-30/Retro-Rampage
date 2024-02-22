@@ -8,6 +8,9 @@ public class Cell {
     private double x, y; // Coordinates of the top-left corner of the cell
     private double width, height; // Size dimensions of the cell
     private boolean isRoom = false; // Flag indicating whether the cell is considered a room
+    private boolean exitRoom;
+    private boolean isSpawnRoom = false;
+    private boolean isExitRoom = false;
 
     // Constructor initializes the cell with its position and size
     public Cell(double x, double y, double width, double height) {
@@ -21,7 +24,15 @@ public class Cell {
     public void draw(Pane root) {
         Rectangle rectangle = new Rectangle(this.x, this.y, this.width, this.height);
         rectangle.setStroke(Color.BLACK); // Sets the border color of the cell
-        rectangle.setFill(Color.TRANSPARENT); // Sets the interior of the cell to be transparent
+
+        if (this.isSpawnRoom) {
+            rectangle.setFill(Color.GREEN);
+        } else if (this.isExitRoom) {
+            rectangle.setFill(Color.RED);
+        } else {
+            rectangle.setFill(Color.TRANSPARENT);
+        }
+
         root.getChildren().add(rectangle);
     }
 
@@ -81,5 +92,12 @@ public class Cell {
 
     public void setRoom(boolean isRoom) {
         this.isRoom = isRoom;
+    }
+    public void setSpawnRoom(boolean isSpawnRoom) {
+        this.isSpawnRoom = isSpawnRoom;
+    }
+
+    public void setExitRoom(boolean isExitRoom) {
+        this.isExitRoom = isExitRoom;
     }
 }

@@ -53,6 +53,7 @@ public class LevelGenerator {
         roomManager.drawRooms();
         visualizationManager.drawDelaunayTriangulation(graphManager.getEdges()); // Ensure GraphManager exposes the edg
         corridorManager.createHallways(loopedEdges, 5);
+        roomManager.setExitRoomUsingBFS();
 
         // Return the scene containing the generated level
         return this.scene;

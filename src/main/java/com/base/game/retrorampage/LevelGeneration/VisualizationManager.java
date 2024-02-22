@@ -3,7 +3,6 @@ package com.base.game.retrorampage.LevelGeneration;
 import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
-import org.locationtech.jts.geom.Coordinate;
 import java.util.List;
 import javafx.scene.paint.Color;
 

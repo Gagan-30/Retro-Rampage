@@ -2,16 +2,17 @@ package com.base.game.retrorampage.LevelGeneration;
 
 import javafx.scene.layout.Pane;
 
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.locationtech.jts.geom.Coordinate;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class RoomManager {
     private final int numberOfCells;
     private final Pane root; // The pane on which rooms will be drawn
+    private Cell spawnRoom;
+    private Cell exitRoom;
     private final List<Cell> cells = new ArrayList<>();
     private final Random random = new Random();
     private final double minDisperseWidth = 60.0;
@@ -65,10 +66,23 @@ public class RoomManager {
     public void drawRooms() {
         for (Cell cell : cells) {
             if (cell.isRoom()) {
-                cell.draw(root);
+                Rectangle rectangle = new Rectangle(cell.getX(), cell.getY(), cell.getWidth(), cell.getHeight());
+                rectangle.setStroke(Color.BLACK); // Border color for all cells
+
+                // Set fill color based on the room type
+                if (cell == spawnRoom) {
+                    rectangle.setFill(Color.GREEN); // Spawn room in green
+                } else if (cell == exitRoom) {
+                    rectangle.setFill(Color.RED); // Exit room in red
+                } else {
+                    rectangle.setFill(Color.TRANSPARENT); // Other rooms remain transparent or another color
+                }
+
+                root.getChildren().add(rectangle);
             }
         }
     }
+
 
     public void disperseCells() {
         boolean moved;
@@ -131,4 +145,56 @@ public class RoomManager {
         }
         return roomRectangles;
     }
+
+    // Method to set the exit room using BFS
+    public void setExitRoomUsingBFS() {
+        if (cells.isEmpty() || spawnRoom == null) {
+            System.out.println("Cells or spawn room not initialized.");
+            return;
+        }
+
+        // Initialize visited array or map if necessary to keep track of visited rooms
+        Map<Cell, Boolean> visited = new HashMap<>();
+        for (Cell cell : cells) {
+            visited.put(cell, false);
+        }
+
+        // Queue for BFS
+        Queue<Cell> queue = new LinkedList<>();
+        queue.add(spawnRoom);
+        visited.put(spawnRoom, true);
+
+        Cell currentRoom = null;
+
+        while (!queue.isEmpty()) {
+            currentRoom = queue.poll();
+
+            // Iterate over neighbors of the current room
+            // This requires a method or a way to get the neighboring rooms of a given room
+            List<Cell> neighbors = getNeighbors(currentRoom);
+            for (Cell neighbor : neighbors) {
+                if (!visited.get(neighbor)) {
+                    queue.add(neighbor);
+                    visited.put(neighbor, true);
+                }
+            }
+        }
+
+        // After BFS, currentRoom will be the last room visited, which is the furthest from the spawn
+        if (currentRoom != null && currentRoom != spawnRoom) {
+            exitRoom = currentRoom;
+            exitRoom.setExitRoom(true); // You'll need a method in Cell to mark it as the exit room
+        }
+
+        // Redraw rooms to visually update the exit room
+        drawRooms();
+    }
+
+    // This is a placeholder for a method to get neighbors of a cell
+    // You'll need to implement this based on how your cells/rooms are connected
+    private List<Cell> getNeighbors(Cell cell) {
+        // Implement logic to find and return neighboring cells
+        return new ArrayList<>();
+    }
+
 }
