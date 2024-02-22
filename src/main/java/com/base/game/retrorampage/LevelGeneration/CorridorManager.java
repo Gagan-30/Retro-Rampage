@@ -68,10 +68,10 @@ public class CorridorManager {
             adjustSegmentIfOverlapping(hallwayVertical);
 
             // Set the fill color to transparent and the stroke to a visible color
-            hallwayHorizontal.setFill(null);
-            hallwayHorizontal.setStroke(Color.GREEN);
-            hallwayVertical.setFill(null);
-            hallwayVertical.setStroke(Color.GREEN);
+            hallwayHorizontal.setFill(Color.BLACK);
+            hallwayHorizontal.setStroke(Color.BLACK);
+            hallwayVertical.setFill(Color.BLACK);
+            hallwayVertical.setStroke(Color.BLACK);
 
             // Add the hallway segments to the root pane
             root.getChildren().addAll(hallwayHorizontal, hallwayVertical);
@@ -90,7 +90,7 @@ public class CorridorManager {
                 // Determine if hallway segment is horizontal or vertical by comparing width and height
                 boolean isHorizontal = hallwaySegment.getWidth() > hallwaySegment.getHeight();
 
-                if (isHorizontal) {
+                if (isHorizontal) { // Horizontal hallway segment
                     if (hallwaySegment.getX() < room.getX()) {
                         // Hallway is to the left of the room, shorten it to end at the room's left edge
                         hallwaySegment.setWidth(intersectionMinX - hallwaySegment.getX());

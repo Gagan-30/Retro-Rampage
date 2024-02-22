@@ -1,12 +1,13 @@
 package com.base.game.retrorampage.LevelGeneration;
 
 import javafx.scene.layout.Pane;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 import javafx.scene.shape.Rectangle;
 import org.locationtech.jts.geom.Coordinate;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class RoomManager {
     private final int numberOfCells;
@@ -30,23 +31,21 @@ public class RoomManager {
             double width = 50 + random.nextDouble() * (250 - 50); // Random width between 50 and 250
             double height = 50 + random.nextDouble() * (250 - 50); // Random height between 50 and 250
 
-            // Position the cell's center at the center of the pane
             double x = centerX - width / 2;
             double y = centerY - height / 2;
 
             Cell cell = new Cell(x, y, width, height);
 
-            // Determine if the cell should be considered a room based on size thresholds
-            // Define size thresholds for what constitutes a room
             double roomWidthThreshold = 60.0;
             double roomHeightThreshold = 60.0;
             if (cell.getWidth() >= roomWidthThreshold && cell.getHeight() >= roomHeightThreshold) {
-                cell.setRoom(true);
+                if (cell.getWidth() >= 60.0 && cell.getHeight() >= 60.0) {
+                    cell.setRoom(true);
+                }
+
+                cells.add(cell);
             }
-
-            cells.add(cell);
         }
-
         disperseCells(); // Disperse cells after they are created at the center
     }
 
