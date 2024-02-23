@@ -20,22 +20,6 @@ public class Cell {
         this.height = height;
     }
 
-    // Draws the cell on the given pane using a rectangle shape
-    public void draw(Pane root) {
-        Rectangle rectangle = new Rectangle(this.x, this.y, this.width, this.height);
-        rectangle.setStroke(Color.BLACK); // Sets the border color of the cell
-
-        if (this.isSpawnRoom) {
-            rectangle.setFill(Color.GREEN);
-        } else if (this.isExitRoom) {
-            rectangle.setFill(Color.RED);
-        } else {
-            rectangle.setFill(Color.TRANSPARENT);
-        }
-
-        root.getChildren().add(rectangle);
-    }
-
     // Checks if this cell overlaps with another cell (cellB)
     public boolean overlaps(Cell cellB) {
         // Determines horizontal and vertical separations between the cells

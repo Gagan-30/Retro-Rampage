@@ -7,11 +7,10 @@ import javafx.scene.shape.Rectangle;
 import java.util.List;
 
 public class LevelGenerator {
-    private final int numberOfCells;
-    private Pane root;
-    private Scene scene;
-    private int WIDTH = 1920;
-    private int HEIGHT = 1080;
+    private final Scene scene;
+    private final int WIDTH = 1920;
+    private final int HEIGHT = 1080;
+
 
     // Initialize the managers
     private RoomManager roomManager;
@@ -20,9 +19,8 @@ public class LevelGenerator {
     private VisualizationManager visualizationManager;
 
     public LevelGenerator(int numberOfCells) {
-        this.numberOfCells = numberOfCells;
-        this.root = new Pane();
-        this.scene = new Scene(root, WIDTH, HEIGHT); // Assuming fixed dimensions for simplicity
+        Pane root = new Pane();
+        this.scene = new Scene(root, WIDTH, HEIGHT); // fixed dimensions for simplicity
 
         // Initialize managers with necessary parameters
         this.roomManager = new RoomManager(numberOfCells, root);
@@ -53,7 +51,6 @@ public class LevelGenerator {
         roomManager.drawRooms();
         visualizationManager.drawDelaunayTriangulation(graphManager.getEdges()); // Ensure GraphManager exposes the edg
         corridorManager.createHallways(loopedEdges, 5);
-        roomManager.setExitRoomUsingBFS();
 
         // Return the scene containing the generated level
         return this.scene;
