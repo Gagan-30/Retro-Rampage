@@ -8,6 +8,9 @@ import java.util.List;
 
 public class LevelGenerator {
     private final Scene scene;
+    private final int WIDTH = 1920;
+    private final int HEIGHT = 1080;
+
 
     // Initialize the managers
     private RoomManager roomManager;
@@ -17,9 +20,7 @@ public class LevelGenerator {
 
     public LevelGenerator(int numberOfCells) {
         Pane root = new Pane();
-        int WIDTH = 1920;
-        int HEIGHT = 1080;
-        this.scene = new Scene(root, WIDTH, HEIGHT); // Assuming fixed dimensions for simplicity
+        this.scene = new Scene(root, WIDTH, HEIGHT); // fixed dimensions for simplicity
 
         // Initialize managers with necessary parameters
         this.roomManager = new RoomManager(numberOfCells, root);
