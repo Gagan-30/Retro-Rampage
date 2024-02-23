@@ -15,8 +15,6 @@ public class RoomManager {
     private Cell exitRoom;
     private final List<Cell> cells = new ArrayList<>();
     private final Random random = new Random();
-    private final double minDisperseWidth = 60.0;
-    private final double minDisperseHeight = 60.0;
 
     public RoomManager(int numberOfCells, Pane root) {
         this.numberOfCells = numberOfCells;
@@ -111,8 +109,10 @@ public class RoomManager {
 
     private void adjustPositions(Cell cellA, Cell cellB) {
         // Calculate the overlap offsets for X and Y axes
+        double minDisperseWidth = 60.0;
         double overlapX = (cellA.getWidth() / 2 + cellB.getWidth() / 2 + minDisperseWidth * 1.15)
                 - Math.abs(cellA.getCenterX() - cellB.getCenterX());
+        double minDisperseHeight = 60.0;
         double overlapY = (cellA.getHeight() / 2 + cellB.getHeight() / 2 + minDisperseHeight * 1.15)
                 - Math.abs(cellA.getCenterY() - cellB.getCenterY());
 
