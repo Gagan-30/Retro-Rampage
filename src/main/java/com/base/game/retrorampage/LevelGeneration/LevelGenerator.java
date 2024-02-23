@@ -7,11 +7,7 @@ import javafx.scene.shape.Rectangle;
 import java.util.List;
 
 public class LevelGenerator {
-    private final int numberOfCells;
-    private Pane root;
-    private Scene scene;
-    private int WIDTH = 1920;
-    private int HEIGHT = 1080;
+    private final Scene scene;
 
     // Initialize the managers
     private RoomManager roomManager;
@@ -20,8 +16,9 @@ public class LevelGenerator {
     private VisualizationManager visualizationManager;
 
     public LevelGenerator(int numberOfCells) {
-        this.numberOfCells = numberOfCells;
-        this.root = new Pane();
+        Pane root = new Pane();
+        int WIDTH = 1920;
+        int HEIGHT = 1080;
         this.scene = new Scene(root, WIDTH, HEIGHT); // Assuming fixed dimensions for simplicity
 
         // Initialize managers with necessary parameters
