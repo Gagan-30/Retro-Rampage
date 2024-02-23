@@ -28,26 +28,33 @@ public class RoomManager {
         double centerX = root.getWidth() / 2;
         double centerY = root.getHeight() / 2;
 
-        for (int i = 0; i < numberOfCells; i++) {
+        while (cells.size() < numberOfCells) {
             double width = 50 + random.nextDouble() * (250 - 50); // Random width between 50 and 250
             double height = 50 + random.nextDouble() * (250 - 50); // Random height between 50 and 250
 
-            double x = centerX - width / 2;
-            double y = centerY - height / 2;
+            double x = centerX - width / 2 + (random.nextDouble() - 0.5) * root.getWidth();
+            double y = centerY - height / 2 + (random.nextDouble() - 0.5) * root.getHeight();
 
             Cell cell = new Cell(x, y, width, height);
 
-            double roomWidthThreshold = 60.0;
-            double roomHeightThreshold = 60.0;
-            if (cell.getWidth() >= roomWidthThreshold && cell.getHeight() >= roomHeightThreshold) {
-                if (cell.getWidth() >= 60.0 && cell.getHeight() >= 60.0) {
-                    cell.setRoom(true);
-                }
-
+            // Check if the cell meets the criteria to be considered a room before adding
+            if (cell.getWidth() >= 60.0 && cell.getHeight() >= 60.0) {
+                cell.setRoom(true);
                 cells.add(cell);
             }
         }
-        disperseCells(); // Disperse cells after they are created at the center
+
+        disperseCells(); // Disperse cells after they are created
+
+        // Set the first room as the spawn room if it exists
+        if (!cells.isEmpty()) {
+            spawnRoom = cells.get(0); // Assuming the first cell is a room
+            spawnRoom.setSpawnRoom(true);
+
+            // Set the last generated room as the exit room
+            exitRoom = cells.get(cells.size() - 1); // Get the last room in the list
+            exitRoom.setExitRoom(true);
+        }
     }
 
     public List<Coordinate> getRoomCenters() {
@@ -144,57 +151,6 @@ public class RoomManager {
             }
         }
         return roomRectangles;
-    }
-
-    // Method to set the exit room using BFS
-    public void setExitRoomUsingBFS() {
-        if (cells.isEmpty() || spawnRoom == null) {
-            System.out.println("Cells or spawn room not initialized.");
-            return;
-        }
-
-        // Initialize visited array or map if necessary to keep track of visited rooms
-        Map<Cell, Boolean> visited = new HashMap<>();
-        for (Cell cell : cells) {
-            visited.put(cell, false);
-        }
-
-        // Queue for BFS
-        Queue<Cell> queue = new LinkedList<>();
-        queue.add(spawnRoom);
-        visited.put(spawnRoom, true);
-
-        Cell currentRoom = null;
-
-        while (!queue.isEmpty()) {
-            currentRoom = queue.poll();
-
-            // Iterate over neighbors of the current room
-            // This requires a method or a way to get the neighboring rooms of a given room
-            List<Cell> neighbors = getNeighbors(currentRoom);
-            for (Cell neighbor : neighbors) {
-                if (!visited.get(neighbor)) {
-                    queue.add(neighbor);
-                    visited.put(neighbor, true);
-                }
-            }
-        }
-
-        // After BFS, currentRoom will be the last room visited, which is the furthest from the spawn
-        if (currentRoom != null && currentRoom != spawnRoom) {
-            exitRoom = currentRoom;
-            exitRoom.setExitRoom(true); // You'll need a method in Cell to mark it as the exit room
-        }
-
-        // Redraw rooms to visually update the exit room
-        drawRooms();
-    }
-
-    // This is a placeholder for a method to get neighbors of a cell
-    // You'll need to implement this based on how your cells/rooms are connected
-    private List<Cell> getNeighbors(Cell cell) {
-        // Implement logic to find and return neighboring cells
-        return new ArrayList<>();
     }
 
 }
