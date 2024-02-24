@@ -50,7 +50,7 @@ public class LevelGenerator {
         // 4. Draw Rooms and Triangulation
         roomManager.drawRooms();
         visualizationManager.drawDelaunayTriangulation(graphManager.getEdges()); // Ensure GraphManager exposes the edg
-        corridorManager.createHallways(loopedEdges, 5);
+        corridorManager.createHallways(loopedEdges, 10);
 
         // Return the scene containing the generated level
         return this.scene;

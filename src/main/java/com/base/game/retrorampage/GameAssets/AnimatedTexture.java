@@ -9,6 +9,17 @@ public class AnimatedTexture extends Texture {
     private long frameDuration; // Duration of each frame in nanoseconds
     private long lastFrameChangeTime = 0; // When the last frame change occurred
 
+    public AnimatedTexture(String[] imagePaths, long frameDuration) {
+        super(imagePaths[0]); // Initialize with the first frame
+        this.frames = new Image[imagePaths.length];
+        for (int i = 0; i < imagePaths.length; i++) {
+            frames[i] = new Image(imagePaths[i]);
+        }
+        this.frameDuration = frameDuration;
+        currentFrame = 0;
+        animationTimer.start(); // Start the animation
+    }
+
     // AnimationTimer to update the frame based on the frameDuration
     private AnimationTimer animationTimer = new AnimationTimer() {
         @Override
@@ -20,17 +31,6 @@ public class AnimatedTexture extends Texture {
             }
         }
     };
-
-    public AnimatedTexture(String[] imagePaths, long frameDuration) {
-        super(imagePaths[0]); // Initialize with the first frame
-        this.frames = new Image[imagePaths.length];
-        for (int i = 0; i < imagePaths.length; i++) {
-            frames[i] = new Image(imagePaths[i]);
-        }
-        this.frameDuration = frameDuration;
-        currentFrame = 0;
-        animationTimer.start(); // Start the animation
-    }
 
     // Call this method to start the animation explicitly if needed
     public void startAnimation() {
