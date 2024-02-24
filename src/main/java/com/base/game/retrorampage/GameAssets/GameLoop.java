@@ -4,6 +4,7 @@ import com.base.game.retrorampage.LevelGeneration.LevelGenerator;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 
 public class GameLoop implements Runnable {
     private final int FPS = 10000;
@@ -68,10 +69,12 @@ public class GameLoop implements Runnable {
             // Clear previous frame
             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-            // Draw the player at its current position
-            gc.drawImage(player.getTexture().getImage(), player.getX(), player.getY());
+            // Delegate the drawing of the player to the Player class
+            player.render(gc);
         });
     }
+
+
 
 
     public void start() {

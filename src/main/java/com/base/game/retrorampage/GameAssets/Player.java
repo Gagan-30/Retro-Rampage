@@ -1,5 +1,8 @@
 package com.base.game.retrorampage.GameAssets;
 
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+
 public class Player extends Sprite {
     private float speed; // Movement speed
 
@@ -16,5 +19,13 @@ public class Player extends Sprite {
 
     public void attack() {
         // Attack logic
+    }
+
+    public void render(GraphicsContext gc) {
+            Image playerImage = this.getTexture().getImage();
+            double scaleFactor = this.getTexture().getScaleFactor();
+            double scaledWidth = playerImage.getWidth() * scaleFactor;
+            double scaledHeight = playerImage.getHeight() * scaleFactor;
+            gc.drawImage(playerImage, this.getX(), this.getY(), scaledWidth, scaledHeight);
     }
 }
