@@ -1,7 +1,6 @@
 package com.base.game.retrorampage.LevelGeneration;
 
 import com.base.game.retrorampage.GameAssets.Camera;
-import com.base.game.retrorampage.GameAssets.GameLoop;
 import com.base.game.retrorampage.GameAssets.Player;
 import com.base.game.retrorampage.GameAssets.Texture;
 import javafx.application.Application;
