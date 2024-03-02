@@ -64,6 +64,10 @@ public class Sprite {
 
     public ArrayList<Action> actionList;
     ImageView imageView;
+    private Pane root;
+    private double x;
+    private double y;
+    private double rotation;
 
     public Sprite() {
         position = new Vector();
@@ -148,10 +152,12 @@ public class Sprite {
         angle += da;
     }
 
-    public void alignToSprite(Sprite other) {
-        this.setPosition(other.position.x, other.position.y);
-        this.setAngle(other.angle);
+    // Inside the Bullet class
+    void alignToSprite(Sprite sprite) {
+        this.setX(sprite.getX());
+        this.setY(sprite.getY());
     }
+
 
     /**
      * Move sprite by the specified distance at the specified angle.
@@ -296,48 +302,24 @@ public class Sprite {
         }
     }
 
-    /**
-     * draw this sprite on the canvas
-     *
-     * @param context GraphicsContext object that handles drawing to the canvas
-     */
-    public void draw(GraphicsContext context) {
-        // if sprite is not visible, exit method
-        if (!this.visible)
-            return;
-
-        double A = Math.toRadians(angle);
-        double cosA = Math.cos(A);
-        double sinA = Math.sin(A);
-
-        double scaleX = 1;
-        if (mirrored)
-            scaleX = -1;
-
-        double scaleY = 1;
-        if (flipped)
-            scaleY = -1;
-
-        // apply rotation and translation to image
-        context.setTransform(
-                scaleX * cosA, scaleX * sinA,
-                scaleY * (-sinA), scaleY * cosA,
-                position.x, position.y);
-
-        // set opacity level
-        context.setGlobalAlpha(opacity);
-
-        // define source rectangle region of image
-        // and destination rectangle region of canvas
-        context.drawImage(texture.image,
-                texture.region.left, texture.region.top,
-                texture.region.width, texture.region.height,
-                -this.width / 2, -this.height / 2,
-                this.width, this.height);
-    }
-
     public Vector getPosition() {
         return position;
+    }
+
+    public void setRoot(Pane root) {
+        this.root = root;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public double getRotation() {
+        return rotation;
     }
 }
 

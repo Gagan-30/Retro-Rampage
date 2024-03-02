@@ -1,4 +1,5 @@
 package com.base.game.retrorampage.GameAssets;
+
 import com.base.game.retrorampage.LevelGeneration.Cell;
 import com.base.game.retrorampage.LevelGeneration.CorridorManager;
 import com.base.game.retrorampage.MainMenu.Config;
@@ -81,6 +82,14 @@ public class Player extends Sprite {
         double mouseY = input.getMouseY();
         double angleToMouse = Math.toDegrees(Math.atan2(mouseY - getY(), mouseX - getX()));
         setRotation(angleToMouse);
+    }
+
+    public double getMouseLookingDirection(Input input) {
+        double mouseX = input.getMouseX();
+        double mouseY = input.getMouseY();
+
+        // Calculate the angle between player and mouse position
+        return Math.toDegrees(Math.atan2(mouseY - getY(), mouseX - getX()));
     }
 
     public void resolveCollision(Rectangle obstacle) {

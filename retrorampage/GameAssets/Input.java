@@ -66,6 +66,10 @@ public class Input {
         );
     }
 
+    public Input() {
+
+    }
+
     /**
      * Update input state information.
      * Automatically called by {@link Game} class during the game loop.

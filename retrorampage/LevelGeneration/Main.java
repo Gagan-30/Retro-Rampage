@@ -26,6 +26,6 @@ public class Main extends Game {
 
     @Override
     public void update() {
-        levelGenerator.updatePlayerPosition();
+        levelGenerator.update();
     }
 }
