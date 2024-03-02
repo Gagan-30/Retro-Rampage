@@ -5,8 +5,8 @@ import com.base.game.retrorampage.GameAssets.Player;
 import javafx.scene.Scene;
 
 public class Main extends Game {
-    private LevelGenerator levelGenerator;
-    private Player player;
+    LevelGenerator levelGenerator;
+    Player player;
 
     @Override
     public void initialize() {
@@ -22,13 +22,10 @@ public class Main extends Game {
         // Set the scene to the primary stage
         stage.setScene(scene);
 
-
     }
 
     @Override
     public void update() {
-        if (player != null) {
-            player.handleMovementInput();
-        }
+        levelGenerator.updatePlayerPosition();
     }
 }

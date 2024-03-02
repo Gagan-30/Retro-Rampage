@@ -1,8 +1,9 @@
 package com.base.game.retrorampage.GameAssets;
 
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
 
@@ -11,53 +12,61 @@ public class Sprite {
      * sprite location in game world
      */
     public Vector position;
+
     /**
      * angle of rotation (in degrees) of the texture
      */
     public double angle;
+
     /**
      * determines whether texture is reversed along the x direction
      */
     public boolean mirrored;
+
     /**
      * determines whether texture is reversed along the y direction
      */
     public boolean flipped;
+
     /**
      * amount of transparency; value from 0.0 (fully transparent) to 1.0 (fully opaque)
      */
     public double opacity;
+
     /**
      * image displayed when rendering this sprite
      */
     public Texture texture;
+
     /**
      * shape used for collision
      */
     public Rect boundary;
+
     /**
      * width of sprite
      */
     public double width;
+
     /**
      * height of sprite
      */
     public double height;
+
     /**
      * determines if sprite will be visible
      */
     public boolean visible;
+
     public Physics physics;
+
     public Animation animation;
+
     public ArrayList<Action> actionList;
-    protected ImageView imageView;
-    protected double x;
-    protected double y;
-    private Rectangle square;
-    private ImageView playerImageView;
+    ImageView imageView;
 
     public Sprite() {
-        position = new Vector(); // Initialize the position vector
+        position = new Vector();
         angle = 0;
         mirrored = false;
         flipped = false;
@@ -67,50 +76,19 @@ public class Sprite {
         visible = true;
         physics = null;
         animation = null;
-        actionList = new ArrayList<>();
+        actionList = new ArrayList<Action>();
     }
 
-    public Sprite(Image image, double x, double y) {
+
+    public Sprite(String imagePath, double size) {
+        Image image = new Image(imagePath);
         this.imageView = new ImageView(image);
-        this.x = x;
-        this.y = y;
+        this.imageView.setFitWidth(size);
+        this.imageView.setFitHeight(size);
 
-        this.imageView.setX(x);
-        this.imageView.setY(y);
+        // Initialize the position vector
+        this.position = new Vector();
 
-        // Initialize the boundary
-        this.boundary = new Rect();
-        this.boundary.setX(x);
-        this.boundary.setY(y);
-    }
-
-    public ImageView getImageView() {
-        return imageView;
-    }
-
-    public double getX() {
-        return x;
-    }
-
-    public void setX(double x) {
-        this.x = x;
-        imageView.setX(x);
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-        imageView.setY(y);
-    }
-
-    public double getWidth() {
-        return width;
-    }
-    public double getHeight() {
-        return height;
     }
 
     /**
@@ -120,9 +98,32 @@ public class Sprite {
      * @param y y-coordinate of center of sprite
      */
     public void setPosition(double x, double y) {
-        position.setValues(x, y);
-        boundary.setPosition(x, y);
+        // Ensure the position vector is not null before invoking setValues
+        if (this.position != null) {
+            this.position.setValues(x, y);
+            this.imageView.relocate(x, y);
+        } else {
+            // Log an error or throw an exception if needed
+            System.err.println("Error: Position vector is null.");
+        }
     }
+
+    public void addToPane(Pane pane) {
+        pane.getChildren().add(this.imageView);
+    }
+
+    public double getX() {
+        return this.imageView.getLayoutX();
+    }
+
+    public double getY() {
+        return this.imageView.getLayoutY();
+    }
+
+    public void setRotation(double angle) {
+        this.imageView.setRotate(angle);
+    }
+
 
     /**
      * Move this sprite by the specified amounts.
@@ -194,14 +195,10 @@ public class Sprite {
      * @param width  sprite width
      * @param height sprite height
      */
-    public void setSize(double width, double height) {
-        // Set the size for the boundary
-        this.boundary.setWidth(width);
-        this.boundary.setHeight(height);
-
-        // Set the size for the image view
-        this.imageView.setFitWidth(width);
-        this.imageView.setFitHeight(height);
+    public void setSize(int width, int height) {
+        this.width = width;
+        this.height = height;
+        boundary.setSize(width, height);
     }
 
     public void setPhysics(Physics phys) {
@@ -248,30 +245,41 @@ public class Sprite {
      */
     public void preventOverlap(Sprite other) {
         if (this.overlaps(other)) {
-            Vector mtv = this.getBoundary().getMinimumTranslationVector(other.getBoundary());
+            Vector mtv = this.getBoundary()
+                    .getMinimumTranslationVector(other.getBoundary());
             this.position.addVector(mtv);
         }
     }
 
     public void boundToScreen(int screenWidth, int screenHeight) {
-        if (position.x - width / 2 < 0) position.x = width / 2;
-        if (position.y - height / 2 < 0) position.y = height / 2;
-        if (position.x + width / 2 > screenWidth) position.x = screenWidth - width / 2;
-        if (position.y + height / 2 > screenHeight) position.y = screenHeight - height / 2;
+        if (position.x - width / 2 < 0)
+            position.x = width / 2;
+        if (position.y - height / 2 < 0)
+            position.y = height / 2;
+        if (position.x + width / 2 > screenWidth)
+            position.x = screenWidth - width / 2;
+        if (position.y + height / 2 > screenHeight)
+            position.y = screenHeight - height / 2;
     }
 
     public void wrapToScreen(int screenWidth, int screenHeight) {
-        if (position.x + width / 2 < 0) position.x = screenWidth + width / 2;
-        if (position.x - width / 2 > screenWidth) position.x = -width / 2;
-        if (position.y + height / 2 < 0) position.y = screenHeight + height / 2;
-        if (position.y - height / 2 > screenHeight) position.y = -height / 2;
+        if (position.x + width / 2 < 0)
+            position.x = screenWidth + width / 2;
+        if (position.x - width / 2 > screenWidth)
+            position.x = -width / 2;
+        if (position.y + height / 2 < 0)
+            position.y = screenHeight + height / 2;
+        if (position.y - height / 2 > screenHeight)
+            position.y = -height / 2;
     }
 
     public void update(double dt) {
         if (physics != null) {
-            physics.position.setValues(this.position.x, this.position.y);
+            physics.position.setValues(
+                    this.position.x, this.position.y);
             physics.update(dt);
-            this.position.setValues(physics.position.x, physics.position.y);
+            this.position.setValues(
+                    physics.position.x, physics.position.y);
         }
 
         if (animation != null) {
@@ -283,15 +291,53 @@ public class Sprite {
         ArrayList<Action> actionListCopy = new ArrayList<Action>(actionList);
         for (Action a : actionListCopy) {
             boolean finished = a.apply(this, dt);
-            if (finished) actionList.remove(a);
+            if (finished)
+                actionList.remove(a);
         }
-        boundToScreen(1920, 1080);
+    }
 
+    /**
+     * draw this sprite on the canvas
+     *
+     * @param context GraphicsContext object that handles drawing to the canvas
+     */
+    public void draw(GraphicsContext context) {
+        // if sprite is not visible, exit method
+        if (!this.visible)
+            return;
+
+        double A = Math.toRadians(angle);
+        double cosA = Math.cos(A);
+        double sinA = Math.sin(A);
+
+        double scaleX = 1;
+        if (mirrored)
+            scaleX = -1;
+
+        double scaleY = 1;
+        if (flipped)
+            scaleY = -1;
+
+        // apply rotation and translation to image
+        context.setTransform(
+                scaleX * cosA, scaleX * sinA,
+                scaleY * (-sinA), scaleY * cosA,
+                position.x, position.y);
+
+        // set opacity level
+        context.setGlobalAlpha(opacity);
+
+        // define source rectangle region of image
+        // and destination rectangle region of canvas
+        context.drawImage(texture.image,
+                texture.region.left, texture.region.top,
+                texture.region.width, texture.region.height,
+                -this.width / 2, -this.height / 2,
+                this.width, this.height);
     }
 
     public Vector getPosition() {
         return position;
     }
-
 }
 

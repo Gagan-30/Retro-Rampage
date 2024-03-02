@@ -37,12 +37,12 @@
 ////
 ////
 ////
-////for (Rectangle roomRectangle : roomManager.getRoomRectangles()) {
+////for (Rect roomRectangle : roomManager.getRoomRectangles()) {
 ////        resolveCollision(roomRectangle);
 ////        }
 ////        }
 ////
-////private void resolveCollision(Rectangle obstacle) {
+////private void resolveCollision(Rect obstacle) {
 ////        if (player != null) {
 ////        // Get the start and end coordinates for the width and height of the obstacle
 ////        double obstacleStartX = obstacle.getX();
@@ -60,9 +60,9 @@
 ////
 ////        // Check if the new position is within the bounds of any hallway
 ////        boolean withinHallwayBounds = false;
-////        Rectangle[] hallwayBoundsList = corridorManager.getHallwayBounds();
+////        Rect[] hallwayBoundsList = corridorManager.getHallwayBounds();
 ////        if (hallwayBoundsList != null) {
-////        for (Rectangle hallwayBounds : hallwayBoundsList) {
+////        for (Rect hallwayBounds : hallwayBoundsList) {
 ////        if (newX >= hallwayBounds.getX()
 ////        && newX + player.getWidth() <= hallwayBounds.getX() + hallwayBounds.getWidth() &&
 ////        newY >= hallwayBounds.getY()
@@ -87,7 +87,7 @@
 //
 //private void drawPlayerInCenter(Cell center) {
 //        double squareSize = 50; // Adjust dimensions as needed
-//        this.square = new Rectangle(squareSize, squareSize); // Use class field
+//        this.square = new Rect(squareSize, squareSize); // Use class field
 //        this.square.setX(center.getCenterX() - square.getWidth() / 2);
 //        this.square.setY(center.getCenterY() - square.getHeight() / 2);
 //        this.square.setFill(Color.TRANSPARENT); // Set the fill color as needed

@@ -148,4 +148,10 @@ public class Input {
         this.mouseY = y;
     }
 
+    public void updateMousePosition(MouseEvent event) {
+        mouseX = event.getX();
+        mouseY = event.getY();
+    }
+
+
 }
