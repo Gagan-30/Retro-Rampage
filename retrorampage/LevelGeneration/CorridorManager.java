@@ -10,6 +10,8 @@ import java.util.List;
 public class CorridorManager {
     private Pane root; // The JavaFX pane on which corridors will be drawn
     private List<Rectangle> rooms;
+    private Rectangle[] hallwayRectangles;
+    private Rectangle[] hallwayBounds;
 
     public CorridorManager(Pane root) {
         this.root = root;
@@ -123,5 +125,13 @@ public class CorridorManager {
 
     public void setRooms(List<Rectangle> rooms) {
         this.rooms = rooms;
+    }
+
+    public Rectangle[] getHallwayRectangles() {
+        return hallwayRectangles;
+    }
+
+    public Rectangle[] getHallwayBounds() {
+        return hallwayBounds;
     }
 }
