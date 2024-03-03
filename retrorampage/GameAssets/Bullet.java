@@ -1,30 +1,37 @@
 package com.base.game.retrorampage.GameAssets;
 
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
-public class Bullet extends Sprite {
-    private double speed;
+public class Bullet {
+    private static final double BULLET_SPEED = 350.0; // Adjust the bullet speed as needed
     private boolean active;
-    private double screenWidth;
-    private double screenHeight;
     private Pane root;
+    private ImageView imageView;
     private double dx; // Directional velocity in the x-axis
     private double dy; // Directional velocity in the y-axis
-    private Input input;
     private Player player;
+    private Input input;
 
-    public Bullet(double size, String imagePath, double speed, Pane root) {
-        super(imagePath, size);
-        this.speed = speed;
+    public Bullet(double size, String image, Pane root, Player player, Input input) {
         this.active = false;
         this.root = root;
-        this.input = new Input();
+        this.player = player;
+        this.input = input;
+        this.imageView = new ImageView(image);
+        this.imageView.setFitWidth(size);
+        this.imageView.setFitHeight(size);
+        this.imageView.setPreserveRatio(true);
     }
 
     public void update(double dt) {
         if (isActive()) {
             // Move the bullet in the specified direction
-            moveBy(dx * speed * dt, dy * speed * dt);
+            imageView.setTranslateX(imageView.getTranslateX() + dx * BULLET_SPEED * dt);
+            imageView.setTranslateY(imageView.getTranslateY() + dy * BULLET_SPEED * dt);
+
+            // Set the rotation of the ImageView based on the direction
+            imageView.setRotate(Math.toDegrees(Math.atan2(dy, dx)));
 
             // Check if the bullet is out of bounds
             if (isOutOfBounds()) {
@@ -33,46 +40,38 @@ public class Bullet extends Sprite {
         }
     }
 
-    public void shoot(double playerX, double playerY, double playerAngle, Input input, Player player) {
-        // Set the player instance
-        this.player = player;
-
+    public void shoot(double playerX, double playerY, double playerAngle) {
         // Set the bullet position and activate it
-        setPosition(playerX, playerY);
+        imageView.setTranslateX(playerX);
+        imageView.setTranslateY(playerY);
 
-        // Get the mouse looking direction from the player
-        double angleToMouse = player.getMouseLookingDirection(input);
-
-        // Set the rotation of the ImageView based on the calculated angle
-        setRotation(angleToMouse);
-
-        // Calculate the direction based on the mouse looking direction
-        double bulletSpeed = 1.0; // You may adjust this value based on your game's requirements
-        dx = bulletSpeed * Math.cos(Math.toRadians(angleToMouse));
-        dy = bulletSpeed * Math.sin(Math.toRadians(angleToMouse));
+        playerAngle = player.getMouseLookingDirection(input);
+        // Calculate the direction based on the player's looking direction
+        double radians = Math.toRadians(playerAngle); // Convert to radians
+        dx = Math.cos(radians);
+        dy = Math.sin(radians);
 
         setActive(true);
 
-        // Draw the bullet with the mouse looking direction
-        draw(angleToMouse);
+        // Draw the bullet
+        draw(playerAngle);
     }
 
-
     public void draw(double angleToMouse) {
-        // Update the position of the ImageView based on the bullet's state
-        imageView.relocate(getX(), getY());
-
         // Set the rotation of the ImageView based on the calculated angle
         imageView.setRotate(angleToMouse);
 
-        // Add the bullet to the root
-        root.getChildren().add(this.imageView);
+        // Add the bullet to the root if it's not already a child
+        if (!root.getChildren().contains(imageView)) {
+            root.getChildren().add(this.imageView);
+        }
     }
 
     private boolean isOutOfBounds() {
         // Check if the bullet is out of bounds based on your game's screen size
         // Adjust the conditions based on your requirements
-        return getX() < 0 || getY() < 0 || getX() > screenWidth || getY() > screenHeight;
+        return imageView.getTranslateX() < 0 || imageView.getTranslateY() < 0 ||
+                imageView.getTranslateX() > root.getWidth() || imageView.getTranslateY() > root.getHeight();
     }
 
     public boolean isActive() {
@@ -81,13 +80,8 @@ public class Bullet extends Sprite {
 
     private void setActive(boolean active) {
         this.active = active;
-        if (!active) {
+        if (!active && root.getChildren().contains(imageView)) {
             root.getChildren().remove(this.imageView); // Remove the bullet from the root when inactive
         }
-    }
-
-    private void alignWithPlayer(double playerX, double playerY) {
-        // Set the bullet position to align with the player's position
-        setPosition(playerX, playerY);
     }
 }

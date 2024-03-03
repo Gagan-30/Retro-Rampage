@@ -103,8 +103,8 @@ public class LevelGenerator {
         String shootKey2 = config.getKeybind("Shoot2");
 
         if (input.isKeyPressed(shootKey1) || input.isKeyPressed(shootKey2)) {
-            Bullet newBullet = new Bullet(10, "bullet.png", 300.0, root);
-            newBullet.shoot(player.getX(), player.getY(), player.getRotation(), input, player);
+            Bullet newBullet = new Bullet(10, "bullet.png", root, player, input);
+            newBullet.shoot(player.getX(), player.getY(), player.getRotation());
             bullets.add(newBullet);
         }
     }
