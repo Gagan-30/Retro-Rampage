@@ -8,17 +8,22 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class Player extends Sprite {
-    private Rectangle square;
+    private final Rectangle square;
     private double prevPlayerX;
     private double prevPlayerY;
     private long lastUpdateTime = System.nanoTime();
     private CorridorManager corridorManager;
+    private int health;  // New field to store player health
+    private final double size;
 
-    public Player(double size, String imagePath) {
+    public Player(double size, String imagePath, int initialHealth) {
         super(imagePath, size);
         this.square = new Rectangle(size, size);
         this.square.setFill(Color.TRANSPARENT);
+        this.health = initialHealth;  // Initialize player health
+        this.size = size;  // Initialize player size
     }
+
 
     public void setCorridorManager(CorridorManager corridorManager) {
         this.corridorManager = corridorManager;
@@ -134,5 +139,15 @@ public class Player extends Sprite {
                 setPosition(getX() + (newX - square.getX()), getY() + (newY - square.getY()));
             }
         }
+    }
+
+    public double getSize() {
+        return size;
+    }
+
+    // New method to decrease player health
+    public void decreaseHealth(int amount) {
+        health -= amount;
+        System.out.println("health = " + health);
     }
 }

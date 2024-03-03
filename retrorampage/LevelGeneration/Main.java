@@ -1,5 +1,6 @@
 package com.base.game.retrorampage.LevelGeneration;
 
+import com.base.game.retrorampage.GameAssets.Bullet;
 import com.base.game.retrorampage.GameAssets.Game;
 import com.base.game.retrorampage.GameAssets.Player;
 import javafx.scene.Scene;
@@ -27,5 +28,6 @@ public class Main extends Game {
     @Override
     public void update() {
         levelGenerator.update();
+
     }
 }

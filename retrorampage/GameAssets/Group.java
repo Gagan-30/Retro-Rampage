@@ -9,7 +9,7 @@ public class Group {
     /**
      * The collection underlying this list.
      */
-    private ArrayList<Sprite> list;
+    private final ArrayList<Sprite> list;
 
     /**
      * Initialize this object.

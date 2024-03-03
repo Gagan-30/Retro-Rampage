@@ -163,4 +163,8 @@ public class RoomManager {
     public Cell getSpawnCell() {
         return spawnRoom;
     }
+
+    public List<Cell> getCells() {
+        return cells;
+    }
 }

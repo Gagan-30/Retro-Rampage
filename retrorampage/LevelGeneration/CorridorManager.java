@@ -8,7 +8,7 @@ import org.locationtech.jts.geom.Coordinate;
 import java.util.List;
 
 public class CorridorManager {
-    private Pane root; // The JavaFX pane on which corridors will be drawn
+    private final Pane root; // The JavaFX pane on which corridors will be drawn
     private List<Rectangle> rooms;
     private Rectangle[] hallwayRectangles;
     private Rectangle[] hallwayBounds;
@@ -133,5 +133,9 @@ public class CorridorManager {
 
     public Rectangle[] getHallwayBounds() {
         return hallwayBounds;
+    }
+
+    public boolean isPositionWithinCell(double newX, double newY, double width, double height) {
+        return false;
     }
 }

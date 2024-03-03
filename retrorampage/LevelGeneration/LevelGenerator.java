@@ -1,6 +1,7 @@
 package com.base.game.retrorampage.LevelGeneration;
 
 import com.base.game.retrorampage.GameAssets.Bullet;
+import com.base.game.retrorampage.GameAssets.Enemy;
 import com.base.game.retrorampage.GameAssets.Input;
 import com.base.game.retrorampage.GameAssets.Player;
 import com.base.game.retrorampage.MainMenu.Config;
@@ -18,15 +19,17 @@ public class LevelGenerator {
     private long lastUpdateTime = System.nanoTime();
 
     // Managers and components
-    private Pane root; // Root pane to contain the level elements
-    private RoomManager roomManager; // Manages the generation and drawing of rooms
-    private GraphManager graphManager; // Manages graph-related operations
-    private CorridorManager corridorManager; // Manages the creation of corridors
-    private VisualizationManager visualizationManager; // Manages visualization of the level
-    private Input input; // Handles user input
-    private Config config; // Manages configuration settings
-    private Player player; // Represents the player
-    private List<Bullet> bullets; // ArrayList to store bullets
+    private final Pane root; // Root pane to contain the level elements
+    private final RoomManager roomManager; // Manages the generation and drawing of rooms
+    private final GraphManager graphManager; // Manages graph-related operations
+    private final CorridorManager corridorManager; // Manages the creation of corridors
+    private final VisualizationManager visualizationManager; // Manages visualization of the level
+    private final Input input; // Handles user input
+    private final Config config; // Manages configuration settings
+    private final Player player; // Represents the player
+    private final List<Bullet> bullets; // ArrayList to store bullets
+    private List<Enemy> enemies;
+
 
     // Constructor
     public LevelGenerator(int numberOfCells, String configFilePath) {
@@ -40,10 +43,11 @@ public class LevelGenerator {
         this.visualizationManager = new VisualizationManager(root);
         this.input = new Input(scene); // Set up input handling
         this.config = new Config(configFilePath); // Load configuration settings
-        this.player = new Player(50, "player.png"); // Initialize the player
+        this.player = new Player(50, "player.png", 100); // Initialize the player
         this.bullets = new ArrayList<>(); // Initialize the bullets list
         this.player.setCorridorManager(corridorManager);
         scene.setOnMouseMoved(event -> input.updateMousePosition(event));
+        this.enemies = new ArrayList<>();
     }
 
 
@@ -73,6 +77,12 @@ public class LevelGenerator {
         Cell spawnRoomCenter = roomManager.getSpawnCell();
         player.drawInSpawn(spawnRoomCenter, root);
 
+// Spawn enemies and set the corridor manager for each enemy
+        enemies = Enemy.spawnEnemies(5, 75, "enemy.png", roomManager.getCells(), roomManager.getSpawnCell(), root);
+        for (Enemy enemy : enemies) {
+            enemy.setCorridorManager(corridorManager);
+        }
+
         // Return the scene containing the generated level
         return this.scene;
     }
@@ -82,6 +92,7 @@ public class LevelGenerator {
         updatePlayerPosition();
         updateBullets(dt);
         handleShootInput();
+        updateEnemies();
     }
 
     private double calculateDeltaTime() {
@@ -97,6 +108,16 @@ public class LevelGenerator {
             player.resolveCollision(roomRectangle);
         }
     }
+
+    private void updateEnemies() {
+        for (Enemy enemy : enemies) {
+            enemy.updatePosition(player.getX(), player.getY(), 100);
+            for (Rectangle roomRectangle : roomManager.getRoomRectangles()) {
+                enemy.resolveCollision(roomRectangle, player);
+            }
+        }
+    }
+
 
     private void handleShootInput() {
         String shootKey1 = config.getKeybind("Shoot1");

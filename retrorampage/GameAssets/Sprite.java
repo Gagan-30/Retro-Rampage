@@ -112,10 +112,6 @@ public class Sprite {
         }
     }
 
-    public void addToPane(Pane pane) {
-        pane.getChildren().add(this.imageView);
-    }
-
     public double getX() {
         return this.imageView.getLayoutX();
     }
@@ -321,5 +317,18 @@ public class Sprite {
     public double getRotation() {
         return rotation;
     }
+
+    public void addToPane(Pane root) {
+        root.getChildren().add(imageView);
+        updateImageViewPosition();  // Add this line to update the position
+    }
+
+    // Add this method to update the position of the ImageView
+    protected void updateImageViewPosition() {
+        imageView.setX(x);
+        imageView.setY(y);
+        imageView.setRotate(rotation);
+    }
+
 }
 

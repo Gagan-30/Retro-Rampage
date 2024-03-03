@@ -137,7 +137,7 @@ public class Action
     {
         return new Action()
         {
-            ArrayList<Action> actionList =
+            final ArrayList<Action> actionList =
                     new ArrayList<Action>(Arrays.asList(actions));
             int currentIndex;
 

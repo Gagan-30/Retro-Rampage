@@ -7,7 +7,7 @@ import java.util.List;
 import javafx.scene.paint.Color;
 
 public class VisualizationManager {
-    private Pane root; // The pane where all visual elements are drawn
+    private final Pane root; // The pane where all visual elements are drawn
 
     public VisualizationManager(Pane root) {
         this.root = root;
