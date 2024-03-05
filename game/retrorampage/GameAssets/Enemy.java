@@ -14,11 +14,14 @@ public class Enemy extends Sprite {
     private final Rectangle square;
     private static CorridorManager corridorManager;
     private int health;
+    private double initialX;
+    private double initialY;
+    private Player player;
 
     public Enemy(double size, String imagePath, int health) {
         super(imagePath, size);
         this.square = new Rectangle(size, size);
-        this.square.setFill(Color.RED);
+        this.square.setFill(Color.TRANSPARENT);
 
         this.height = size;
         this.width = size;
@@ -43,12 +46,16 @@ public class Enemy extends Sprite {
                 randomCell = cells.get(random.nextInt(cells.size()));
             } while (randomCell.equals(spawnCell));
 
-            double enemyX = randomCell.getCenterX() - enemy.getSquare().getWidth() / 2;
-            double enemyY = randomCell.getCenterY() - enemy.getSquare().getHeight() / 2;
+            double enemyX = randomCell.getCenterX() - size / 2;
+            double enemyY = randomCell.getCenterY() - size / 2;
 
-            enemy.setPosition(enemyX, enemyY);
+            // Debug information
+            System.out.println("Enemy " + i + " spawned at: X=" + enemyX + ", Y=" + enemyY + " in Cell: " + randomCell);
+
+            enemy.initialX = enemyX; // Set initialX
+            enemy.initialY = enemyY; // Set initialY
+
             enemy.addToPane(root); // Ensure addToPane is called after updating the position
-
             enemies.add(enemy);
         }
 
@@ -64,9 +71,9 @@ public class Enemy extends Sprite {
         double distanceToPlayer = Math.hypot(playerX - currentX, playerY - currentY);
 
         if (distanceToPlayer <= square.getWidth()) {
-            // Player is within the same cell, move towards the player
-            double directionX = playerX - currentX;
-            double directionY = playerY - currentY;
+            // Player is within the same cell, move away from the player
+            double directionX = currentX - playerX;
+            double directionY = currentY - playerY;
 
             // Normalize the direction vector
             double distance = Math.sqrt(directionX * directionX + directionY * directionY);
@@ -77,13 +84,18 @@ public class Enemy extends Sprite {
             double newX = currentX + directionX * movementSpeed;
             double newY = currentY + directionY * movementSpeed;
 
-            // Update the position
-            square.setX(newX - square.getWidth() / 2);
-            square.setY(newY - square.getHeight() / 2);
+            // Ensure the new position stays within the current cell
+            if (corridorManager.isPositionWithinCell(newX, newY, square.getWidth(), square.getHeight())) {
+                square.setX(newX - square.getWidth() / 2);
+                square.setY(newY - square.getHeight() / 2);
 
-            // Update the image position
-            imageView.setX(square.getX() + (square.getWidth() - width) / 2);
-            imageView.setY(square.getY() + (square.getHeight() - height) / 2);
+                // Update the image position
+                imageView.setX(square.getX() + (square.getWidth() - width) / 2);
+                imageView.setY(square.getY() + (square.getHeight() - height) / 2);
+            }
+
+            // Take away player's health
+            player.decreaseHealth(20); // Adjust the value based on your game's health system
         } else {
             // Player is not in the same cell, use the original behavior
             // Calculate the direction vector towards the player
@@ -163,13 +175,23 @@ public class Enemy extends Sprite {
     public void addToPane(Pane root) {
         this.root = root;
 
-        // Center the image within the square
-        imageView.setX(square.getX() + (square.getWidth() - width) / 2);
-        imageView.setY(square.getY() + (square.getHeight() - height) / 2);
+        imageView.setX(initialX);
+        imageView.setY(initialY);
+
+        // Center the square around the image
+        square.setX(imageView.getX() - (square.getWidth() - width) / 2);
+        square.setY(imageView.getY() - (square.getHeight() - height) / 2);
 
         // Add both square and image to the root
-        root.getChildren().addAll(square, imageView);
+        root.getChildren().addAll(imageView, square);
+
+        // Print the coordinates for debugging
+        System.out.println("Enemy added to pane at: X=" + square.getX() + ", Y=" + square.getY());
+
+        // Print the coordinates of imageView for debugging
+        System.out.println("ImageView added to pane at: X=" + imageView.getX() + ", Y=" + imageView.getY());
     }
+
 
     public void removeFromPane() {
         if (root != null) {
@@ -177,5 +199,8 @@ public class Enemy extends Sprite {
         }
     }
 
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
 
 }

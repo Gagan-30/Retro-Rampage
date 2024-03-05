@@ -16,12 +16,15 @@ public class Player extends Sprite {
     private int health;  // New field to store player health
     private final double size;
 
-    public Player(double size, String imagePath, int initialHealth) {
+    private Pane root;  // Add the root field
+
+    public Player(double size, String imagePath, int health, Pane root) {
         super(imagePath, size);
         this.square = new Rectangle(size, size);
         this.square.setFill(Color.RED);
-        this.health = initialHealth;  // Initialize player health
+        this.health = health;  // Initialize player health
         this.size = size;  // Initialize player size
+        this.root = root;  // Initialize the root field
     }
 
 
@@ -150,5 +153,33 @@ public class Player extends Sprite {
     public void decreaseHealth(int amount) {
         health -= amount;
         System.out.println("health = " + health);
+
+        if (health <= 0) {
+            // Player is dead, handle death logic
+            die();
+        }
+    }
+
+    // Method to handle player death
+    private void die() {
+        // Optionally, you can add death animation or other effects here
+
+        // Remove the player's square from the pane
+        removeFromPane();
+
+        // Remove the player's square from the scene
+        root.getChildren().remove(square);
+
+        // Remove the player's imageView from the pane
+        removeFromPane();
+
+        // Reset the player's health or perform other actions as needed
+        health = 100;  // Reset health for demonstration, adjust as needed
+    }
+
+
+    // New method to set the root
+    public void setRoot(Pane root) {
+        this.root = root;
     }
 }

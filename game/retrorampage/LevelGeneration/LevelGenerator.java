@@ -45,7 +45,7 @@ public class LevelGenerator {
         this.visualizationManager = new VisualizationManager(root);
         this.input = new Input(scene); // Set up input handling
         this.config = new Config(configFilePath); // Load configuration settings
-        this.player = new Player(50, "player.png", 100); // Initialize the player
+        this.player = new Player(50, "player.png", 100, root); // Initialize the player
         this.bullets = new ArrayList<>(); // Initialize the bullets list
         this.player.setCorridorManager(corridorManager);
         scene.setOnMouseMoved(event -> input.updateMousePosition(event));
@@ -139,7 +139,7 @@ public class LevelGenerator {
     // Helper method to check if the input corresponds to a mouse click
 
     private boolean isMouseClick(String inputKey) {
-        return inputKey.equals("PRIMARY") || inputKey.equals("SECONDARY") || inputKey.equals("MIDDLE");
+        return inputKey.equals("Right Click") || inputKey.equals("Left Click") || inputKey.equals("MIDDLE");
     }
 
 
@@ -160,13 +160,35 @@ public class LevelGenerator {
 
     // Update the checkBulletCollisions method in LevelGenerator
     private void checkBulletCollisions(Bullet bullet) {
-        List<Enemy> enemiesToRemove = new ArrayList<>();
+        boolean bulletHitRoom = false;
 
+        for (Rectangle roomRectangle : roomManager.getRoomRectangles()) {
+            double bulletX = bullet.getX();
+            double bulletY = bullet.getY();
+            double roomX = roomRectangle.getX();
+            double roomY = roomRectangle.getY();
+            double roomWidth = roomRectangle.getWidth();
+            double roomHeight = roomRectangle.getHeight();
+
+            // Check if the bullet is within the bounds of the room
+            if (bulletX + bullet.getWidth() >= roomX && bulletX <= roomX + roomWidth &&
+                    bulletY + bullet.getHeight() >= roomY && bulletY <= roomY + roomHeight) {
+                // Bullet collided with the room boundary, handle collision logic if needed
+                System.out.println("Bullet hit room boundary!");
+                bulletHitRoom = true;
+            }
+        }
+
+        if (bulletHitRoom) {
+            bullet.setActive(false);
+        }
+
+        List<Enemy> enemiesToRemove = new ArrayList<>();
         for (Enemy enemy : enemies) {
             if (bullet.isActive() && enemy.getSquare().getBoundsInParent().intersects(bullet.getBoundsInParent())) {
                 System.out.println("Bullet hit enemy!");
                 // Handle enemy hit logic, e.g., reduce enemy health
-                enemy.reduceHealth(10); // Adjust the amount by which the health is reduced
+                enemy.reduceHealth(25); // Adjust the amount by which the health is reduced
                 bullet.setActive(false);
 
                 if (enemy.getHealth() <= 0) {
@@ -178,14 +200,6 @@ public class LevelGenerator {
         }
 
         enemies.removeAll(enemiesToRemove);
-
-        for (Rectangle roomRectangle : roomManager.getRoomRectangles()) {
-            if (bullet.isActive() && roomRectangle.getBoundsInParent().intersects(bullet.getBoundsInParent())) {
-                System.out.println("Bullet hit room!");
-                bullet.setActive(false);
-                return; // Stop checking for other collisions if the bullet hit a room
-            }
-        }
     }
 
 
@@ -194,6 +208,7 @@ public class LevelGenerator {
         List<Enemy> enemiesToRemove = new ArrayList<>();
 
         for (Enemy enemy : enemies) {
+            enemy.setPlayer(player);
             enemy.updatePosition(player.getX(), player.getY(), 100);
 
             if (enemy.isCollidingPlayer(player)) {

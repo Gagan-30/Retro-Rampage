@@ -16,7 +16,6 @@ public class CorridorManager {
     public CorridorManager(Pane root) {
         this.root = root;
     }
-
     public void createCorridors(List<GraphManager.Edge> edges) {
         for (GraphManager.Edge edge : edges) {
             drawCorridor(edge.start, edge.end);

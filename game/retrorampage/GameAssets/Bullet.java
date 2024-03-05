@@ -14,6 +14,10 @@ public class Bullet {
     private final Player player;
     private final Input input;
     private Bounds boundsInParent;
+    private String x;
+    private String y;
+    private double width;
+    private double height;
 
     public Bullet(double size, String image, Pane root, Player player, Input input) {
         this.active = false;
@@ -89,5 +93,21 @@ public class Bullet {
 
     public Bounds getBoundsInParent() {
         return imageView.getBoundsInParent();
+    }
+
+    public double getX() {
+        return imageView.getBoundsInParent().getMinX();
+    }
+
+    public double getY() {
+        return imageView.getBoundsInParent().getMinY();
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getHeight() {
+        return height;
     }
 }

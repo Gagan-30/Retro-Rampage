@@ -254,15 +254,16 @@ public class Sprite {
     }
 
     public void boundToScreen(int screenWidth, int screenHeight) {
-        if (position.x - width / 2 < 0)
-            position.x = width / 2;
-        if (position.y - height / 2 < 0)
-            position.y = height / 2;
-        if (position.x + width / 2 > screenWidth)
-            position.x = screenWidth - width / 2;
-        if (position.y + height / 2 > screenHeight)
-            position.y = screenHeight - height / 2;
+        if (getX() - width / 2 < 0)
+            setX(width / 2);
+        if (getY() - height / 2 < 0)
+            setY(height / 2);
+        if (getX() + width / 2 > screenWidth)
+            setX(screenWidth - width / 2);
+        if (getY() + height / 2 > screenHeight)
+            setY(screenHeight - height / 2);
     }
+
 
     public void wrapToScreen(int screenWidth, int screenHeight) {
         if (position.x + width / 2 < 0)
