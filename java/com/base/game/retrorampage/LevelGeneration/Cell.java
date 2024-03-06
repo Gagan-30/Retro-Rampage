@@ -6,7 +6,8 @@ import javafx.scene.shape.Rectangle;
 
 public class Cell {
     private double x, y; // Coordinates of the top-left corner of the cell
-    private double width, height; // Size dimensions of the cell
+    private double width;
+    private final double height; // Size dimensions of the cell
     private boolean isRoom = false; // Flag indicating whether the cell is considered a room
     private boolean exitRoom;
     private boolean isSpawnRoom = false;

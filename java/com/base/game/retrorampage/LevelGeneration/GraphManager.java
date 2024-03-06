@@ -8,7 +8,7 @@ import org.locationtech.jts.geom.Geometry;
 import java.util.*;
 
 public class GraphManager {
-    private GeometryFactory geometryFactory = new GeometryFactory();
+    private final GeometryFactory geometryFactory = new GeometryFactory();
     private List<Edge> edges;
 
     public List<Edge> triangulateRooms(List<Coordinate> roomCenters) {
@@ -48,7 +48,7 @@ public class GraphManager {
 
     // Utility class for Union-Find operations
     private static class UnionFind {
-        private Map<Coordinate, Coordinate> parent = new HashMap<>();
+        private final Map<Coordinate, Coordinate> parent = new HashMap<>();
 
         public Coordinate find(Coordinate x) {
             parent.putIfAbsent(x, x);

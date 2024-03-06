@@ -8,13 +8,14 @@ import org.locationtech.jts.geom.Coordinate;
 import java.util.List;
 
 public class CorridorManager {
-    private Pane root; // The JavaFX pane on which corridors will be drawn
+    private final Pane root; // The JavaFX pane on which corridors will be drawn
     private List<Rectangle> rooms;
+    private Rectangle[] hallwayRectangles;
+    private Rectangle[] hallwayBounds;
 
     public CorridorManager(Pane root) {
         this.root = root;
     }
-
     public void createCorridors(List<GraphManager.Edge> edges) {
         for (GraphManager.Edge edge : edges) {
             drawCorridor(edge.start, edge.end);
@@ -123,5 +124,17 @@ public class CorridorManager {
 
     public void setRooms(List<Rectangle> rooms) {
         this.rooms = rooms;
+    }
+
+    public Rectangle[] getHallwayRectangles() {
+        return hallwayRectangles;
+    }
+
+    public Rectangle[] getHallwayBounds() {
+        return hallwayBounds;
+    }
+
+    public boolean isPositionWithinCell(double newX, double newY, double width, double height) {
+        return false;
     }
 }

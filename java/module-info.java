@@ -12,7 +12,10 @@ module com.base.game.retrorampage {
 
     // Add exports for LevelGeneration package to make it accessible to JavaFX.
     exports com.base.game.retrorampage.LevelGeneration;
+    exports com.base.game.retrorampage.GameAssets;
+
 
     // Open LevelGeneration to javafx.fxml if it contains FXML files.
     opens com.base.game.retrorampage.LevelGeneration to javafx.fxml;
+    opens com.base.game.retrorampage.GameAssets to javafx.fxml;
 }

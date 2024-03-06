@@ -15,6 +15,8 @@ public class RoomManager {
     private Cell exitRoom;
     private final List<Cell> cells = new ArrayList<>();
     private final Random random = new Random();
+    private Cell spawnCell;
+    private Cell spawnRoomCenter;
 
     public RoomManager(int numberOfCells, Pane root) {
         this.numberOfCells = numberOfCells;
@@ -27,11 +29,15 @@ public class RoomManager {
         double centerY = root.getHeight() / 2;
 
         while (cells.size() < numberOfCells) {
-            double width = 50 + random.nextDouble() * (250 - 50); // Random width between 50 and 250
-            double height = 50 + random.nextDouble() * (250 - 50); // Random height between 50 and 250
+            double width = 200 + random.nextDouble() * (400 - 200); // Random width between 50 and 250
+            double height = 200 + random.nextDouble() * (400 - 200); // Random height between 50 and 250
 
-            double x = centerX - width / 2 + (random.nextDouble() - 0.5) * root.getWidth();
-            double y = centerY - height / 2 + (random.nextDouble() - 0.5) * root.getHeight();
+            double x = centerX - width / 2 + (random.nextDouble() - 0.5) * (root.getWidth() - width);
+            double y = centerY - height / 2 + (random.nextDouble() - 0.5) * (root.getHeight() - height);
+
+            // Ensure that the generated room is within the bounds of the root pane
+            x = clamp(x, root.getWidth() - width);
+            y = clamp(y, root.getHeight() - height);
 
             Cell cell = new Cell(x, y, width, height);
 
@@ -54,6 +60,7 @@ public class RoomManager {
             exitRoom.setExitRoom(true);
         }
     }
+
 
     public List<Coordinate> getRoomCenters() {
         List<Coordinate> roomCenters = new ArrayList<>();
@@ -109,11 +116,11 @@ public class RoomManager {
 
     private void adjustPositions(Cell cellA, Cell cellB) {
         // Calculate the overlap offsets for X and Y axes
-        double minDisperseWidth = 60.0;
-        double overlapX = (cellA.getWidth() / 2 + cellB.getWidth() / 2 + minDisperseWidth * 1.15)
+        double minDisperseWidth = 80.0;
+        double overlapX = (cellA.getWidth() / 2 + cellB.getWidth() / 2 + minDisperseWidth * 1.1)
                 - Math.abs(cellA.getCenterX() - cellB.getCenterX());
-        double minDisperseHeight = 60.0;
-        double overlapY = (cellA.getHeight() / 2 + cellB.getHeight() / 2 + minDisperseHeight * 1.15)
+        double minDisperseHeight = 70.0;
+        double overlapY = (cellA.getHeight() / 2 + cellB.getHeight() / 2 + minDisperseHeight * 1.1)
                 - Math.abs(cellA.getCenterY() - cellB.getCenterY());
 
         // Ensure there's a minimum separation distance
@@ -145,7 +152,7 @@ public class RoomManager {
         List<Rectangle> roomRectangles = new ArrayList<>();
         for (Cell cell : cells) {
             if (cell.isRoom()) {
-                // Create a new Rectangle based on the cell's position and size
+                // Create a new Rect based on the cell's position and size
                 Rectangle roomRectangle = new Rectangle(cell.getX(), cell.getY(), cell.getWidth(), cell.getHeight());
                 roomRectangles.add(roomRectangle);
             }
@@ -153,4 +160,11 @@ public class RoomManager {
         return roomRectangles;
     }
 
+    public Cell getSpawnCell() {
+        return spawnRoom;
+    }
+
+    public List<Cell> getCells() {
+        return cells;
+    }
 }

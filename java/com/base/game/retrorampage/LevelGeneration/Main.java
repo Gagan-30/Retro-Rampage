@@ -1,28 +1,33 @@
 package com.base.game.retrorampage.LevelGeneration;
 
-import javafx.application.Application;
+import com.base.game.retrorampage.GameAssets.Bullet;
+import com.base.game.retrorampage.GameAssets.Game;
+import com.base.game.retrorampage.GameAssets.Player;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
 
-public class Main extends Application {
+public class Main extends Game {
+    LevelGenerator levelGenerator;
+    Player player;
+
     @Override
-    public void start(Stage primaryStage) {
+    public void initialize() {
         // Set the title of the primary stage
-        primaryStage.setTitle("Level Generator");
+        setTitle("Level Generator");
 
         // Initialize the LevelGenerator with the desired number of cells
-        LevelGenerator levelGenerator = new LevelGenerator(7);
+        levelGenerator = new LevelGenerator(5, "config.txt");
 
         // Generate the level and obtain the Scene object
         Scene scene = levelGenerator.generateLevel();
 
-        // Set the scene to the primary stage and show it
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        // Set the scene to the primary stage
+        stage.setScene(scene);
+
     }
 
-    public static void main(String[] args) {
-        // Launch the JavaFX application
-        launch(args);
+    @Override
+    public void update() {
+        levelGenerator.update();
+
     }
 }
