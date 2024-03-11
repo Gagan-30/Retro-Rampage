@@ -62,23 +62,32 @@ public abstract class Game
         // to clarify class containing update method
         Game self = this;
 
-        AnimationTimer gameloop = new AnimationTimer()
-        {
-            public void handle(long nanotime)
-            {
+        AnimationTimer gameloop = new AnimationTimer() {
+            long lastTime = System.nanoTime();
+            int frameCount = 0;
+
+            public void handle(long currentTime) {
+                // Calculate FPS
+                frameCount++;
+                if (currentTime - lastTime >= 1e9) {
+                    double fps = frameCount / ((currentTime - lastTime) / 1e9);
+                    setTitle("Game - FPS: " + String.format("%.2f", fps));
+                    frameCount = 0;
+                    lastTime = currentTime;
+                }
+
                 // update user input
                 input.update();
 
                 // update game state
                 self.update();
-                self.group.update(1/60.0);
+                self.group.update(1 / 60.0);
 
                 // clear the canvas
                 self.context.setFill(Color.GRAY);
-                self.context.fillRect( 0,0,
+                self.context.fillRect(0, 0,
                         self.canvas.getWidth(),
-                        self.canvas.getHeight() );
-
+                        self.canvas.getHeight());
             }
         };
 

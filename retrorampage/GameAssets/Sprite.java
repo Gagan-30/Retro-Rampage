@@ -64,7 +64,7 @@ public class Sprite {
 
     public ArrayList<Action> actionList;
     ImageView imageView;
-    private Pane root;
+    public Pane root;
     private double x;
     private double y;
     private double rotation;
@@ -254,15 +254,16 @@ public class Sprite {
     }
 
     public void boundToScreen(int screenWidth, int screenHeight) {
-        if (position.x - width / 2 < 0)
-            position.x = width / 2;
-        if (position.y - height / 2 < 0)
-            position.y = height / 2;
-        if (position.x + width / 2 > screenWidth)
-            position.x = screenWidth - width / 2;
-        if (position.y + height / 2 > screenHeight)
-            position.y = screenHeight - height / 2;
+        if (getX() - width / 2 < 0)
+            setX(width / 2);
+        if (getY() - height / 2 < 0)
+            setY(height / 2);
+        if (getX() + width / 2 > screenWidth)
+            setX(screenWidth - width / 2);
+        if (getY() + height / 2 > screenHeight)
+            setY(screenHeight - height / 2);
     }
+
 
     public void wrapToScreen(int screenWidth, int screenHeight) {
         if (position.x + width / 2 < 0)
@@ -323,6 +324,12 @@ public class Sprite {
         updateImageViewPosition();  // Add this line to update the position
     }
 
+    public void removeFromPane() {
+        if (root != null && root.getChildren().contains(imageView)) {
+            root.getChildren().remove(imageView);
+        }
+    }
+
     // Add this method to update the position of the ImageView
     protected void updateImageViewPosition() {
         imageView.setX(x);
@@ -330,5 +337,20 @@ public class Sprite {
         imageView.setRotate(rotation);
     }
 
+    public boolean isColliding(Bullet bullet) {
+        return false;
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public void setOpacity(double opacity) {
+        this.opacity = opacity;
+    }
 }
 

@@ -3,25 +3,61 @@ package com.base.game.retrorampage.GameAssets;
 import com.base.game.retrorampage.LevelGeneration.Cell;
 import com.base.game.retrorampage.LevelGeneration.CorridorManager;
 import com.base.game.retrorampage.MainMenu.Config;
+import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
+import javafx.animation.TranslateTransition;
+import javafx.geometry.Bounds;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 public class Player extends Sprite {
     private final Rectangle square;
+    private final double size;
+    private final TranslateTransition translateTransition;
     private double prevPlayerX;
     private double prevPlayerY;
     private long lastUpdateTime = System.nanoTime();
     private CorridorManager corridorManager;
     private int health;  // New field to store player health
-    private final double size;
+    private Pane root;  // Add the root field
+    private boolean canMove = true;  // Add a flag to control movement based on color
+    private Camera camera;
+    private Text damageLabel;
+    private FadeTransition fadeTransition;
+    private Bounds boundsInParent;
+    private boolean inRedRoom;
 
-    public Player(double size, String imagePath, int initialHealth) {
+    public Player(double size, String imagePath, int health, Pane root, Camera camera) {
         super(imagePath, size);
         this.square = new Rectangle(size, size);
         this.square.setFill(Color.TRANSPARENT);
-        this.health = initialHealth;  // Initialize player health
+        this.health = health;  // Initialize player health
         this.size = size;  // Initialize player size
+        this.root = root;  // Initialize the root field
+        this.camera = camera;
+
+        // Initialize damage label first
+        damageLabel = new Text();
+        damageLabel.setFont(new Font("Arial", 20));
+        damageLabel.setFill(Color.RED);
+        damageLabel.setVisible(false);
+        root.getChildren().add(damageLabel);
+
+        // Initialize translate transition first
+        translateTransition = new TranslateTransition(Duration.seconds(0.5), damageLabel);
+        translateTransition.setFromY(0);
+        translateTransition.setToY(-20);
+        translateTransition.setCycleCount(1);
+
+        // Initialize fade transition after damageLabel
+        fadeTransition = new FadeTransition(Duration.seconds(0.5), damageLabel);
+        fadeTransition.setFromValue(1.0);
+        fadeTransition.setToValue(0.0);
     }
 
 
@@ -34,10 +70,11 @@ public class Player extends Sprite {
         this.square.setY(center.getCenterY() - square.getHeight() / 2);
         root.getChildren().add(this.square);
 
-        this.setPosition(center.getCenterX() - this.getX() / 2,
-                center.getCenterY() - this.getY() / 2);
+        this.setPosition(center.getCenterX() - this.size / 2,
+                center.getCenterY() - this.size / 2);
         this.addToPane(root);
     }
+
 
     public void updatePosition(Input input, Config config, double movementSpeed) {
         // Update input state
@@ -62,83 +99,98 @@ public class Player extends Sprite {
 
         // Handle key presses and update player's position
         if (input.isKeyPressed(moveUpKey1) || input.isKeyPressed(moveUpKey2)) {
-            prevPlayerY = getY(); // Store previous position
-            square.setY(square.getY() - movement);
-            setPosition(getX(), getY() - movement);
+            movePlayer(0, -movement);
         }
         if (input.isKeyPressed(moveDownKey1) || input.isKeyPressed(moveDownKey2)) {
-            prevPlayerY = getY(); // Store previous position
-            square.setY(square.getY() + movement);
-            setPosition(getX(), getY() + movement);
+            movePlayer(0, movement);
         }
         if (input.isKeyPressed(moveLeftKey2) || input.isKeyPressed(moveLeftKey1)) {
-            prevPlayerX = getX(); // Store previous position
-            square.setX(square.getX() - movement);
-            setPosition(getX() - movement, getY());
+            movePlayer(-movement, 0);
         }
         if (input.isKeyPressed(moveRightKey1) || input.isKeyPressed(moveRightKey2)) {
-            prevPlayerX = getX(); // Store previous position
-            square.setX(square.getX() + movement);
-            setPosition(getX() + movement, getY());
+            movePlayer(movement, 0);
         }
 
-        // Update the player's looking direction based on mouse movement
-        double mouseX = input.getMouseX();
-        double mouseY = input.getMouseY();
-        double angleToMouse = Math.toDegrees(Math.atan2(mouseY - getY(), mouseX - getX()));
+        double angleToMouse = getMouseLookingDirection(input);
         setRotation(angleToMouse);
+
+        // Update the player's position based on input
+        square.setX(getX());
+        square.setY(getY());
+
+        // Check the color at the player's current position
+        Color pixelColor = getColorAtPosition(getX(), getY());
+
+        // Check if the pixel color is in the allowed range
+        if (!isColorAllowed(pixelColor)) {
+            // Optionally, handle the case where the player is in a restricted area
+            System.out.println("Player is in a restricted area!");
+
+            // Revert to the previous position
+            square.setX(prevPlayerX);
+            square.setY(prevPlayerY);
+            setPosition(prevPlayerX, prevPlayerY);
+        }
     }
+
+
+    private void movePlayer(double deltaX, double deltaY) {
+        prevPlayerX = getX(); // Store previous position
+        prevPlayerY = getY(); // Store previous position
+        square.setX(square.getX() + deltaX);
+        square.setY(square.getY() + deltaY);
+        setPosition(getX() + deltaX, getY() + deltaY);
+    }
+
 
     public double getMouseLookingDirection(Input input) {
         double mouseX = input.getMouseX();
         double mouseY = input.getMouseY();
 
-        // Calculate the angle between player and mouse position
-        return Math.toDegrees(Math.atan2(mouseY - getY(), mouseX - getX()));
+        // Adjust the mouse coordinates based on the camera translation
+        double adjustedMouseX = mouseX - camera.getTranslation().getX();
+        double adjustedMouseY = mouseY - camera.getTranslation().getY();
+
+        double angle = Math.toDegrees(Math.atan2(adjustedMouseY - (getY() + size / 2), adjustedMouseX - (getX() + size / 2)));
+
+        // Normalize the angle to [0, 360)
+        angle = (angle + 360) % 360;
+
+        return angle;
     }
 
-    public void resolveCollision(Rectangle obstacle) {
-        // Get the start and end coordinates for the width and height of the obstacle
-        double obstacleStartX = obstacle.getX();
-        double obstacleEndX = obstacle.getX() + obstacle.getWidth();
-        double obstacleStartY = obstacle.getY();
-        double obstacleEndY = obstacle.getY() + obstacle.getHeight();
 
-        // Calculate the potential new position after collision resolution
-        double newX = getX();
-        double newY = getY();
+    private boolean isColorAllowed(Color color) {
+        // Define the allowed color ranges
+        double redThreshold = 0.8;
+        double greenThreshold = 0.9;
+        double blueThreshold = 0.9;
 
-        // Check if the new position is within the bounds of the room or hallway
-        boolean withinRoomBounds = newX >= obstacleStartX && newX + square.getWidth() <= obstacleEndX &&
-                newY >= obstacleStartY && newY + square.getHeight() <= obstacleEndY;
+        // Check if the color is within the allowed range
+        return color.getRed() <= redThreshold && color.getGreen() <= greenThreshold && color.getBlue() <= blueThreshold;
+    }
 
-        // Check if the new position is within the bounds of any hallway
-        boolean withinHallwayBounds = false;
-        Rectangle[] hallwayBoundsList = corridorManager.getHallwayBounds();
-        if (hallwayBoundsList != null) {
-            for (Rectangle hallwayBounds : hallwayBoundsList) {
-                if (newX >= hallwayBounds.getX()
-                        && newX + square.getWidth() <= hallwayBounds.getX() + hallwayBounds.getWidth() &&
-                        newY >= hallwayBounds.getY()
-                        && newY + square.getHeight() <= hallwayBounds.getY() + hallwayBounds.getHeight()) {
-                    withinHallwayBounds = true;
-                    break; // No need to check further if within bounds of any hallway
-                }
-            }
+
+    // New method to get the color of a pixel at a specific position
+    private Color getColorAtPosition(double x, double y) {
+        double sceneWidth = root.getWidth();
+        double sceneHeight = root.getHeight();
+
+        if (x < 0 || x >= sceneWidth || y < 0 || y >= sceneHeight) {
+            // Position is outside the bounds of the root, consider it as out-of-bounds
+            return Color.WHITE;
         }
 
-        // Adjust the position only if it's not within the bounds of the room
-        if (!withinRoomBounds) {
-            // If within the bounds of the hallway, allow movement; otherwise, prevent it
-            if (withinHallwayBounds) {
-                // Update the position
-                square.setX(newX);
-                square.setY(newY);
+        // Create a snapshot of the root as a WritableImage
+        WritableImage snapshot = new WritableImage((int) sceneWidth, (int) sceneHeight);
+        root.snapshot(null, snapshot);
 
-                // Update the player's image view position
-                setPosition(getX() + (newX - square.getX()), getY() + (newY - square.getY()));
-            }
-        }
+        // Read the color at the specified position
+        int pixelX = (int) x;
+        int pixelY = (int) y;
+        Color pixelColor = snapshot.getPixelReader().getColor(pixelX, pixelY);
+
+        return pixelColor;
     }
 
     public double getSize() {
@@ -147,7 +199,95 @@ public class Player extends Sprite {
 
     // New method to decrease player health
     public void decreaseHealth(int amount) {
-        health -= amount;
-        System.out.println("health = " + health);
+        if (health > 0) {
+            health -= amount;
+
+            if (health <= 0) {
+                // Player is defeated, remove graphical representation from the scene
+                root.getChildren().remove(square);
+                health = 0; // Ensure health doesn't go below 0
+                System.out.println("Player health: 0");
+            } else {
+                System.out.println("Player health: " + health);
+                updateHealthLabel(amount); // Update the health label with the amount
+                fadeTransition.play(); // Start the fade-out animation
+                translateTransition.play(); // Start the translate animation
+            }
+        }
     }
+
+    private void updateHealthLabel(int amount) {
+        damageLabel.setText("-" + amount);
+        damageLabel.setX(getX() - size / 2); // Adjust position to center the label horizontally
+        damageLabel.setY(getY() - size / 2 - 30); // Adjust position to place the label above the player
+
+        // Set initial opacity and translation
+        damageLabel.setOpacity(1.0);
+        damageLabel.setTranslateY(0);
+
+        // Set an event handler to hide the label when the fade-out animation is finished
+        fadeTransition.setOnFinished(event -> {
+            damageLabel.setVisible(false);
+            damageLabel.setOpacity(1.0); // Reset opacity after animation
+            damageLabel.setTranslateY(0); // Reset translation after animation
+        });
+
+        // Set an event handler to reset translate transition after its completion
+        translateTransition.setOnFinished(event -> {
+            damageLabel.setTranslateY(0); // Reset translation after animation
+        });
+
+        // Ensure the label is in front of the room and player by setting its Z-order
+        damageLabel.toFront();
+
+        // Start the fade-out and translate animations
+        fadeTransition.play();
+        translateTransition.play();
+        damageLabel.setVisible(true); // Make the label visible before starting the animations
+    }
+
+
+    // New method to set the root
+    public void setRoot(Pane root) {
+        this.root = root;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public Rectangle getSquare() {
+        return square;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public void heal(int amount) {
+        int maxHealth = 100; // Adjust this based on your maximum health
+        if (health < maxHealth) {
+            health += amount;
+            if (health > maxHealth) {
+                health = maxHealth; // Ensure health doesn't exceed the maximum
+            }
+            System.out.println("Player healed: " + amount);
+        }
+    }
+
+    public Bounds getBoundsInParent() {
+        return boundsInParent;
+    }
+
+    // Update the isInRedRoom method in the Player class
+    public boolean isInRedRoom() {
+        // Assuming getColorAtPosition is implemented correctly in the Player class
+        Color currentColor = getColorAtPosition(getX() + getSize() / 2, getY() + getSize() / 2);
+
+        // Check if the color at the player's position is red
+        inRedRoom = currentColor.equals(Color.DARKRED);
+
+        return inRedRoom;
+    }
+
 }

@@ -1,31 +1,46 @@
 package com.base.game.retrorampage.GameAssets;
 
+import javafx.scene.transform.Scale;
+import javafx.scene.transform.Translate;
+
 public class Camera {
-    private double x, y;
-    private final double width, height; // Viewport size for zooming
-    private final double levelWidth, levelHeight; // Overall level dimensions
+    private final Translate translation;
+    private final Scale zoom;
+    private final double initialZoomLevel;
+    private final double zoomSpeed;
 
-    public Camera(double x, double y, double width, double height, double levelWidth, double levelHeight) {
-        this.x = x;
-        this.y = y;
-        this.width = width; // Smaller than levelWidth for zoom effect
-        this.height = height; // Smaller than levelHeight for zoom effect
-        this.levelWidth = levelWidth;
-        this.levelHeight = levelHeight;
+    public Camera(double initialZoomLevel, double zoomSpeed) {
+        this.initialZoomLevel = initialZoomLevel;
+        this.zoomSpeed = zoomSpeed;
+
+        this.translation = new Translate();
+        this.zoom = new Scale(initialZoomLevel, initialZoomLevel);
     }
 
-    public void update(Player player) {
-        // Center the camera on the protagonist, within bounds
-        this.x = Math.max(0, Math.min(player.getX() - this.width / 2, levelWidth - this.width));
-        this.y = Math.max(0, Math.min(player.getY() - this.height / 2, levelHeight - this.height));
+    public void follow(Player player, double sceneWidth, double sceneHeight) {
+        // Adjust the camera position to follow the player
+        translation.setX(sceneWidth / 2 - player.getX());
+        translation.setY(sceneHeight / 2 - player.getY());
     }
 
-    // Getters for camera position, if needed
-    public double getX() {
-        return x;
+    public void zoomIn() {
+        // Zoom in by multiplying the current scale by the zoom speed
+        zoom.setX(zoom.getX() * (1 + zoomSpeed));
+        zoom.setY(zoom.getY() * (1 + zoomSpeed));
     }
 
-    public double getY() {
-        return y;
+    public void zoomOut() {
+        // Zoom out by dividing the current scale by the zoom speed
+        zoom.setX(zoom.getX() / (1 + zoomSpeed));
+        zoom.setY(zoom.getY() / (1 + zoomSpeed));
+    }
+
+    public Translate getTranslation() {
+        return translation;
+    }
+
+    public Scale getZoom() {
+        return zoom;
     }
 }
+

@@ -1,5 +1,6 @@
 package com.base.game.retrorampage.GameAssets;
 
+import javafx.geometry.Bounds;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
@@ -12,6 +13,11 @@ public class Bullet {
     private double dy; // Directional velocity in the y-axis
     private final Player player;
     private final Input input;
+    private Bounds boundsInParent;
+    private double x; // Corrected to double
+    private double y; // Corrected to double
+    private double width;
+    private double height;
 
     public Bullet(double size, String image, Pane root, Player player, Input input) {
         this.active = false;
@@ -78,10 +84,41 @@ public class Bullet {
         return active;
     }
 
-    private void setActive(boolean active) {
+    public void setActive(boolean active) {
         this.active = active;
         if (!active && root.getChildren().contains(imageView)) {
             root.getChildren().remove(this.imageView); // Remove the bullet from the root when inactive
         }
     }
+
+    public Bounds getBoundsInParent() {
+        return imageView.getBoundsInParent();
+    }
+
+    public double getX() {
+        return imageView.getBoundsInParent().getMinX();
+    }
+
+    public double getY() {
+        return imageView.getBoundsInParent().getMinY();
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public void setPosition(double x, double y) {
+        // Set the bullet's position
+        this.x = x;
+        this.y = y;
+
+        // Update the ImageView's position
+        imageView.setTranslateX(x);
+        imageView.setTranslateY(y);
+    }
+
 }

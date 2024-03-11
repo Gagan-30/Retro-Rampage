@@ -38,6 +38,8 @@ public class Rect
      * y-coordinate of bottom edge of rectangle
      */
     public double bottom;
+    private double x;
+    private double y;
 
     /**
      * Initialize rectangle with all values set to 0.
@@ -119,5 +121,13 @@ public class Rect
         Arrays.sort( differences );
 
         return differences[0];
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
     }
 }

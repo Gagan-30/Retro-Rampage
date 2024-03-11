@@ -85,9 +85,9 @@ public class RoomManager {
                 if (cell == spawnRoom) {
                     rectangle.setFill(Color.GREEN); // Spawn room in green
                 } else if (cell == exitRoom) {
-                    rectangle.setFill(Color.RED); // Exit room in red
+                    rectangle.setFill(Color.DARKRED); // Exit room in red
                 } else {
-                    rectangle.setFill(Color.TRANSPARENT); // Other rooms remain transparent or another color
+                    rectangle.setFill(Color.GREY); // Other rooms remain transparent or another color
                 }
 
                 root.getChildren().add(rectangle);

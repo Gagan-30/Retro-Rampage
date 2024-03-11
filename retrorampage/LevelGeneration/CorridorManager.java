@@ -16,7 +16,6 @@ public class CorridorManager {
     public CorridorManager(Pane root) {
         this.root = root;
     }
-
     public void createCorridors(List<GraphManager.Edge> edges) {
         for (GraphManager.Edge edge : edges) {
             drawCorridor(edge.start, edge.end);
@@ -26,7 +25,7 @@ public class CorridorManager {
     private void drawCorridor(Coordinate start, Coordinate end) {
         // Convert the coordinates to Line objects for JavaFX visualization
         Line line = new Line(start.x, start.y, end.x, end.y);
-        line.setStroke(Color.RED);
+        line.setStroke(Color.TRANSPARENT);
         line.setStrokeWidth(2); // Set the corridor width, adjust as needed
         root.getChildren().add(line);
     }
@@ -135,7 +134,16 @@ public class CorridorManager {
         return hallwayBounds;
     }
 
-    public boolean isPositionWithinCell(double newX, double newY, double width, double height) {
+    // Inside the CorridorManager class
+    // Inside the CorridorManager class
+    public boolean isPositionWithinCell(double x, double y, double width, double height) {
+        for (Rectangle roomRectangle : rooms) {
+            if (roomRectangle.getBoundsInParent().contains(x, y, width, height)) {
+                return true;
+            }
+        }
         return false;
     }
+
+
 }

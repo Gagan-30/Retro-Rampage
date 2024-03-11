@@ -2,7 +2,7 @@ package com.base.game.retrorampage.GameAssets;
 
 import com.base.game.retrorampage.LevelGeneration.Cell;
 import com.base.game.retrorampage.LevelGeneration.CorridorManager;
-import com.base.game.retrorampage.MainMenu.Config;
+import javafx.geometry.Bounds;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -13,27 +13,37 @@ import java.util.Random;
 
 public class Enemy extends Sprite {
     private final Rectangle square;
-    private double prevEnemyX;
-    private double prevEnemyY;
-    private final long lastUpdateTime = System.nanoTime();
     private static CorridorManager corridorManager;
+    private int health;
+    private double initialX;
+    private double initialY;
+    private Player player;
+    private long lastAttackTime = System.nanoTime();
+    private long lastUpdateTime = System.nanoTime();
+    private long playerCollisionCooldown = 2 * 1_000_000_000L; // 2 seconds in nanoseconds
+    private long lastPlayerCollisionTime = 0;
+    private boolean playerCollisionCooldownActive = false;
 
-    public Enemy(double size, String imagePath) {
+    public Enemy(double size, String imagePath, int health) {
         super(imagePath, size);
         this.square = new Rectangle(size, size);
-        this.square.setFill(Color.RED); // Set the enemy color to red for example
+        this.square.setFill(Color.TRANSPARENT);
+
+        this.height = size;
+        this.width = size;
+        this.health = health;
     }
 
     public void setCorridorManager(CorridorManager corridorManager) {
         Enemy.corridorManager = corridorManager;
     }
 
-    public static List<Enemy> spawnEnemies(int numEnemies, double size, String imagePath, List<Cell> cells, Cell spawnCell, Pane root) {
+    public static List<Enemy> spawnEnemies(int numEnemies, double size, String imagePath, int health, List<Cell> cells, Cell spawnCell, Pane root) {
         List<Enemy> enemies = new ArrayList<>();
         Random random = new Random();
 
         for (int i = 0; i < numEnemies; i++) {
-            Enemy enemy = new Enemy(size, imagePath);
+            Enemy enemy = new Enemy(size, imagePath, health);
             enemy.setCorridorManager(corridorManager); // Set the corridorManager for the enemy
 
             Cell randomCell;
@@ -41,85 +51,161 @@ public class Enemy extends Sprite {
                 randomCell = cells.get(random.nextInt(cells.size()));
             } while (randomCell.equals(spawnCell));
 
-            enemy.square.setX(randomCell.getCenterX() - enemy.square.getWidth() / 2);
-            enemy.square.setY(randomCell.getCenterY() - enemy.square.getHeight() / 2);
+            double enemyX = randomCell.getCenterX() - size / 2;
+            double enemyY = randomCell.getCenterY() - size / 2;
 
-            enemy.setPosition(randomCell.getCenterX() - enemy.getX() / 2,
-                    randomCell.getCenterY() - enemy.getY() / 2);
+            // Debug information
+            System.out.println("Enemy " + i + " spawned at: X=" + enemyX + ", Y=" + enemyY + " in Cell: " + randomCell);
 
-            enemy.addToPane(root);  // Ensure addToPane is called after updating the position
+            enemy.initialX = enemyX; // Set initialX
+            enemy.initialY = enemyY; // Set initialY
 
+            enemy.addToPane(root); // Ensure addToPane is called after updating the position
             enemies.add(enemy);
         }
 
         return enemies;
     }
 
-
     public void updatePosition(double playerX, double playerY, double movementSpeed) {
-        double currentX = square.getX() + square.getWidth() / 2;
-        double currentY = square.getY() + square.getHeight() / 2;
+        long now = System.nanoTime();
+        double elapsedSeconds = (now - lastUpdateTime) / 1e9; // Convert nanoseconds to seconds
+        lastUpdateTime = now;
 
-        // Calculate the distance between the enemy and the player
-        double distanceToPlayer = Math.hypot(playerX - currentX, playerY - currentY);
+        double directionX = playerX - square.getX();
+        double directionY = playerY - square.getY();
+        double distanceToPlayer = Math.hypot(directionX, directionY);
 
-        if (distanceToPlayer <= square.getWidth()) {
-            // Player is within the same cell, move towards the player
-            double directionX = playerX - currentX;
-            double directionY = playerY - currentY;
+        // Normalize the direction vector
+        if (distanceToPlayer > 0) {
+            directionX /= distanceToPlayer;
+            directionY /= distanceToPlayer;
 
-            // Normalize the direction vector
-            double distance = Math.sqrt(directionX * directionX + directionY * directionY);
-            directionX /= distance;
-            directionY /= distance;
-
-            // Calculate the new position
-            double newX = currentX + directionX * movementSpeed;
-            double newY = currentY + directionY * movementSpeed;
-
-            // Update the position
-            square.setX(newX - square.getWidth() / 2);
-            square.setY(newY - square.getHeight() / 2);
-        } else {
-            // Player is not in the same cell, use the original behavior
-            // Calculate the direction vector towards the player
-            double directionX = playerX - currentX;
-            double directionY = playerY - currentY;
-
-            // Normalize the direction vector
-            double distance = Math.sqrt(directionX * directionX + directionY * directionY);
-            directionX /= distance;
-            directionY /= distance;
+            // Calculate the movement based on elapsed time and speed
+            double movementX = directionX * movementSpeed * elapsedSeconds;
+            double movementY = directionY * movementSpeed * elapsedSeconds;
 
             // Calculate the new position
-            double newX = currentX + directionX * movementSpeed;
-            double newY = currentY + directionY * movementSpeed;
+            double newX = square.getX() + movementX;
+            double newY = square.getY() + movementY;
 
-            // Ensure the new position stays within the current cell
+            // Check if the new position stays within the current cell
             if (corridorManager.isPositionWithinCell(newX, newY, square.getWidth(), square.getHeight())) {
-                square.setX(newX - square.getWidth() / 2);
-                square.setY(newY - square.getHeight() / 2);
+                square.setX(newX);
+                square.setY(newY);
+
+                // Update the image position
+                imageView.setX(newX + (square.getWidth() - width) / 2);
+                imageView.setY(newY + (square.getHeight() - height) / 2);
+
+                // Rotate the image to face the player
+                double angleToPlayer = Math.toDegrees(Math.atan2(directionY, directionX));
+                imageView.setRotate(angleToPlayer);
+
+                // Set the last attack time to the current time
+                lastAttackTime = System.nanoTime();
             }
         }
     }
 
 
-    public void resolveCollision(Rectangle obstacle, Player player) {
-        double obstacleStartX = obstacle.getX();
-        double obstacleEndX = obstacle.getX() + obstacle.getWidth();
-        double obstacleStartY = obstacle.getY();
-        double obstacleEndY = obstacle.getY() + obstacle.getHeight();
+    public boolean isCollidingPlayer(Player player) {
+        Bounds playerBounds = player.getSquare().getBoundsInParent();
+        Bounds enemyBounds = square.getBoundsInParent();
 
-        double playerX = player.getX();
-        double playerY = player.getY();
-        double playerSize = player.getSize();
+        if (playerBounds.intersects(enemyBounds)) {
+            // Player and enemy are colliding
+            handlePlayerCollision();
+            return true;
+        }
 
-        if (playerX + playerSize > obstacleStartX && playerX < obstacleEndX &&
-                playerY + playerSize > obstacleStartY && playerY < obstacleEndY &&
-                square.getWidth() <= 40) {
-            // Enemy square size is 25 pixels or less, and it collided with the player
-            // Decrease player health by 20 (adjust this value based on your game's health system)
-            player.decreaseHealth(20);
+        return false;
+    }
+
+    public void handlePlayerCollision() {
+        if (!playerCollisionCooldownActive && getHealth() > 0 && player != null) {
+            // Set the player collision cooldown flag to true
+            playerCollisionCooldownActive = true;
+
+            // Reduce the player's health
+            player.decreaseHealth(20); // Adjust the amount based on your game's logic
+
+            // Check if the player's health is already zero or below
+            if (player.getHealth() <= 0) {
+                player.setHealth(0);
+                System.out.println("Player-enemy collision! Player health: 0");
+            } else {
+                System.out.println("Player-enemy collision! Player health: " + player.getHealth());
+            }
+
+            // Start a timer to reset the collision cooldown after a certain delay
+            new java.util.Timer().schedule(
+                    new java.util.TimerTask() {
+                        @Override
+                        public void run() {
+                            playerCollisionCooldownActive = false;
+                        }
+                    },
+                    playerCollisionCooldown / 1_000_000 // Convert nanoseconds to milliseconds
+            );
         }
     }
+
+
+    public boolean isCollidingRoom(Rectangle roomRectangle) {
+        return false;
+    }
+
+    public void reduceHealth(int amount) {
+        // Reduce the enemy's health by the specified amount
+        health -= amount;
+        System.out.println(health);
+
+        // Optionally, you can add logic to handle the enemy's death when health reaches zero or below
+        if (health <= 0) {
+            // Handle enemy death, e.g., remove from the list, play death animation, etc.
+            removeFromPane(); // Ensure the enemy is removed from the pane
+        }
+    }
+
+
+    public Rectangle getSquare() {
+        return square;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void addToPane(Pane root) {
+        this.root = root;
+
+        imageView.setX(initialX);
+        imageView.setY(initialY);
+
+        // Center the square around the image
+        square.setX(imageView.getX() - (square.getWidth() - width) / 2);
+        square.setY(imageView.getY() - (square.getHeight() - height) / 2);
+
+        // Add both square and image to the root
+        root.getChildren().addAll(imageView, square);
+
+        // Print the coordinates for debugging
+        System.out.println("Enemy added to pane at: X=" + square.getX() + ", Y=" + square.getY());
+
+        // Print the coordinates of imageView for debugging
+        System.out.println("ImageView added to pane at: X=" + imageView.getX() + ", Y=" + imageView.getY());
+    }
+
+
+    public void removeFromPane() {
+        if (root != null) {
+            root.getChildren().removeAll(square, imageView);
+        }
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
 }

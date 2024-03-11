@@ -120,7 +120,7 @@
 //            if (rock.overlaps(player))
 //            {
 //                // player.removeSelf();
-//                // TODO: game over message appears
+//                // game over message appears
 //            }
 //
 //            for (Entity bulletE : bulletGroup.getList())

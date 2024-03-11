@@ -1,6 +1,5 @@
 package com.base.game.retrorampage.LevelGeneration;
 
-import com.base.game.retrorampage.GameAssets.Bullet;
 import com.base.game.retrorampage.GameAssets.Game;
 import com.base.game.retrorampage.GameAssets.Player;
 import javafx.scene.Scene;
@@ -11,8 +10,6 @@ public class Main extends Game {
 
     @Override
     public void initialize() {
-        // Set the title of the primary stage
-        setTitle("Level Generator");
 
         // Initialize the LevelGenerator with the desired number of cells
         levelGenerator = new LevelGenerator(5, "config.txt");
@@ -28,6 +25,5 @@ public class Main extends Game {
     @Override
     public void update() {
         levelGenerator.update();
-
     }
 }

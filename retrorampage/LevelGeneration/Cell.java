@@ -1,9 +1,5 @@
 package com.base.game.retrorampage.LevelGeneration;
 
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-
 public class Cell {
     private double x, y; // Coordinates of the top-left corner of the cell
     private double width;
