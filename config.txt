@@ -1,0 +1,19 @@
+Fullscreen: false
+Resolution: 1920 x 1080
+Volume: 100
+MoveUp1: W
+MoveUp2: UP
+MoveDown1: S
+MoveDown2: DOWN
+MoveLeft1: A
+MoveLeft2: LEFT
+MoveRight1: D
+MoveRight2: RIGHT
+Shoot1: Left Click
+Shoot2: SPACE
+Aim1: Right Click
+Aim2: 
+Reload1: R
+Reload2: 
+Inventory1: TAB
+Inventory2: E
