@@ -2,30 +2,26 @@ package com.base.game.retrorampage.LevelGeneration;
 
 import com.base.game.retrorampage.GameAssets.*;
 import com.base.game.retrorampage.MainMenu.Config;
+import com.base.game.retrorampage.MainMenu.GameOver;
 import com.base.game.retrorampage.MainMenu.NextLevel;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class LevelGenerator {
     private final Scene scene;
     private final int WIDTH = 1920;
     private final int HEIGHT = 1080;
-    private Stage primaryStage;
-
     // Managers and components
     private final Pane root; // Root pane to contain the level elements
     private final RoomManager roomManager; // Manages the generation and drawing of rooms
     private final GraphManager graphManager; // Manages graph-related operations
     private final CorridorManager corridorManager; // Manages the creation of corridors
-    private final VisualizationManager visualizationManager; // Manages visualization of the level
     private final Input input; // Handles user input
     private final Config config; // Manages configuration settings
     private final Player player; // Represents the player
@@ -35,6 +31,7 @@ public class LevelGenerator {
     private final int health;
     private final boolean isRightMousePressed = false;
     private final boolean isMiddleMousePressed = false;
+    private final Stage primaryStage;
     private boolean isShooting = false; // Add this variable
     private long lastUpdateTime = System.nanoTime();
     private List<Enemy> enemies;
@@ -43,18 +40,19 @@ public class LevelGenerator {
     private String shootKey1;
     private String shootKey2;
     private boolean isLeftMousePressed = false;
+    private Game game;
 
     // Constructor
-    public LevelGenerator(Stage primaryStage ,int numberOfCells, String configFilePath) {
+    public LevelGenerator(Stage primaryStage, Game game, int numberOfCells, String configFilePath) {
         this.primaryStage = primaryStage;
         this.root = new Pane(); // Create a new pane to hold the level elements
         this.scene = new Scene(root, WIDTH, HEIGHT); // Set scene dimensions
+        this.game = game;
 
         // Initialize managers with necessary parameters
         this.roomManager = new RoomManager(numberOfCells, root);
         this.graphManager = new GraphManager();
         this.corridorManager = new CorridorManager(root);
-        this.visualizationManager = new VisualizationManager(root);
         this.input = new Input(scene); // Set up input handling
         this.config = new Config(configFilePath); // Load configuration settings
         this.camera = new Camera(1.0, 0.1);
@@ -120,14 +118,22 @@ public class LevelGenerator {
 
     public void update() {
         double dt = calculateDeltaTime();
+        updateCamera();
         updatePlayerPosition();
+        checkPlayerHealth();
         updateBullets(dt);
         handleShootInput();
         updateEnemies();
         updateHealthItem();
         updateExitKey();
-        updateCamera();
         checkEndLevel();
+    }
+
+    private double calculateDeltaTime() {
+        long now = System.nanoTime();
+        double dt = (now - lastUpdateTime) / 1e9; // Convert nanoseconds to seconds
+        lastUpdateTime = now;
+        return dt;
     }
 
     private void updateCamera() {
@@ -138,18 +144,11 @@ public class LevelGenerator {
         root.getTransforms().setAll(camera.getTranslation(), camera.getZoom());
     }
 
-    private double calculateDeltaTime() {
-        long now = System.nanoTime();
-        double dt = (now - lastUpdateTime) / 1e9; // Convert nanoseconds to seconds
-        lastUpdateTime = now;
-        return dt;
-    }
-
     private void updatePlayerPosition() {
         player.updatePosition(input, config, 120.0);
     }
 
-    // Handle shsdooting input, either from keyboard or left mouse button
+    // Handle shooting input, either from keyboard or left mouse button
 
     private void handleShootInput() {
         shootKey1 = config.getKeybind("Shoot1");
@@ -228,18 +227,16 @@ public class LevelGenerator {
     }
 
     private void updateBullets(double dt) {
-        List<Bullet> bulletsToRemove = new ArrayList<>();
-
-        for (Bullet bullet : bullets) {
+        Iterator<Bullet> iterator = bullets.iterator();
+        while (iterator.hasNext()) {
+            Bullet bullet = iterator.next();
             if (bullet.isActive()) {
                 bullet.update(dt);
                 checkBulletCollisions(bullet);
             } else {
-                bulletsToRemove.add(bullet);
+                iterator.remove(); // Remove the bullet using the iterator
             }
         }
-
-        bullets.removeAll(bulletsToRemove);
     }
 
     // Update the checkBulletCollisions method in LevelGenerator
@@ -265,26 +262,26 @@ public class LevelGenerator {
             bullet.setActive(false);
         }
 
-        List<Enemy> enemiesToRemove = new ArrayList<>();
-        for (Enemy enemy : enemies) {
+        Iterator<Enemy> iterator = enemies.iterator();
+        while (iterator.hasNext()) {
+            Enemy enemy = iterator.next();
             if (bullet.isActive() && enemy.getSquare().getBoundsInParent().intersects(bullet.getBoundsInParent())) {
                 System.out.println("Bullet hit enemy!");
                 enemy.reduceHealth(25);
+                enemy.updateDamageLabel(25);
                 bullet.setActive(false);
 
                 if (enemy.getHealth() <= 0) {
                     System.out.println("Enemy defeated!");
                     int totalKilled = Enemy.getTotalEnemiesKilled();
                     System.out.println("Total enemies killed: " + totalKilled);
-                    enemiesToRemove.add(enemy);
+                    iterator.remove(); // Remove the enemy using the iterator
                 }
             }
         }
-
-        enemies.removeAll(enemiesToRemove);
     }
-    // In the updateEnemies method of LevelGenerator, print a debug statement
 
+    // In the updateEnemies method of LevelGenerator, print a debug statement
     private void updateEnemies() {
         List<Enemy> enemiesToRemove = new ArrayList<>();
 
@@ -348,8 +345,15 @@ public class LevelGenerator {
         if (healthItem != null && healthItem.isActive() && player.getSquare().getBoundsInParent().intersects(healthItem.getBoundsInParent())) {
             // Player collided with the health item
             player.heal(healthItem.getHealthIncrease()); // Assuming you have a getHealthIncrease() method in HealthItem
+            player.updateHealthLabel(healthItem.getHealthIncrease());
             healthItem.removeFromPane(); // Remove the health item from the pane
             healthItem = null; // Set healthItem to null
+        }
+    }
+
+    private void checkPlayerHealth() {
+        if (player.getHealth() <= 0) {
+            gameOver();
         }
     }
 
@@ -377,11 +381,31 @@ public class LevelGenerator {
     private void checkEndLevel() {
         // Check if the player has the key and is in the dark red room
         if (player.hasKey() && player.isInRedRoom()) {
-            endLevel(); // Call the endLevel method
+            nextLevel(); // Call the endLevel method
         }
     }
 
-    private void endLevel() {
+
+    private void gameOver() {
+        // Create an instance of the NextLevel class
+        GameOver gameOver = new GameOver();
+
+        // Call the createNextLevelScene method to get the next level scene
+        Scene gameOverScene = gameOver.createGameOverScene(scene, primaryStage);
+
+        if (gameOverScene != null) {
+            // Set the next level scene to be displayed on the primary stage
+            primaryStage.setScene(gameOverScene);
+
+            // Call stopGameLoop method from the Game instance
+            game.stopGameLoop();
+        } else {
+            // Handle the case where the next level scene couldn't be created
+            System.err.println("Failed to create the next level scene.");
+        }
+    }
+
+    private void nextLevel() {
         // Create an instance of the NextLevel class
         NextLevel nextLevel = new NextLevel();
 
@@ -391,6 +415,9 @@ public class LevelGenerator {
         if (nextLevelScene != null) {
             // Set the next level scene to be displayed on the primary stage
             primaryStage.setScene(nextLevelScene);
+
+            // Call stopGameLoop method from the Game instance
+            game.stopGameLoop();
         } else {
             // Handle the case where the next level scene couldn't be created
             System.err.println("Failed to create the next level scene.");

@@ -17,54 +17,61 @@ import javafx.stage.Stage;
 public abstract class Game extends Application implements Screen {
 
     /**
-     * area where game graphics are displayed
-     */
-    public Canvas canvas;
-
-    /**
-     * object with methods to draw game entities on canvas
-     */
-    public GraphicsContext context;
-
-    public Group group;
-
-    /**
      * The window containing the game.
      */
-    public Stage stage;
+    protected Stage stage;
 
-    public Input input;
+    /**
+     * Canvas where game graphics are displayed.
+     */
+    protected Canvas canvas;
 
-    private AnimationTimer gameLoop;
+    /**
+     * Graphics context to draw on the canvas.
+     */
+    protected GraphicsContext context;
+
+    /**
+     * The group containing game entities.
+     */
+    protected Group group;
+
+    /**
+     * Handles user input.
+     */
+    protected Input input;
+
+    /**
+     * Animation timer for the game loop.
+     */
+    protected AnimationTimer gameLoop;
 
     /**
      * Initializes the window and game objects,
      * and manages the life cycle of the game (initialization and game loop).
      */
-    public void start(Stage mainStage) {
-        mainStage.setTitle("Game");
-        mainStage.setResizable(false);
+    @Override
+    public void start(Stage primaryStage) {
+        stage = primaryStage;
+        stage.setTitle("Game");
+        stage.setResizable(false);
 
         Pane root = new Pane();
         Scene mainScene = new Scene(root);
-        mainStage.setScene(mainScene);
-        mainStage.sizeToScene();
+        stage.setScene(mainScene);
 
         canvas = new Canvas(512, 512);
         context = canvas.getGraphicsContext2D();
         root.getChildren().add(canvas);
 
         group = new Group();
-
         input = new Input(mainScene);
-
-        // to clarify class containing update method
-        Game self = this;
 
         gameLoop = new AnimationTimer() {
             long lastTime = System.nanoTime();
             int frameCount = 0;
 
+            @Override
             public void handle(long currentTime) {
                 // Calculate FPS
                 frameCount++;
@@ -75,26 +82,20 @@ public abstract class Game extends Application implements Screen {
                     lastTime = currentTime;
                 }
 
-                // update user input
+                // Update user input
                 input.update();
 
-                // update game state
-                self.update();
-                self.group.update(1 / 60.0);
+                // Update game state
+                update();
+                group.update(1 / 60.0);
 
-                // clear the canvas
-                self.context.setFill(Color.GRAY);
-                self.context.fillRect(0, 0,
-                        self.canvas.getWidth(),
-                        self.canvas.getHeight());
+                // Clear the canvas
+                context.setFill(Color.GRAY);
+                context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
             }
         };
 
-        mainStage.show();
-
-        // reference required for set methods
-        stage = mainStage;
-
+        stage.show();
         initialize();
         startGameLoop();
     }
@@ -109,14 +110,12 @@ public abstract class Game extends Application implements Screen {
     /**
      * Stops the game loop.
      */
-    protected void stopGameLoop() {
-        if (gameLoop != null) {
-            gameLoop.stop();
-        }
+    public void stopGameLoop() {
+        gameLoop.stop();
     }
 
     /**
-     * Set the text that appears in the window title bar
+     * Set the text that appears in the window title bar.
      *
      * @param title window title
      */
@@ -133,5 +132,4 @@ public abstract class Game extends Application implements Screen {
      * Override this method to update the game state.
      */
     public abstract void update();
-
 }

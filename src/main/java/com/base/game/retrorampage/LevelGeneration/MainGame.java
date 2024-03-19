@@ -11,7 +11,7 @@ public class MainGame extends Game {
     public void initialize() {
 
         // Initialize the LevelGenerator with the desired number of cells
-        levelGenerator = new LevelGenerator(stage, 5, "config.txt");
+        levelGenerator = new LevelGenerator(stage, this,3, "config.txt");
 
         // Generate the level and obtain the Scene object
         Scene scene = levelGenerator.generateLevel();

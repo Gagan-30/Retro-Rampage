@@ -82,10 +82,8 @@ public class RoomManager {
                 rectangle.setStroke(Color.BLACK); // Border color for all cells
 
                 // Set fill color based on the room type
-                if (cell == spawnRoom) {
-                    rectangle.setFill(Color.GREEN); // Spawn room in green
-                } else if (cell == exitRoom) {
-                    rectangle.setFill(Color.DARKRED); // Exit room in red
+                if (cell == exitRoom) {
+                    rectangle.setFill(Color.DARKRED); // Spawn room in green
                 } else {
                     rectangle.setFill(Color.GREY); // Other rooms remain transparent or another color
                 }

@@ -1,6 +1,7 @@
 package com.base.game.retrorampage.MainMenu;
 
 import com.base.game.retrorampage.GameAssets.Enemy;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -9,7 +10,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class NextLevelController {
+public class GameOverController {
 
     private final MainMenu mainMenu = new MainMenu();
     private final Config config = new Config("config.txt");
@@ -57,8 +58,8 @@ public class NextLevelController {
     }
 
     @FXML
-    public void onNextLevelButtonClick() {
-        // Implement functionality to proceed to the next level
+    public void onRetryButtonClick() {
+        // Implement functionality to proceed to the retry level
     }
 
     private void updateTitle(String newTitle) {

@@ -2,18 +2,24 @@ package com.base.game.retrorampage.GameAssets;
 
 import com.base.game.retrorampage.LevelGeneration.Cell;
 import com.base.game.retrorampage.LevelGeneration.CorridorManager;
+import javafx.animation.FadeTransition;
+import javafx.animation.TranslateTransition;
 import javafx.geometry.Bounds;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class Enemy extends Sprite {
-    private final Rectangle square;
     private static CorridorManager corridorManager;
+    private static int totalEnemiesKilled = 0;
+    private final Rectangle square;
     private int health;
     private double initialX;
     private double initialY;
@@ -23,9 +29,11 @@ public class Enemy extends Sprite {
     private long playerCollisionCooldown = 2 * 1_000_000_000L; // 2 seconds in nanoseconds
     private long lastPlayerCollisionTime = 0;
     private boolean playerCollisionCooldownActive = false;
-    private static int totalEnemiesKilled = 0;
+    private Text damageLabel;
+    private FadeTransition fadeTransition;
+    private TranslateTransition translateTransition;
 
-    public Enemy(double size, String imagePath, int health) {
+    public Enemy(double size, String imagePath, int health, Pane root) {
         super(imagePath, size);
         this.square = new Rectangle(size, size);
         this.square.setFill(Color.TRANSPARENT);
@@ -33,10 +41,26 @@ public class Enemy extends Sprite {
         this.height = size;
         this.width = size;
         this.health = health;
-    }
 
-    public void setCorridorManager(CorridorManager corridorManager) {
-        Enemy.corridorManager = corridorManager;
+        // Initialize damage label
+        damageLabel = new Text();
+        damageLabel.setFont(new Font("Arial", 20));
+        damageLabel.setFill(Color.RED);
+        damageLabel.setVisible(false);
+
+        // Initialize fade transition
+        fadeTransition = new FadeTransition(Duration.seconds(0.5), damageLabel);
+        fadeTransition.setFromValue(1.0);
+        fadeTransition.setToValue(0.0);
+
+        // Initialize translate transition
+        translateTransition = new TranslateTransition(Duration.seconds(0.5), damageLabel);
+        translateTransition.setFromY(0);
+        translateTransition.setToY(-20);
+        translateTransition.setCycleCount(1);
+
+        this.root = root;
+        root.getChildren().add(damageLabel);
     }
 
     public static List<Enemy> spawnEnemies(int numEnemies, double size, String imagePath, int health, List<Cell> cells, Cell spawnCell, Pane root) {
@@ -44,7 +68,7 @@ public class Enemy extends Sprite {
         Random random = new Random();
 
         for (int i = 0; i < numEnemies; i++) {
-            Enemy enemy = new Enemy(size, imagePath, health);
+            Enemy enemy = new Enemy(size, imagePath, health, root);
             enemy.setCorridorManager(corridorManager); // Set the corridorManager for the enemy
 
             Cell randomCell;
@@ -81,6 +105,15 @@ public class Enemy extends Sprite {
         }
 
         return enemies;
+    }
+
+    // Method to retrieve totalEnemiesKilled from outside the class
+    public static int getTotalEnemiesKilled() {
+        return totalEnemiesKilled;
+    }
+
+    public void setCorridorManager(CorridorManager corridorManager) {
+        Enemy.corridorManager = corridorManager;
     }
 
     public void updatePosition(double playerX, double playerY, double movementSpeed) {
@@ -123,7 +156,6 @@ public class Enemy extends Sprite {
             }
         }
     }
-
 
     public boolean isCollidingPlayer(Player player) {
         Bounds playerBounds = player.getSquare().getBoundsInParent();
@@ -168,6 +200,7 @@ public class Enemy extends Sprite {
     }
 
 
+
     public boolean isCollidingRoom(Rectangle roomRectangle) {
         return false;
     }
@@ -175,11 +208,6 @@ public class Enemy extends Sprite {
     // Method to increment totalEnemiesKilled when an enemy is killed
     private void incrementTotalEnemiesKilled() {
         totalEnemiesKilled++;
-    }
-
-    // Method to retrieve totalEnemiesKilled from outside the class
-    public static int getTotalEnemiesKilled() {
-        return totalEnemiesKilled;
     }
 
     // Method to reduce enemy's health and handle death
@@ -232,6 +260,37 @@ public class Enemy extends Sprite {
         if (root != null) {
             root.getChildren().removeAll(square, imageView);
         }
+    }
+
+    // Method to update enemy's damage label
+    public void updateDamageLabel(int amount) {
+        damageLabel.setText("-" + amount);
+        damageLabel.setX(square.getX() - square.getWidth() / 2); // Adjust position to center the label horizontally
+        damageLabel.setY(square.getY() - square.getHeight() / 2 - 30); // Adjust position to place the label above the enemy
+
+        // Set initial opacity and translation
+        damageLabel.setOpacity(1.0);
+        damageLabel.setTranslateY(0);
+
+        // Set an event handler to hide the label when the fade-out animation is finished
+        fadeTransition.setOnFinished(event -> {
+            damageLabel.setVisible(false);
+            damageLabel.setOpacity(1.0); // Reset opacity after animation
+            damageLabel.setTranslateY(0); // Reset translation after animation
+        });
+
+        // Set an event handler to reset translate transition after its completion
+        translateTransition.setOnFinished(event -> {
+            damageLabel.setTranslateY(0); // Reset translation after animation
+        });
+
+        // Ensure the label is in front of the enemy by setting its Z-order
+        damageLabel.toFront();
+
+        // Start the fade-out and translate animations
+        fadeTransition.play();
+        translateTransition.play();
+        damageLabel.setVisible(true); // Make the label visible before starting the animations
     }
 
     public void setPlayer(Player player) {

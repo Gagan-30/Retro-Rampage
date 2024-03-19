@@ -29,12 +29,9 @@ public class Player extends Sprite {
     private boolean hasKey = false; // Add a boolean variable to track if the player has the key
     private boolean canMove = true;  // Add a flag to control movement based on color
     private Camera camera;
-    Cell lastRoom;
     private Text damageLabel;
     private FadeTransition fadeTransition;
     private Bounds boundsInParent;
-    private boolean inRedRoom;
-    private boolean inLastRoom;
     private RoomManager roomManager;
 
     public Player(double size, String imagePath, int health, Pane root, Camera camera, RoomManager roomManager) {
@@ -137,8 +134,8 @@ public class Player extends Sprite {
             square.setY(prevPlayerY);
             setPosition(prevPlayerX, prevPlayerY);
         }
-    }
 
+    }
 
     private void movePlayer(double deltaX, double deltaY) {
         prevPlayerX = getX(); // Store previous position
@@ -147,7 +144,6 @@ public class Player extends Sprite {
         square.setY(square.getY() + deltaY);
         setPosition(getX() + deltaX, getY() + deltaY);
     }
-
 
     public double getMouseLookingDirection(Input input) {
         double mouseX = input.getMouseX();
@@ -164,7 +160,6 @@ public class Player extends Sprite {
 
         return angle;
     }
-
 
     private boolean isColorAllowed(Color color) {
         // Define the allowed color ranges
@@ -209,8 +204,8 @@ public class Player extends Sprite {
             health -= amount;
 
             if (health <= 0) {
-                // Player is defeated, remove graphical representation from the scene
-                root.getChildren().remove(square);
+                // Player is defeated, remove the player object from the pane
+                removeFromPane(); // Remove the Player object from the pane
                 health = 0; // Ensure health doesn't go below 0
                 System.out.println("Player health: 0");
             } else {
@@ -222,34 +217,64 @@ public class Player extends Sprite {
         }
     }
 
-    private void updateHealthLabel(int amount) {
-        damageLabel.setText("-" + amount);
-        damageLabel.setX(getX() - size / 2); // Adjust position to center the label horizontally
-        damageLabel.setY(getY() - size / 2 - 30); // Adjust position to place the label above the player
+    public void updateHealthLabel(int amount) {
+        if (amount == 20) {
+            damageLabel.setText("-" + amount);
+            damageLabel.setX(getX() - size / 2); // Adjust position to center the label horizontally
+            damageLabel.setY(getY() - size / 2 - 30); // Adjust position to place the label above the player
 
-        // Set initial opacity and translation
-        damageLabel.setOpacity(1.0);
-        damageLabel.setTranslateY(0);
+            // Set initial opacity and translation
+            damageLabel.setOpacity(1.0);
+            damageLabel.setTranslateY(0);
 
-        // Set an event handler to hide the label when the fade-out animation is finished
-        fadeTransition.setOnFinished(event -> {
-            damageLabel.setVisible(false);
-            damageLabel.setOpacity(1.0); // Reset opacity after animation
-            damageLabel.setTranslateY(0); // Reset translation after animation
-        });
+            // Set an event handler to hide the label when the fade-out animation is finished
+            fadeTransition.setOnFinished(event -> {
+                damageLabel.setVisible(false);
+                damageLabel.setOpacity(1.0); // Reset opacity after animation
+                damageLabel.setTranslateY(0); // Reset translation after animation
+            });
 
-        // Set an event handler to reset translate transition after its completion
-        translateTransition.setOnFinished(event -> {
-            damageLabel.setTranslateY(0); // Reset translation after animation
-        });
+            // Set an event handler to reset translate transition after its completion
+            translateTransition.setOnFinished(event -> {
+                damageLabel.setTranslateY(0); // Reset translation after animation
+            });
 
-        // Ensure the label is in front of the room and player by setting its Z-order
-        damageLabel.toFront();
+            // Ensure the label is in front of the room and player by setting its Z-order
+            damageLabel.toFront();
 
-        // Start the fade-out and translate animations
-        fadeTransition.play();
-        translateTransition.play();
-        damageLabel.setVisible(true); // Make the label visible before starting the animations
+            // Start the fade-out and translate animations
+            fadeTransition.play();
+            translateTransition.play();
+            damageLabel.setVisible(true); // Make the label visible before starting the animations
+        } else {
+            damageLabel.setText("+" + amount);
+            damageLabel.setFill(Color.GREEN);
+            damageLabel.setX(getX() - size / 2); // Adjust position to center the label horizontally
+            damageLabel.setY(getY() - size / 2 - 30); // Adjust position to place the label above the player
+
+            // Set initial opacity and translation
+            damageLabel.setOpacity(1.0);
+            damageLabel.setTranslateY(0);
+
+            // Set an event handler to hide the label when the fade-out animation is finished
+            fadeTransition.setOnFinished(event -> {
+                damageLabel.setVisible(false);
+                damageLabel.setOpacity(1.0); // Reset opacity after animation
+                damageLabel.setTranslateY(0); // Reset translation after animation
+            });
+
+            // Set an event handler to reset translate transition after its completion
+            translateTransition.setOnFinished(event -> {
+                damageLabel.setTranslateY(0); // Reset translation after animation
+            });
+
+            // Ensure the label is in front of the room and player by setting its Z-order
+            damageLabel.toFront();
+            // Start the fade-out and translate animations
+            fadeTransition.play();
+            translateTransition.play();
+            damageLabel.setVisible(true); // Make the label visible before starting the animations
+        }
     }
 
 
@@ -262,12 +287,12 @@ public class Player extends Sprite {
         return health;
     }
 
-    public Rectangle getSquare() {
-        return square;
-    }
-
     public void setHealth(int health) {
         this.health = health;
+    }
+
+    public Rectangle getSquare() {
+        return square;
     }
 
     public void heal(int amount) {
@@ -294,8 +319,6 @@ public class Player extends Sprite {
 
         return inRedRoom;
     }
-
-
 
     public void setHasKey(boolean hasKey) {
         this.hasKey = hasKey;
