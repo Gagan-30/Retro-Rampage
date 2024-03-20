@@ -4,7 +4,6 @@ import com.base.game.retrorampage.LevelGeneration.Cell;
 import com.base.game.retrorampage.LevelGeneration.CorridorManager;
 import com.base.game.retrorampage.LevelGeneration.RoomManager;
 import com.base.game.retrorampage.MainMenu.Config;
-import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Bounds;
@@ -27,12 +26,12 @@ public class Player extends Sprite {
     private int health;  // New field to store player health
     private Pane root;  // Add the root field
     private boolean hasKey = false; // Add a boolean variable to track if the player has the key
-    private boolean canMove = true;  // Add a flag to control movement based on color
-    private Camera camera;
-    private Text damageLabel;
-    private FadeTransition fadeTransition;
+    private final boolean canMove = true;  // Add a flag to control movement based on color
+    private final Camera camera;
+    private final Text damageLabel;
+    private final FadeTransition fadeTransition;
     private Bounds boundsInParent;
-    private RoomManager roomManager;
+    private final RoomManager roomManager;
 
     public Player(double size, String imagePath, int health, Pane root, Camera camera, RoomManager roomManager) {
         super(imagePath, size);
@@ -69,13 +68,12 @@ public class Player extends Sprite {
     }
 
     public void drawInSpawn(Cell center, Pane root) {
-        this.square.setX(center.getCenterX() - square.getWidth() / 2);
-        this.square.setY(center.getCenterY() - square.getHeight() / 2);
-        root.getChildren().add(this.square);
-
-        this.setPosition(center.getCenterX() - this.size / 2,
-                center.getCenterY() - this.size / 2);
-        this.addToPane(root);
+        if (!root.getChildren().contains(square)) {
+            this.square.setX(center.getCenterX() - square.getWidth() / 2);
+            this.square.setY(center.getCenterY() - square.getHeight() / 2);
+            this.setPosition(center.getCenterX() - this.size / 2, center.getCenterY() - this.size / 2);
+            this.addToPane(root); // Adding the Player object to the root Pane again
+        }
     }
 
 

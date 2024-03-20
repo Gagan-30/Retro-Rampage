@@ -1,9 +1,9 @@
 package com.base.game.retrorampage.LevelGeneration;
 
 public class Cell {
+    private final double height; // Size dimensions of the cell
     private double x, y; // Coordinates of the top-left corner of the cell
     private double width;
-    private final double height; // Size dimensions of the cell
     private boolean isRoom = false; // Flag indicating whether the cell is considered a room
     private boolean exitRoom;
     private boolean isSpawnRoom = false;
@@ -41,6 +41,7 @@ public class Cell {
     public double getCenterX() {
         return this.x + this.width / 2.0;
     }
+
     public double getY() {
         return y;
     }
@@ -54,6 +55,7 @@ public class Cell {
     public double getCenterY() {
         return this.y + this.height / 2.0;
     }
+
     public double getWidth() {
         return width;
     }
@@ -71,6 +73,7 @@ public class Cell {
     public boolean isRoom() {
         return isRoom;
     }
+
     public void setRoom(boolean isRoom) {
         this.isRoom = isRoom;
     }
@@ -78,9 +81,11 @@ public class Cell {
     public void setSpawnRoom(boolean isSpawnRoom) {
         this.isSpawnRoom = isSpawnRoom;
     }
+
     public boolean contains(double pointX, double pointY) {
         return pointX >= x && pointX <= x + width && pointY >= y && pointY <= y + height;
     }
+
     public void setExitRoom(boolean isExitRoom) {
         this.isExitRoom = isExitRoom;
     }

@@ -14,7 +14,7 @@ public class ExitKey extends Sprite {
     private final Pane root; // Add this field
     private boolean active;
     private boolean hasKey;
-    private RoomManager roomManager;
+    private final RoomManager roomManager;
 
     public ExitKey(double size, String imagePath, Player player, Pane root, RoomManager roomManager) {
         super(imagePath, size);

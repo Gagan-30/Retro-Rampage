@@ -2,9 +2,8 @@ package com.base.game.retrorampage.LevelGeneration;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
-import org.locationtech.jts.geom.Coordinate;
+
 import java.util.List;
 
 public class CorridorManager {
@@ -16,19 +15,7 @@ public class CorridorManager {
     public CorridorManager(Pane root) {
         this.root = root;
     }
-    public void createCorridors(List<GraphManager.Edge> edges) {
-        for (GraphManager.Edge edge : edges) {
-            drawCorridor(edge.start, edge.end);
-        }
-    }
 
-    private void drawCorridor(Coordinate start, Coordinate end) {
-        // Convert the coordinates to Line objects for JavaFX visualization
-        Line line = new Line(start.x, start.y, end.x, end.y);
-        line.setStroke(Color.TRANSPARENT);
-        line.setStrokeWidth(2); // Set the corridor width, adjust as needed
-        root.getChildren().add(line);
-    }
 
     // This method assumes that the 'edges' list contains edges connecting the centers
     // of rooms that are to be connected by hallways.

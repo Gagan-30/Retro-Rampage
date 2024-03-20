@@ -14,7 +14,7 @@ public class HealthItem extends Sprite {
     private final ImageView imageView;
     private final Pane root; // Add this field
     private boolean active;
-    private RoomManager roomManager;
+    private final RoomManager roomManager;
 
     public HealthItem(double size, String imagePath, Player player, Pane root, RoomManager roomManager) {
         super(imagePath, size);
@@ -93,13 +93,12 @@ public class HealthItem extends Sprite {
         imageView.relocate(randomX, randomY);
     }
 
+    public boolean isActive() {
+        return active;
+    }
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public boolean isActive() {
-        return active;
     }
 
     public Bounds getBoundsInParent() {

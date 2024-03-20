@@ -1,11 +1,10 @@
 package com.base.game.retrorampage.GameAssets;
 
 /**
- *  Used to simulate change in position of an object based on velocity and acceleration;
- *  useful in games with a top-down view perspective.
+ * Used to simulate change in position of an object based on velocity and acceleration;
+ * useful in games with a top-down view perspective.
  */
-public class Physics
-{
+public class Physics {
     /**
      * Position of object.
      */
@@ -40,14 +39,14 @@ public class Physics
      * Initialize values used by physics simulation.
      * For objects traveling at constant speed,
      * set acceleration and deceleration values to 0.
+     *
      * @param accValue acceleration value
      * @param maxSpeed maximum speed
      * @param decValue deceleration value
      */
     public Physics(double accValue,
                    double maxSpeed,
-                   double decValue)
-    {
+                   double decValue) {
         position = new Vector();
         velocity = new Vector();
         acceleration = new Vector();
@@ -58,20 +57,20 @@ public class Physics
 
     /**
      * Calculate speed of object.
+     *
      * @return speed of object
      */
-    public double getSpeed()
-    {
+    public double getSpeed() {
         return velocity.getLength();
     }
 
     /**
      * Set speed of object.
      * If acceleration and deceleration values are 0, the speed will remain constant.
+     *
      * @param speed speed of object
      */
-    public void setSpeed(double speed)
-    {
+    public void setSpeed(double speed) {
         velocity.setLength(speed);
     }
 
@@ -80,25 +79,24 @@ public class Physics
      * as measured from the x-axis (the vector (1,0)).
      * If the speed is 0, this method returns 0.
      * Return values are in the range from -180 to +180.
+     *
      * @return angle of motion of object
      */
-    public double getMotionAngle()
-    {
+    public double getMotionAngle() {
         return velocity.getAngle();
     }
 
     /**
      * Set the angle of motion of this object.
      * If the speed is 0, this method has no effect.
+     *
      * @param angleDeg angle of motion of object
      */
-    public void setMotionAngle(double angleDeg)
-    {
+    public void setMotionAngle(double angleDeg) {
         velocity.setAngle(angleDeg);
     }
 
-    public void accelerateBy(double amount, double angle)
-    {
+    public void accelerateBy(double amount, double angle) {
         Vector a = new Vector();
         a.setLength(amount);
         a.setAngle(angle);
@@ -107,23 +105,23 @@ public class Physics
 
     /**
      * Accelerate this object in the direction angleDegrees
-     *  by the amount specified by {@link #accelerationValue}.
+     * by the amount specified by {@link #accelerationValue}.
+     *
      * @param angleDeg direction of acceleration
      */
-    public void accelerateAtAngle(double angleDeg)
-    {
+    public void accelerateAtAngle(double angleDeg) {
         accelerateBy(accelerationValue, angleDeg);
     }
 
     /**
      * Update the position of this object
-     *  according to velocity and acceleration.
-     *  Deceleration is applied if no acceleration is present.
+     * according to velocity and acceleration.
+     * Deceleration is applied if no acceleration is present.
+     *
      * @param dt elapsed time (seconds) since previous iteration of game loop
-     *   (typically approximately 1/60 second)
+     *           (typically approximately 1/60 second)
      */
-    public void update(double dt)
-    {
+    public void update(double dt) {
         // apply acceleration
         velocity.addValues(
                 acceleration.x * dt,

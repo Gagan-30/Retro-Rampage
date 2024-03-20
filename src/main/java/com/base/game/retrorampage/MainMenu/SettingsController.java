@@ -1,23 +1,23 @@
 package com.base.game.retrorampage.MainMenu;
 
 // Import necessary JavaFX classes
+
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class SettingsController {
 
+    // Instances of classes for managing specific settings categories
+    private final Graphics graphics = new Graphics();
+    private final Sound sound = new Sound();
+    private final Keybind keybind = new Keybind();
     // Private fields to store the previous scene, the main application stage, and scenes for each settings category
     private Scene previousScene;
     private Stage stage;
     private Scene graphicsScene;
     private Scene soundScene;
     private Scene keybindScene;
-
-    // Instances of classes for managing specific settings categories
-    private final Graphics graphics = new Graphics();
-    private final Sound sound = new Sound();
-    private final Keybind keybind = new Keybind();
 
     // Sets the previous scene, allowing for navigation back to the main menu or previous state
     public void setPreviousScene(Scene previousScene) {

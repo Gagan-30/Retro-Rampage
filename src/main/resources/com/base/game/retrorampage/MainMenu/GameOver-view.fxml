@@ -14,7 +14,7 @@
         <URL value="@styles.css"/>
     </stylesheets>
 
-    <!-- Main Menu Label -->
+    <!-- RetroRampage Menu Label -->
     <Label fx:id="mainMenuLabel" styleClass="main-title" text="Game Over"/>
 
     <!-- Total Enemies Killed Label -->
@@ -22,7 +22,7 @@
 
     <!-- Horizontal Box for Buttons -->
     <HBox alignment="CENTER" spacing="30">
-        <!-- Main Menu Button -->
+        <!-- RetroRampage Menu Button -->
         <Button onAction="#onMainMenuButtonClick" styleClass="menu-button" text="Main Menu"/>
         <!-- Next Level Button -->
         <Button onAction="#onRetryButtonClick" styleClass="menu-button" text="Retry"/>

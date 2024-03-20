@@ -4,8 +4,7 @@ import javafx.scene.image.Image;
 
 import java.util.ArrayList;
 
-public class Animation
-{
+public class Animation {
     public ArrayList<Texture> textureList;
 
     public double frameDuration;
@@ -16,8 +15,7 @@ public class Animation
 
     public boolean paused;
 
-    public Animation()
-    {
+    public Animation() {
         textureList = new ArrayList<Texture>();
         frameDuration = 1;
         loop = false;
@@ -28,21 +26,18 @@ public class Animation
     public Animation(String imageFileName,
                      int rows, int columns,
                      double frameDuration,
-                     boolean loop)
-    {
+                     boolean loop) {
         textureList = new ArrayList<Texture>();
 
         Image image = new Image(imageFileName);
-        double frameWidth = image.getWidth()/columns;
-        double frameHeight = image.getHeight()/rows;
-        for (int y = 0; y < rows; y++)
-        {
-            for (int x = 0; x < columns; x++)
-            {
+        double frameWidth = image.getWidth() / columns;
+        double frameHeight = image.getHeight() / rows;
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < columns; x++) {
                 Texture tex = new Texture();
                 tex.image = image;
-                int frameX = x * (int)frameWidth;
-                int frameY = y * (int)frameHeight;
+                int frameX = x * (int) frameWidth;
+                int frameY = y * (int) frameHeight;
                 tex.region = new Rect(
                         frameX, frameY,
                         frameWidth, frameHeight);
@@ -56,10 +51,9 @@ public class Animation
         this.paused = false;
     }
 
-    public Texture getCurrentTexture()
-    {
+    public Texture getCurrentTexture() {
         int textureIndex =
-                (int)Math.floor(elapsedTime / frameDuration);
+                (int) Math.floor(elapsedTime / frameDuration);
 
         // avoid out-of-bounds errors
         if (textureIndex >= textureList.size())
@@ -68,24 +62,21 @@ public class Animation
         return textureList.get(textureIndex);
     }
 
-    public void update(double dt)
-    {
+    public void update(double dt) {
         if (paused)
             return;
 
         elapsedTime += dt;
 
-        if ( loop && isFinished() )
+        if (loop && isFinished())
             elapsedTime = 0;
     }
 
-    public boolean isFinished()
-    {
-        return (elapsedTime > frameDuration * textureList.size() );
+    public boolean isFinished() {
+        return (elapsedTime > frameDuration * textureList.size());
     }
 
-    public Animation clone()
-    {
+    public Animation clone() {
         Animation a = new Animation();
         a.textureList = this.textureList;
         a.frameDuration = this.frameDuration;

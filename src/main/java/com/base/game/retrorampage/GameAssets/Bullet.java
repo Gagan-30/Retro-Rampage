@@ -6,13 +6,13 @@ import javafx.scene.layout.Pane;
 
 public class Bullet {
     private static final double BULLET_SPEED = 350.0; // Adjust the bullet speed as needed
-    private boolean active;
     private final Pane root;
     private final ImageView imageView;
-    private double dx; // Directional velocity in the x-axis
-    private double dy; // Directional velocity in the y-axis
     private final Player player;
     private final Input input;
+    private boolean active;
+    private double dx; // Directional velocity in the x-axis
+    private double dy; // Directional velocity in the y-axis
     private Bounds boundsInParent;
     private double x; // Corrected to double
     private double y; // Corrected to double

@@ -2,16 +2,19 @@ package com.base.game.retrorampage.GameAssets;
 
 import com.base.game.retrorampage.LevelGeneration.Cell;
 import com.base.game.retrorampage.LevelGeneration.CorridorManager;
+import com.base.game.retrorampage.MainMenu.Config;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Bounds;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -26,17 +29,21 @@ public class Enemy extends Sprite {
     private Player player;
     private long lastAttackTime = System.nanoTime();
     private long lastUpdateTime = System.nanoTime();
-    private long playerCollisionCooldown = 2 * 1_000_000_000L; // 2 seconds in nanoseconds
-    private long lastPlayerCollisionTime = 0;
+    private final long playerCollisionCooldown = 2 * 1_000_000_000L; // 2 seconds in nanoseconds
+    private final long lastPlayerCollisionTime = 0;
     private boolean playerCollisionCooldownActive = false;
-    private Text damageLabel;
-    private FadeTransition fadeTransition;
-    private TranslateTransition translateTransition;
+    private final Text damageLabel;
+    private final FadeTransition fadeTransition;
+    private final TranslateTransition translateTransition;
+    private AudioClip audioClip;
+    private URL playerDamagePath;
+    private final Config config;
 
-    public Enemy(double size, String imagePath, int health, Pane root) {
+    public Enemy(double size, String imagePath, int health, Config config, Pane root) {
         super(imagePath, size);
         this.square = new Rectangle(size, size);
         this.square.setFill(Color.TRANSPARENT);
+        this.config = config;
 
         this.height = size;
         this.width = size;
@@ -68,7 +75,7 @@ public class Enemy extends Sprite {
         Random random = new Random();
 
         for (int i = 0; i < numEnemies; i++) {
-            Enemy enemy = new Enemy(size, imagePath, health, root);
+            Enemy enemy = new Enemy(size, imagePath, health, new Config("config.txt"), root);
             enemy.setCorridorManager(corridorManager); // Set the corridorManager for the enemy
 
             Cell randomCell;
@@ -177,6 +184,11 @@ public class Enemy extends Sprite {
 
             // Reduce the player's health
             player.decreaseHealth(20); // Adjust the amount based on your game's logic
+            // Load enemy damage audio
+            playerDamagePath = getClass().getResource("/playerdamage.wav");
+            audioClip = new AudioClip(playerDamagePath.toString());
+            audioClip.setVolume(config.getVolume());
+            audioClip.play(); // Play enemy damage audio
 
             // Check if the player's health is already zero or below
             if (player.getHealth() <= 0) {
@@ -198,7 +210,6 @@ public class Enemy extends Sprite {
             );
         }
     }
-
 
 
     public boolean isCollidingRoom(Rectangle roomRectangle) {

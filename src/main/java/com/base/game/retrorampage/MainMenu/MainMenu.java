@@ -29,7 +29,7 @@ public class MainMenu {
         // Create a new scene with the loaded layout
         Scene scene = new Scene(root);
         // Set the title of the window (stage) to "MainGame Menu"
-        stage.setTitle("MainGame Menu");
+        stage.setTitle("Main Menu");
         // Make the window resizable
         stage.setResizable(true);
 

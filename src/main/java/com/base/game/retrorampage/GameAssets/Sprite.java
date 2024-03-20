@@ -1,6 +1,5 @@
 package com.base.game.retrorampage.GameAssets;
 
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -63,8 +62,8 @@ public class Sprite {
     public Animation animation;
 
     public ArrayList<Action> actionList;
-    ImageView imageView;
     public Pane root;
+    ImageView imageView;
     private double x;
     private double y;
     private double rotation;
@@ -116,14 +115,17 @@ public class Sprite {
         return this.imageView.getLayoutX();
     }
 
+    public void setX(double x) {
+        this.x = x;
+    }
+
     public double getY() {
         return this.imageView.getLayoutY();
     }
 
-    public void setRotation(double angle) {
-        this.imageView.setRotate(angle);
+    public void setY(double y) {
+        this.y = y;
     }
-
 
     /**
      * Move this sprite by the specified amounts.
@@ -153,7 +155,6 @@ public class Sprite {
         this.setX(sprite.getX());
         this.setY(sprite.getY());
     }
-
 
     /**
      * Move sprite by the specified distance at the specified angle.
@@ -264,7 +265,6 @@ public class Sprite {
             setY(screenHeight - height / 2);
     }
 
-
     public void wrapToScreen(int screenWidth, int screenHeight) {
         if (position.x + width / 2 < 0)
             position.x = screenWidth + width / 2;
@@ -307,25 +307,27 @@ public class Sprite {
         this.root = root;
     }
 
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
     public double getRotation() {
         return rotation;
     }
 
+    public void setRotation(double angle) {
+        this.imageView.setRotate(angle);
+    }
+
     public void addToPane(Pane root) {
-        root.getChildren().add(imageView);
-        updateImageViewPosition();  // Add this line to update the position
+        if (!root.getChildren().contains(imageView)) {
+            root.getChildren().add(imageView);
+        } else {
+            // If imageView is already a child, remove it and add it again
+            root.getChildren().remove(imageView);
+            root.getChildren().add(imageView);
+        }
+        updateImageViewPosition();  // Update the position of the imageView
     }
 
     public void removeFromPane() {
-        if (root != null && root.getChildren().contains(imageView)) {
+        if (root != null) {
             root.getChildren().remove(imageView);
         }
     }

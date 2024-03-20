@@ -1,9 +1,10 @@
 package com.base.game.retrorampage.MainMenu;
 
 import com.base.game.retrorampage.GameAssets.Enemy;
+import com.base.game.retrorampage.LevelGeneration.LevelGenerator;
+import com.base.game.retrorampage.LevelGeneration.MainGame;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
@@ -20,7 +21,6 @@ public class NextLevelController {
     private Scene previousScene;
     private Stage stage;
     private Scene mainMenuScene;
-    private Enemy enemy; // Instance of the Enemy class
 
     public void setPreviousScene(Scene previousScene) {
         this.previousScene = previousScene;
@@ -28,11 +28,6 @@ public class NextLevelController {
 
     public void setStage(Stage stage) {
         this.stage = stage;
-    }
-
-    public void setEnemy(Enemy enemy) {
-        this.enemy = enemy;
-        updateTotalEnemiesLabel(); // Call the update method when the enemy is set
     }
 
     public void initialize() {
@@ -53,12 +48,28 @@ public class NextLevelController {
             stage.setFullScreen(true);
         }
 
-        updateTitle("Main Menu");
+        updateTitle("RetroRampage Menu");
     }
 
     @FXML
     public void onNextLevelButtonClick() {
-        // Implement functionality to proceed to the next level
+        MainGame mainGame = (MainGame) previousScene.getUserData();
+        if (mainGame != null) {
+            // Retrieve the levelGenerator from the MainGame instance
+            LevelGenerator levelGenerator = mainGame.getLevelGenerator();
+
+            // Reinitialize the LevelGenerator to regenerate the level
+            Scene scene = levelGenerator.generateLevel();
+
+            // Set the scene to the primary stage
+            stage.setScene(scene);
+
+            // Start the game loop again
+            mainGame.startGameLoop();
+        } else {
+            // Handle the case where mainGame is null
+            System.out.println("MainGame object is null.");
+        }
     }
 
     private void updateTitle(String newTitle) {

@@ -3,43 +3,20 @@ package com.base.game.retrorampage.GameAssets;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Action
-{
-    public interface Function
-    {
-        boolean run(Sprite target, double deltaTime, double totalTime);
-    }
-
+public class Action {
     public Function function;
     public double totalTime;
-
-    public Action()
-    {
+    public Action() {
         totalTime = 0;
     }
 
-    public Action(Function f)
-    {
+    public Action(Function f) {
         function = f;
         totalTime = 0;
     }
 
-    public boolean apply(Sprite target, double deltaTime)
-    {
-        totalTime += deltaTime;
-        return function.run(target, deltaTime, totalTime);
-    }
-
-    public void reset()
-    {
-        totalTime = 0;
-    }
-
-    // static functions to create BAGEL.Action objects
-
     public static Action moveBy(
-            double deltaX, double deltaY, double duration)
-    {
+            double deltaX, double deltaY, double duration) {
         return new Action(
                 (Sprite target, double dt, double tt) ->
                 {
@@ -50,8 +27,7 @@ public class Action
         );
     }
 
-    public static Action rotateBy(double deltaA, double duration)
-    {
+    public static Action rotateBy(double deltaA, double duration) {
         return new Action(
                 (Sprite target, double dt, double tt) ->
                 {
@@ -61,8 +37,7 @@ public class Action
         );
     }
 
-    public static Action fadeOut(double duration)
-    {
+    public static Action fadeOut(double duration) {
         return new Action(
                 (Sprite target, double dt, double tt) ->
                 {
@@ -74,8 +49,9 @@ public class Action
         );
     }
 
-    public static Action removeSelf()
-    {
+    // static functions to create BAGEL.Action objects
+
+    public static Action removeSelf() {
         return new Action(
                 (Sprite target, double dt, double tt) ->
                 {
@@ -84,8 +60,7 @@ public class Action
         );
     }
 
-    public static Action isAnimationFinished()
-    {
+    public static Action isAnimationFinished() {
         return new Action(
                 (Sprite target, double dt, double tt) ->
                 {
@@ -94,20 +69,14 @@ public class Action
         );
     }
 
-    // meta-actions
-
-    public static Action repeat(Action action, int totalTimes)
-    {
-        return new Action()
-        {
+    public static Action repeat(Action action, int totalTimes) {
+        return new Action() {
             int finishedTimes = 0;
 
             @Override
-            public boolean apply(Sprite target, double dt)
-            {
+            public boolean apply(Sprite target, double dt) {
                 boolean finished = action.apply(target, dt);
-                if (finished)
-                {
+                if (finished) {
                     finishedTimes += 1;
                     action.reset();
                 }
@@ -116,13 +85,10 @@ public class Action
         };
     }
 
-    public static Action forever(Action action)
-    {
-        return new Action()
-        {
+    public static Action forever(Action action) {
+        return new Action() {
             @Override
-            public boolean apply(Sprite target, double dt)
-            {
+            public boolean apply(Sprite target, double dt) {
                 boolean finished = action.apply(target, dt);
 
                 if (finished)
@@ -133,29 +99,24 @@ public class Action
         };
     }
 
-    public static Action sequence(Action... actions)
-    {
-        return new Action()
-        {
+    public static Action sequence(Action... actions) {
+        return new Action() {
             final ArrayList<Action> actionList =
                     new ArrayList<Action>(Arrays.asList(actions));
             int currentIndex;
 
             @Override
-            public boolean apply(Sprite target, double dt)
-            {
+            public boolean apply(Sprite target, double dt) {
                 Action currentAction = actionList.get(currentIndex);
                 boolean finished = currentAction.apply(target, dt);
-                if (finished)
-                {
+                if (finished) {
                     currentIndex += 1;
                 }
-                return ( currentIndex == actionList.size() );
+                return (currentIndex == actionList.size());
             }
 
             @Override
-            public void reset()
-            {
+            public void reset() {
                 for (Action action : actionList)
                     action.reset();
 
@@ -164,8 +125,9 @@ public class Action
         };
     }
 
-    public static Action delay(double duration)
-    {
+    // meta-actions
+
+    public static Action delay(double duration) {
         return new Action(
                 (Sprite target, double dt, double tt) ->
                 {
@@ -176,8 +138,7 @@ public class Action
 
     // screen-based actions
     public static Action boundToScreen(
-            int screenWidth, int screenHeight)
-    {
+            int screenWidth, int screenHeight) {
         return new Action(
                 (Sprite target, double dt, double tt) ->
                 {
@@ -188,8 +149,7 @@ public class Action
     }
 
     public static Action wrapToScreen(
-            int screenWidth, int screenHeight)
-    {
+            int screenWidth, int screenHeight) {
         return new Action(
                 (Sprite target, double dt, double tt) ->
                 {
@@ -201,8 +161,7 @@ public class Action
 
     // compound actions
     public static Action delayFadeRemove(
-            double delayTime, double fadeTime)
-    {
+            double delayTime, double fadeTime) {
         return Action.sequence(
                 Action.delay(delayTime),
                 Action.fadeOut(fadeTime),
@@ -210,11 +169,23 @@ public class Action
         );
     }
 
-    public static Action animateThenRemove()
-    {
+    public static Action animateThenRemove() {
         return Action.sequence(
                 Action.isAnimationFinished(),
                 Action.removeSelf()
         );
+    }
+
+    public boolean apply(Sprite target, double deltaTime) {
+        totalTime += deltaTime;
+        return function.run(target, deltaTime, totalTime);
+    }
+
+    public void reset() {
+        totalTime = 0;
+    }
+
+    public interface Function {
+        boolean run(Sprite target, double deltaTime, double totalTime);
     }
 }

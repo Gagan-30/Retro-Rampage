@@ -1,6 +1,7 @@
 package com.base.game.retrorampage.MainMenu;
 
 // Import statements for handling JavaFX components and exceptions
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -10,8 +11,8 @@ import java.io.IOException;
 
 public class GameOver {
 
-    // Method to create and return a JavaFX Scene for the NextLevel screen. This method takes the previous scene and the main application stage as parameters.
-    public Scene createGameOverScene(Scene previousScene, Stage mainStage) {
+    // Method to create and return a JavaFX Scene for the GameOver screen. This method takes the previous scene and the main application stage as parameters.
+    public Scene createGameOverScene(Scene previousScene, Stage mainStage, int numberOfCells) {
         try {
             // Initialize an FXMLLoader to load the FXML file associated with the NextLevel screen
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("GameOver-view.fxml"));
@@ -35,8 +36,8 @@ public class GameOver {
             // Retrieve the controller associated with the FXML file loaded for the settings screen
             GameOverController gameOverController = fxmlLoader.getController();
             // Pass the previous scene and the main stage to the controller for further use
+            gameOverController.setPreviousScene(previousScene, numberOfCells);
             gameOverController.setStage(mainStage);
-            gameOverController.setPreviousScene(previousScene);
 
 
             // Return the newly created scene to wherever this method was called from

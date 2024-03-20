@@ -1,22 +1,24 @@
 package com.base.game.retrorampage.LevelGeneration;
 
+import com.base.game.retrorampage.MainMenu.Config;
 import javafx.scene.layout.Pane;
-
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.locationtech.jts.geom.Coordinate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class RoomManager {
     private final int numberOfCells;
     private final Pane root; // The pane on which rooms will be drawn
+    private final List<Cell> cells = new ArrayList<>();
+    private final Random random = new Random();
     private Cell spawnRoom;
     private Cell exitRoom;
     private Cell spawnCell;
     private Cell spawnRoomCenter;
-    private final List<Cell> cells = new ArrayList<>();
-    private final Random random = new Random();
 
     public RoomManager(int numberOfCells, Pane root) {
         this.numberOfCells = numberOfCells;
@@ -28,9 +30,25 @@ public class RoomManager {
         double centerX = root.getWidth() / 2;
         double centerY = root.getHeight() / 2;
 
+        Config config = new Config("config.txt");
+        double widthScale;
+        double heightScale;
+
+        String resolution = config.loadResolutionSetting();
+        if (resolution.equals("800 x 600")) {
+            widthScale = 0.5;
+            heightScale = 0.5;
+        } else if (resolution.equals("1280 x 720")) {
+            widthScale = 0.75;
+            heightScale = 0.75;
+        } else {
+            widthScale = 1;
+            heightScale = 1;
+        }
+
         while (cells.size() < numberOfCells) {
-            double width = 200 + random.nextDouble() * (400 - 200); // Random width between 50 and 250
-            double height = 200 + random.nextDouble() * (400 - 200); // Random height between 50 and 250
+            double width = (200 + random.nextDouble() * (400 - 200)) * widthScale; // Random width between 50 and 250
+            double height = (200 + random.nextDouble() * (400 - 200)) * heightScale; // Random height between 50 and 250
 
             double x = centerX - width / 2 + (random.nextDouble() - 0.5) * (root.getWidth() - width);
             double y = centerY - height / 2 + (random.nextDouble() - 0.5) * (root.getHeight() - height);
@@ -42,7 +60,7 @@ public class RoomManager {
             Cell cell = new Cell(x, y, width, height);
 
             // Check if the cell meets the criteria to be considered a room before adding
-            if (cell.getWidth() >= 60.0 && cell.getHeight() >= 60.0) {
+            if (cell.getWidth() >= (60.0 * widthScale) && cell.getHeight() >= (60.0 * widthScale)) {
                 cell.setRoom(true);
                 cells.add(cell);
             }
@@ -60,7 +78,6 @@ public class RoomManager {
             exitRoom.setExitRoom(true);
         }
     }
-
 
     public List<Coordinate> getRoomCenters() {
         List<Coordinate> roomCenters = new ArrayList<>();
@@ -161,6 +178,7 @@ public class RoomManager {
     public Cell getSpawnCell() {
         return spawnRoom;
     }
+
     public Cell getLastRoom() {
         return exitRoom;
     }

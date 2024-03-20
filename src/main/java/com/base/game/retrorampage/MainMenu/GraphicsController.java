@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 
 public class GraphicsController {
     private final Config config; // A Config object to manage loading and saving of graphics settings.
-    private final String[] resolutions = {"640 x 480", "800 x 600", "1280 x 720", "1920 x 1080"}; // Supported resolutions.
+    private final String[] resolutions = {"800 x 600", "1280 x 720", "1920 x 1080"}; // Supported resolutions.
     private Scene previousScene; // Reference to the previous scene for navigation purposes.
     private Stage stage; // The main application window.
     private int currentResolutionIndex = 0; // Index of the currently selected resolution in the resolutions array.

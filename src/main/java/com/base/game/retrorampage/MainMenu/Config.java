@@ -201,4 +201,32 @@ public class Config {
     public int loadVolumeSetting() {
         return Integer.parseInt(settings.getOrDefault("Volume", "50"));
     }
+
+    public int getWidth() {
+        String resolution = settings.getOrDefault("Resolution", "800 x 600");
+        String[] parts = resolution.split("x");
+        if (parts.length == 2) {
+            return Integer.parseInt(parts[0].trim());
+        } else {
+            // Return a default width if parsing fails
+            return 800;
+        }
+    }
+
+    // Retrieves the resolution height from the settings map.
+    public int getHeight() {
+        String resolution = settings.getOrDefault("Resolution", "800 x 600");
+        String[] parts = resolution.split("x");
+        if (parts.length == 2) {
+            return Integer.parseInt(parts[1].trim());
+        } else {
+            // Return a default height if parsing fails
+            return 600;
+        }
+    }
+
+    // Retrieves the volume setting from the settings map.
+    public int getVolume() {
+        return Integer.parseInt(settings.getOrDefault("Volume", "50"));
+    }
 }

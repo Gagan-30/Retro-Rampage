@@ -1,6 +1,7 @@
 package com.base.game.retrorampage.MainMenu;
 
 // Import statements for handling JavaFX components and exceptions
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

@@ -1,7 +1,6 @@
 package com.base.game.retrorampage.GameAssets;
 
-public interface Screen
-{
+public interface Screen {
     /**
      * Initialize game objects used in this particular screen.
      */

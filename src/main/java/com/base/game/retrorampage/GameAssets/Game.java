@@ -103,7 +103,7 @@ public abstract class Game extends Application implements Screen {
     /**
      * Starts the game loop.
      */
-    protected void startGameLoop() {
+    public void startGameLoop() {
         gameLoop.start();
     }
 

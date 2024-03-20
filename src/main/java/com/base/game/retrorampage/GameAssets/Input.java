@@ -157,4 +157,19 @@ public class Input {
         mouseY = event.getY();
     }
 
+    public void resetInput() {
+        // Clear all lists
+        justPressedQueue.clear();
+        justReleasedQueue.clear();
+        justPressedList.clear();
+        stillPressedList.clear();
+        justReleasedList.clear();
+
+        // Reset mouse state
+        mouseX = 0;
+        mouseY = 0;
+        isMousePressed = false;
+    }
+
+
 }

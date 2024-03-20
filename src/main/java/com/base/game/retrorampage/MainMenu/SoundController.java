@@ -13,10 +13,9 @@ import javafx.util.converter.NumberStringConverter;
 
 // Define the SoundController class
 public class SoundController {
+    private final Config config; // Configuration object
     private Scene previousScene;
     private Stage stage;
-    private final Config config; // Configuration object
-
     @FXML
     private Slider volumeSlider; // Slider for volume control
     @FXML

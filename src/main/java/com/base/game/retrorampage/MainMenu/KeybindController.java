@@ -15,6 +15,10 @@ import java.util.Map;
 
 // Controller class for handling keybind configurations in a JavaFX application.
 public class KeybindController {
+    // A map to associate each button with a specific action string.
+    private final Map<Button, String> buttonToActionMap = new HashMap<>();
+    // Configuration object for managing keybinds, assumed to read from a "config.txt" file.
+    private final Config config;
     // Fields for storing the previous scene, the application's main stage, and the currently selected button for keybinding.
     private Scene previousScene;
     private Stage stage;
@@ -22,7 +26,6 @@ public class KeybindController {
     // Flags to indicate whether the application is ready to capture a key/mouse click and whether input listeners have been set up.
     private boolean readyToCaptureClick = false;
     private boolean inputListenersSetup = false;
-
     // FXML-annotated buttons for various game actions.
     @FXML
     private Button moveUp1Button, moveUp2Button, moveDown1Button, moveDown2Button;
@@ -32,11 +35,6 @@ public class KeybindController {
     private Button shoot1Button, shoot2Button, aim1Button, aim2Button, reload1Button, reload2Button;
     @FXML
     private Button inventory1Button, inventory2Button;
-
-    // A map to associate each button with a specific action string.
-    private final Map<Button, String> buttonToActionMap = new HashMap<>();
-    // Configuration object for managing keybinds, assumed to read from a "config.txt" file.
-    private final Config config;
 
     // Constructor initializes the configuration object.
     public KeybindController() {

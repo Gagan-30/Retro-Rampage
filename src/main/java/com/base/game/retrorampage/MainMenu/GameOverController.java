@@ -1,10 +1,10 @@
 package com.base.game.retrorampage.MainMenu;
 
 import com.base.game.retrorampage.GameAssets.Enemy;
-import javafx.event.ActionEvent;
+import com.base.game.retrorampage.LevelGeneration.LevelGenerator;
+import com.base.game.retrorampage.LevelGeneration.MainGame;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
@@ -22,22 +22,20 @@ public class GameOverController {
     private Stage stage;
     private Scene mainMenuScene;
     private Enemy enemy; // Instance of the Enemy class
+    private int numberOfCells; // Store the number of cells
 
-    public void setPreviousScene(Scene previousScene) {
+    public void setPreviousScene(Scene previousScene, int numberOfCells) {
         this.previousScene = previousScene;
+        this.numberOfCells = numberOfCells; // Set the number of cells
     }
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
-    public void setEnemy(Enemy enemy) {
-        this.enemy = enemy;
-        updateTotalEnemiesLabel(); // Call the update method when the enemy is set
-    }
 
     public void initialize() {
-        mainMenuLabel.setText("Level Complete");
+        mainMenuLabel.setText("Game Over");
         updateTotalEnemiesLabel();
     }
 
@@ -54,13 +52,30 @@ public class GameOverController {
             stage.setFullScreen(true);
         }
 
-        updateTitle("Main Menu");
+        updateTitle("RetroRampage Menu");
     }
 
     @FXML
     public void onRetryButtonClick() {
-        // Implement functionality to proceed to the retry level
+        MainGame mainGame = (MainGame) previousScene.getUserData();
+        if (mainGame != null) {
+            // Retrieve the levelGenerator from the MainGame instance
+            LevelGenerator levelGenerator = mainGame.getLevelGenerator();
+
+            // Reinitialize the LevelGenerator to regenerate the level
+            Scene scene = levelGenerator.generateLevel();
+
+            // Set the scene to the primary stage
+            stage.setScene(scene);
+
+            // Start the game loop again
+            mainGame.startGameLoop();
+        } else {
+            // Handle the case where mainGame is null
+            System.out.println("MainGame object is null.");
+        }
     }
+
 
     private void updateTitle(String newTitle) {
         if (stage != null) {

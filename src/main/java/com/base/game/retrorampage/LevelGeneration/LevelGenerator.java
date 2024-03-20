@@ -4,19 +4,22 @@ import com.base.game.retrorampage.GameAssets.*;
 import com.base.game.retrorampage.MainMenu.Config;
 import com.base.game.retrorampage.MainMenu.GameOver;
 import com.base.game.retrorampage.MainMenu.NextLevel;
+import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+import java.net.URL;
 import java.util.*;
 
 public class LevelGenerator {
     private final Scene scene;
     private final int WIDTH = 1920;
     private final int HEIGHT = 1080;
+
     // Managers and components
     private final Pane root; // Root pane to contain the level elements
     private final RoomManager roomManager; // Manages the generation and drawing of rooms
@@ -32,6 +35,11 @@ public class LevelGenerator {
     private final boolean isRightMousePressed = false;
     private final boolean isMiddleMousePressed = false;
     private final Stage primaryStage;
+    private AudioClip audioClip;
+    private URL gunshotPath;
+    private URL enemyDamagePath;
+    private URL keyPickUpPath;
+    private URL healUpPath;
     private boolean isShooting = false; // Add this variable
     private long lastUpdateTime = System.nanoTime();
     private List<Enemy> enemies;
@@ -40,7 +48,7 @@ public class LevelGenerator {
     private String shootKey1;
     private String shootKey2;
     private boolean isLeftMousePressed = false;
-    private Game game;
+    private final Game game;
 
     // Constructor
     public LevelGenerator(Stage primaryStage, Game game, int numberOfCells, String configFilePath) {
@@ -81,19 +89,16 @@ public class LevelGenerator {
         var mstEdges = graphManager.generateMST(triangleEdges);
         var loopedEdges = graphManager.reintroduceLoops(mstEdges, triangleEdges, 0.3);
 
-        // 3. Create corridors based on MST edges and additional logic for loops
-        corridorManager.createCorridors(mstEdges);
-
-        // 4. Draw Rooms and Triangulation
+        // 3. Draw Rooms and Triangulation
         roomManager.drawRooms();
         corridorManager.createHallways(loopedEdges, 40); // Draw hallways again for visualization
 
-        // 5. Draw the player in the center of the spawn room cell
+        // 4. Draw the player in the center of the spawn room cell
         Cell spawnRoomCenter = roomManager.getSpawnCell();
         player.drawInSpawn(spawnRoomCenter, root);
 
-        // Spawn enemies and set the corridor manager for each enemy
-        enemies = Enemy.spawnEnemies(5, 60, "enemy.png", health, roomManager.getCells(), roomManager.getSpawnCell(), root);
+        // 5. Spawn enemies and set the corridor manager for each enemy
+        enemies = Enemy.spawnEnemies(roomManager.getCells().size(), 60, "enemy.png", health, roomManager.getCells(), roomManager.getSpawnCell(), root);
         for (Enemy enemy : enemies) {
             enemy.setCorridorManager(corridorManager);
         }
@@ -106,9 +111,10 @@ public class LevelGenerator {
         exitKey = new ExitKey(20, "key.png", player, root, roomManager);
         exitKey.spawnRandomly();
 
-        // Set the camera to follow the player
+        // 8. Set the camera to follow the player
         camera.follow(player, WIDTH, HEIGHT);
-        // Apply transformations to the root
+
+        // 9. Apply transformations to the root
         root.getTransforms().setAll(camera.getTranslation(), camera.getZoom());
 
         // Return the scene containing the generated level
@@ -120,12 +126,12 @@ public class LevelGenerator {
         double dt = calculateDeltaTime();
         updateCamera();
         updatePlayerPosition();
-        checkPlayerHealth();
         updateBullets(dt);
         handleShootInput();
         updateEnemies();
         updateHealthItem();
         updateExitKey();
+        checkPlayerHealth();
         checkEndLevel();
     }
 
@@ -148,27 +154,35 @@ public class LevelGenerator {
         player.updatePosition(input, config, 120.0);
     }
 
-    // Handle shooting input, either from keyboard or left mouse button
-
+    /**
+     * Handles shooting input, either from keyboard or left mouse button.
+     */
     private void handleShootInput() {
+        // Retrieve key bindings for shooting
         shootKey1 = config.getKeybind("Shoot1");
         shootKey2 = config.getKeybind("Shoot2");
 
-        // Check if the shoot key is pressed or left mouse button is pressed
+        // Check if the shoot key is pressed or any mouse button is pressed
         if (input.isKeyPressed(shootKey1) || input.isKeyPressed(shootKey2) || isLeftMousePressed || isRightMousePressed || isMiddleMousePressed) {
+            // If not shooting already, create a new bullet and add it to the list
             if (!isShooting) {
-                // Create a new bullet and add it to the list
                 Bullet newBullet = new Bullet(10, "bullet.png", root, player, input);
                 newBullet.shoot(player.getX(), player.getY(), player.getRotation());
                 bullets.add(newBullet);
                 isShooting = true;
+                // Load gunshot sound and play it
+                gunshotPath = getClass().getResource("/gunshot.wav");
+                audioClip = new AudioClip(gunshotPath.toString());
+                audioClip.setVolume(config.getVolume());
+                audioClip.play();
             }
         } else {
-            isShooting = false;
+            isShooting = false; // Stop shooting if no shoot key is pressed
         }
     }
-    // Handle mouse press and release events to track the left mouse button state
 
+
+    // Handle mouse press and release events to track the left mouse button state
     private void handleMousePress() {
         shootKey1 = config.getKeybind("Shoot1");
         shootKey2 = config.getKeybind("Shoot2");
@@ -271,6 +285,13 @@ public class LevelGenerator {
                 enemy.updateDamageLabel(25);
                 bullet.setActive(false);
 
+                // Load enemy damage audio
+                enemyDamagePath = getClass().getResource("/enemydamage.wav");
+                audioClip = new AudioClip(enemyDamagePath.toString());
+                audioClip.setVolume(config.getVolume());
+                audioClip.play(); // Play enemy damage audio
+
+
                 if (enemy.getHealth() <= 0) {
                     System.out.println("Enemy defeated!");
                     int totalKilled = Enemy.getTotalEnemiesKilled();
@@ -344,7 +365,11 @@ public class LevelGenerator {
     private void checkPlayerHealthItemCollision() {
         if (healthItem != null && healthItem.isActive() && player.getSquare().getBoundsInParent().intersects(healthItem.getBoundsInParent())) {
             // Player collided with the health item
-            player.heal(healthItem.getHealthIncrease()); // Assuming you have a getHealthIncrease() method in HealthItem
+            player.heal(healthItem.getHealthIncrease());
+            healUpPath = getClass().getResource("/healup.wav");
+            audioClip = new AudioClip(healUpPath.toString());
+            audioClip.setVolume(config.getVolume());
+            audioClip.play(); // Play heal up audio
             player.updateHealthLabel(healthItem.getHealthIncrease());
             healthItem.removeFromPane(); // Remove the health item from the pane
             healthItem = null; // Set healthItem to null
@@ -352,8 +377,8 @@ public class LevelGenerator {
     }
 
     private void checkPlayerHealth() {
-        if (player.getHealth() <= 0) {
-            gameOver();
+        if (player.getHealth() == 0) {
+            Platform.runLater(this::gameOver);
         }
     }
 
@@ -368,6 +393,11 @@ public class LevelGenerator {
         if (exitKey != null && exitKey.isActive() && player.getSquare().getBoundsInParent().intersects(exitKey.getBoundsInParent())) {
             if (!exitKey.hasKey()) {
                 System.out.println("Player collected the exit key!");
+                // Load key pick audio
+                keyPickUpPath = getClass().getResource("/keypickup.wav");
+                audioClip = new AudioClip(keyPickUpPath.toString());
+                audioClip.setVolume(config.getVolume());
+                audioClip.play(); // Play key pick audio
                 player.setHasKey(true); // Update the hasKey status
             }
 
@@ -381,17 +411,32 @@ public class LevelGenerator {
     private void checkEndLevel() {
         // Check if the player has the key and is in the dark red room
         if (player.hasKey() && player.isInRedRoom()) {
-            nextLevel(); // Call the endLevel method
+            Platform.runLater(this::nextLevel);
         }
     }
 
+
+    private void clearLevel() {
+        // Remove all elements from the root pane
+        root.getChildren().clear();
+
+        // Clear lists and maps
+        bullets.clear();
+        enemies.clear();
+        enemyCooldowns.clear();
+        player.setHasKey(false);
+        input.resetInput();
+
+        // Reset player health
+        player.setHealth(100);
+    }
 
     private void gameOver() {
         // Create an instance of the NextLevel class
         GameOver gameOver = new GameOver();
 
         // Call the createNextLevelScene method to get the next level scene
-        Scene gameOverScene = gameOver.createGameOverScene(scene, primaryStage);
+        Scene gameOverScene = gameOver.createGameOverScene(scene, primaryStage, roomManager.getCells().size());
 
         if (gameOverScene != null) {
             // Set the next level scene to be displayed on the primary stage
@@ -399,6 +444,8 @@ public class LevelGenerator {
 
             // Call stopGameLoop method from the Game instance
             game.stopGameLoop();
+            // Call clearLevel method to clean up the level
+            clearLevel();
         } else {
             // Handle the case where the next level scene couldn't be created
             System.err.println("Failed to create the next level scene.");
@@ -418,9 +465,12 @@ public class LevelGenerator {
 
             // Call stopGameLoop method from the Game instance
             game.stopGameLoop();
+            // Call clearLevel method to clean up the level
+            clearLevel();
         } else {
             // Handle the case where the next level scene couldn't be created
             System.err.println("Failed to create the next level scene.");
+            game.startGameLoop();
         }
     }
 
