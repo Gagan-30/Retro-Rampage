@@ -23,7 +23,7 @@ public class Exit {
 
             // Creates a new Scene using the root node from the FXML file.
             // The scene is set to a predefined size, which can be adjusted if necessary.
-            Scene scene = new Scene(root, 640, 480);
+            Scene scene = new Scene(root, 2160, 480);
 
             // Checks if the main stage was in fullscreen mode before changing scenes.
             boolean wasFullScreen = mainStage.isFullScreen();

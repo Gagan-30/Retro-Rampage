@@ -45,6 +45,7 @@ public abstract class Game extends Application implements Screen {
      * Animation timer for the game loop.
      */
     protected AnimationTimer gameLoop;
+    private Scene previousScene;
 
     /**
      * Initializes the window and game objects,
@@ -55,6 +56,11 @@ public abstract class Game extends Application implements Screen {
         stage = primaryStage;
         stage.setTitle("Game");
         stage.setResizable(false);
+        boolean wasFullScreen = stage.isFullScreen();
+        // If the stage was in full screen mode before, re-enable full screen mode.
+        if (wasFullScreen) {
+            stage.setFullScreen(true);
+        }
 
         Pane root = new Pane();
         Scene mainScene = new Scene(root);
@@ -104,14 +110,20 @@ public abstract class Game extends Application implements Screen {
      * Starts the game loop.
      */
     public void startGameLoop() {
-        gameLoop.start();
+        if (gameLoop != null) { // Ensure gameLoop is not null before starting
+            gameLoop.start();
+        } else {
+            System.out.println("Game loop is null. Make sure to initialize it.");
+        }
     }
 
     /**
      * Stops the game loop.
      */
     public void stopGameLoop() {
-        gameLoop.stop();
+        if (gameLoop != null) { // Ensure gameLoop is not null before stopping
+            gameLoop.stop();
+        }
     }
 
     /**
@@ -132,4 +144,8 @@ public abstract class Game extends Application implements Screen {
      * Override this method to update the game state.
      */
     public abstract void update();
+
+    public void setPreviousScene(Scene previousScene) {
+        this.previousScene = previousScene;
+    }
 }

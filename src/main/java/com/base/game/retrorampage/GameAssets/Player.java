@@ -62,20 +62,32 @@ public class Player extends Sprite {
         fadeTransition.setToValue(0.0);
     }
 
-
     public void setCorridorManager(CorridorManager corridorManager) {
         this.corridorManager = corridorManager;
     }
 
     public void drawInSpawn(Cell center, Pane root) {
+        double spawnCenterX = center.getCenterX();
+        double spawnCenterY = center.getCenterY();
+
         if (!root.getChildren().contains(square)) {
-            this.square.setX(center.getCenterX() - square.getWidth() / 2);
-            this.square.setY(center.getCenterY() - square.getHeight() / 2);
-            this.setPosition(center.getCenterX() - this.size / 2, center.getCenterY() - this.size / 2);
+            this.square.setX(spawnCenterX - square.getWidth() / 2);
+            this.square.setY(spawnCenterY - square.getHeight() / 2);
+            this.setPosition(spawnCenterX - this.size / 2, spawnCenterY - this.size / 2);
             this.addToPane(root); // Adding the Player object to the root Pane again
+        } else {
+            // Player is already spawned, check if it's at the spawn center
+            double playerCenterX = getX() + square.getWidth() / 2;
+            double playerCenterY = getY() + square.getHeight() / 2;
+
+            if (playerCenterX != spawnCenterX || playerCenterY != spawnCenterY) {
+                // Move the player to the spawn center
+                this.square.setX(spawnCenterX - square.getWidth() / 2);
+                this.square.setY(spawnCenterY - square.getHeight() / 2);
+                this.setPosition(spawnCenterX - this.size / 2, spawnCenterY - this.size / 2);
+            }
         }
     }
-
 
     public void updatePosition(Input input, Config config, double movementSpeed) {
         // Update input state
@@ -160,15 +172,35 @@ public class Player extends Sprite {
     }
 
     private boolean isColorAllowed(Color color) {
-        // Define the allowed color ranges
-        double redThreshold = 0.8;
-        double greenThreshold = 0.9;
-        double blueThreshold = 0.9;
+        // Define the thresholds for light grey, grey, black, and dark red colors
+        double lightGreyRedThreshold = 0.8;
+        double lightGreyGreenThreshold = 0.8;
+        double lightGreyBlueThreshold = 0.8;
 
-        // Check if the color is within the allowed range
-        return color.getRed() <= redThreshold && color.getGreen() <= greenThreshold && color.getBlue() <= blueThreshold;
+        double greyRedThreshold = 0.5;
+        double greyGreenThreshold = 0.5;
+        double greyBlueThreshold = 0.5;
+
+        double blackThreshold = 0.1; // Adjust as needed
+
+        double darkRedRedThreshold = 0.5; // Adjust as needed
+        double darkRedGreenThreshold = 0.0; // Adjust as needed
+        double darkRedBlueThreshold = 0.0; // Adjust as needed
+
+        // Get the RGB components of the color
+        double red = color.getRed();
+        double green = color.getGreen();
+        double blue = color.getBlue();
+
+        // Check if the color is within the thresholds for light grey, grey, black, or dark red
+        boolean isLightGrey = (red >= lightGreyRedThreshold && green >= lightGreyGreenThreshold && blue >= lightGreyBlueThreshold);
+        boolean isGrey = (red >= greyRedThreshold && green >= greyGreenThreshold && blue >= greyBlueThreshold);
+        boolean isBlack = (red <= blackThreshold && green <= blackThreshold && blue <= blackThreshold);
+        boolean isDarkRed = (red >= darkRedRedThreshold && green <= darkRedGreenThreshold && blue <= darkRedBlueThreshold);
+
+        // Return true if the color is light grey, grey, black, or dark red, false otherwise
+        return isLightGrey || isGrey || isBlack || isDarkRed;
     }
-
 
     // New method to get the color of a pixel at a specific position
     private Color getColorAtPosition(double x, double y) {

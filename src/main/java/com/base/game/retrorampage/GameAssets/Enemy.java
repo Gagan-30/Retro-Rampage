@@ -15,9 +15,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Enemy extends Sprite {
     private static CorridorManager corridorManager;
@@ -199,8 +197,8 @@ public class Enemy extends Sprite {
             }
 
             // Start a timer to reset the collision cooldown after a certain delay
-            new java.util.Timer().schedule(
-                    new java.util.TimerTask() {
+            new Timer().schedule(
+                    new TimerTask() {
                         @Override
                         public void run() {
                             playerCollisionCooldownActive = false;
@@ -308,4 +306,7 @@ public class Enemy extends Sprite {
         this.player = player;
     }
 
+    public void setHealth(int health) {
+        this.health = health;
+    }
 }

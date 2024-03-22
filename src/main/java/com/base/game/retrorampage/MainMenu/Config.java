@@ -127,18 +127,6 @@ public class Config {
             writer.newLine();
             writer.write("Shoot2: " + keybinds.getOrDefault("Shoot2", ""));
             writer.newLine();
-            writer.write("Aim1: " + keybinds.getOrDefault("Aim1", ""));
-            writer.newLine();
-            writer.write("Aim2: " + keybinds.getOrDefault("Aim2", ""));
-            writer.newLine();
-            writer.write("Reload1: " + keybinds.getOrDefault("Reload1", ""));
-            writer.newLine();
-            writer.write("Reload2: " + keybinds.getOrDefault("Reload2", ""));
-            writer.newLine();
-            writer.write("Inventory1: " + keybinds.getOrDefault("Inventory1", ""));
-            writer.newLine();
-            writer.write("Inventory2: " + keybinds.getOrDefault("Inventory2", ""));
-            writer.newLine();
         } catch (IOException e) {
             e.printStackTrace();
         }

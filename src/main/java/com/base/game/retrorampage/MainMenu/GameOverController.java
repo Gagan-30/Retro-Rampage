@@ -29,6 +29,11 @@ public class GameOverController {
         this.numberOfCells = numberOfCells; // Set the number of cells
     }
 
+    public void setPreviousScene(Scene previousScene) {
+        this.previousScene = previousScene;
+    }
+
+
     public void setStage(Stage stage) {
         this.stage = stage;
     }
@@ -59,6 +64,7 @@ public class GameOverController {
     public void onRetryButtonClick() {
         MainGame mainGame = (MainGame) previousScene.getUserData();
         if (mainGame != null) {
+
             // Retrieve the levelGenerator from the MainGame instance
             LevelGenerator levelGenerator = mainGame.getLevelGenerator();
 

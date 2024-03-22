@@ -5,6 +5,7 @@ package com.base.game.retrorampage.MainMenu;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
@@ -50,9 +51,8 @@ public class MainMenu {
             stage.setHeight(Integer.parseInt(parts[1]));
         }
         // Set the full screen exit hint to an empty string (disabling it)
-        stage.setFullScreenExitHint("");
-        // Disable the default key combination for exiting full screen mode
-        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+        stage.setFullScreenExitHint("Press F11 to enter or exit Full screen");
+        stage.setFullScreenExitKeyCombination(KeyCombination.keyCombination(String.valueOf(KeyCode.F11)));
         // Apply the fullscreen setting from the config
         stage.setFullScreen(config.loadFullscreenSetting());
     }

@@ -18,7 +18,5 @@
     <Button onAction="#onEasyButtonClick" text="Easy" styleClass="menu-button"/>
     <Button onAction="#onMediumButtonClick" text="Medium" styleClass="menu-button"/>
     <Button onAction="#onHardButtonClick" text="Hard" styleClass="menu-button"/>
-    <Button onAction="#onSurvivorButtonClick" text="Survivor" styleClass="menu-button"/>
-    <Button onAction="#onGroundedButtonClick" text="Grounded" styleClass="menu-button"/>
     <Button onAction="#onReturnButtonClick" text="Return" styleClass="menu-button"/>
 </VBox>

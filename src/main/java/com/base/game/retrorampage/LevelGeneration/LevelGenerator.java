@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.*;
 
 public class LevelGenerator {
+    private static int globalEnemyHealth;
     private final Scene scene;
     private final int WIDTH = 1920;
     private final int HEIGHT = 1080;
@@ -32,9 +33,11 @@ public class LevelGenerator {
     private final Map<Enemy, Long> enemyCooldowns = new HashMap<>(); // Map to store enemy cooldowns
     private final Camera camera;
     private final int health;
+
     private final boolean isRightMousePressed = false;
     private final boolean isMiddleMousePressed = false;
     private final Stage primaryStage;
+    private final Game game;
     private AudioClip audioClip;
     private URL gunshotPath;
     private URL enemyDamagePath;
@@ -48,12 +51,17 @@ public class LevelGenerator {
     private String shootKey1;
     private String shootKey2;
     private boolean isLeftMousePressed = false;
-    private final Game game;
 
     // Constructor
     public LevelGenerator(Stage primaryStage, Game game, int numberOfCells, String configFilePath) {
+        boolean wasFullScreen = primaryStage.isFullScreen();
+        // If the stage was in full screen mode before, re-enable full screen mode.
+        if (wasFullScreen) {
+            primaryStage.setFullScreen(true);
+        }
         this.primaryStage = primaryStage;
         this.root = new Pane(); // Create a new pane to hold the level elements
+
         this.scene = new Scene(root, WIDTH, HEIGHT); // Set scene dimensions
         this.game = game;
 
@@ -73,6 +81,11 @@ public class LevelGenerator {
         this.exitKey = new ExitKey(20, "key.png", player, root, roomManager);
         this.enemies = new ArrayList<>();
         handleMousePress();
+    }
+
+    // Setter method to set the global enemy health
+    public static void setGlobalEnemyHealth(int health) {
+        globalEnemyHealth = health;
     }
 
     // Generate the level
@@ -98,7 +111,8 @@ public class LevelGenerator {
         player.drawInSpawn(spawnRoomCenter, root);
 
         // 5. Spawn enemies and set the corridor manager for each enemy
-        enemies = Enemy.spawnEnemies(roomManager.getCells().size(), 60, "enemy.png", health, roomManager.getCells(), roomManager.getSpawnCell(), root);
+        enemies = Enemy.spawnEnemies(roomManager.getCells().size(), 60, "enemy.png",
+                globalEnemyHealth, roomManager.getCells(), roomManager.getSpawnCell(), root);
         for (Enemy enemy : enemies) {
             enemy.setCorridorManager(corridorManager);
         }
@@ -120,7 +134,6 @@ public class LevelGenerator {
         // Return the scene containing the generated level
         return this.scene;
     }
-
 
     public void update() {
         double dt = calculateDeltaTime();
@@ -181,7 +194,6 @@ public class LevelGenerator {
         }
     }
 
-
     // Handle mouse press and release events to track the left mouse button state
     private void handleMousePress() {
         shootKey1 = config.getKeybind("Shoot1");
@@ -240,6 +252,8 @@ public class LevelGenerator {
         }
     }
 
+    // Update the checkBulletCollisions method in LevelGenerator
+
     private void updateBullets(double dt) {
         Iterator<Bullet> iterator = bullets.iterator();
         while (iterator.hasNext()) {
@@ -253,50 +267,36 @@ public class LevelGenerator {
         }
     }
 
-    // Update the checkBulletCollisions method in LevelGenerator
-
     private void checkBulletCollisions(Bullet bullet) {
         boolean bulletOutsideRooms = true;
 
+        // Check if the bullet intersects with any room rectangle
         for (Rectangle roomRectangle : roomManager.getRoomRectangles()) {
-            double roomX = roomRectangle.getX();
-            double roomY = roomRectangle.getY();
-            double roomWidth = roomRectangle.getWidth();
-            double roomHeight = roomRectangle.getHeight();
-
-            // Check if the bullet is inside the bounds of the room
-            if (bullet.getX() >= roomX && bullet.getX() + bullet.getWidth() <= roomX + roomWidth && bullet.getY() >= roomY && bullet.getY() + bullet.getHeight() <= roomY + roomHeight) {
+            if (roomRectangle.getBoundsInParent().contains(bullet.getX(), bullet.getY())) {
                 bulletOutsideRooms = false;
                 break;
             }
         }
 
         if (bulletOutsideRooms) {
-            // Bullet is outside all rooms, consider it colliding with the room edges
+            // If the bullet is outside all rooms, remove it
             bullet.setActive(false);
+            return; // Exit the method after deactivating the bullet
         }
 
+        // Check for collisions with enemies
         Iterator<Enemy> iterator = enemies.iterator();
         while (iterator.hasNext()) {
             Enemy enemy = iterator.next();
             if (bullet.isActive() && enemy.getSquare().getBoundsInParent().intersects(bullet.getBoundsInParent())) {
-                System.out.println("Bullet hit enemy!");
+                // Handle bullet collision with enemy
                 enemy.reduceHealth(25);
                 enemy.updateDamageLabel(25);
                 bullet.setActive(false);
 
-                // Load enemy damage audio
-                enemyDamagePath = getClass().getResource("/enemydamage.wav");
-                audioClip = new AudioClip(enemyDamagePath.toString());
-                audioClip.setVolume(config.getVolume());
-                audioClip.play(); // Play enemy damage audio
-
-
+                // Check if the enemy has been defeated
                 if (enemy.getHealth() <= 0) {
-                    System.out.println("Enemy defeated!");
-                    int totalKilled = Enemy.getTotalEnemiesKilled();
-                    System.out.println("Total enemies killed: " + totalKilled);
-                    iterator.remove(); // Remove the enemy using the iterator
+                    iterator.remove(); // Remove the defeated enemy
                 }
             }
         }
@@ -415,8 +415,7 @@ public class LevelGenerator {
         }
     }
 
-
-    private void clearLevel() {
+    public void clearLevel() {
         // Remove all elements from the root pane
         root.getChildren().clear();
 
@@ -426,12 +425,13 @@ public class LevelGenerator {
         enemyCooldowns.clear();
         player.setHasKey(false);
         input.resetInput();
+        game.stopGameLoop();
 
         // Reset player health
         player.setHealth(100);
     }
 
-    private void gameOver() {
+    public void gameOver() {
         // Create an instance of the NextLevel class
         GameOver gameOver = new GameOver();
 
@@ -439,11 +439,14 @@ public class LevelGenerator {
         Scene gameOverScene = gameOver.createGameOverScene(scene, primaryStage, roomManager.getCells().size());
 
         if (gameOverScene != null) {
+            boolean wasFullScreen = primaryStage.isFullScreen();
             // Set the next level scene to be displayed on the primary stage
             primaryStage.setScene(gameOverScene);
 
-            // Call stopGameLoop method from the Game instance
-            game.stopGameLoop();
+            // If the stage was in full screen mode before, re-enable full screen mode.
+            if (wasFullScreen) {
+                primaryStage.setFullScreen(true);
+            }
             // Call clearLevel method to clean up the level
             clearLevel();
         } else {
@@ -455,16 +458,17 @@ public class LevelGenerator {
     private void nextLevel() {
         // Create an instance of the NextLevel class
         NextLevel nextLevel = new NextLevel();
-
+        boolean wasFullScreen = primaryStage.isFullScreen();
         // Call the createNextLevelScene method to get the next level scene
         Scene nextLevelScene = nextLevel.createNextLevelScene(scene, primaryStage);
 
         if (nextLevelScene != null) {
             // Set the next level scene to be displayed on the primary stage
             primaryStage.setScene(nextLevelScene);
+            if (wasFullScreen) {
+                primaryStage.setFullScreen(true);
+            }
 
-            // Call stopGameLoop method from the Game instance
-            game.stopGameLoop();
             // Call clearLevel method to clean up the level
             clearLevel();
         } else {
@@ -473,5 +477,6 @@ public class LevelGenerator {
             game.startGameLoop();
         }
     }
+
 
 }

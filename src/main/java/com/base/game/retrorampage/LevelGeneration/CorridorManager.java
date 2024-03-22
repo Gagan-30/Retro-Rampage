@@ -122,7 +122,6 @@ public class CorridorManager {
     }
 
     // Inside the CorridorManager class
-    // Inside the CorridorManager class
     public boolean isPositionWithinCell(double x, double y, double width, double height) {
         for (Rectangle roomRectangle : rooms) {
             if (roomRectangle.getBoundsInParent().contains(x, y, width, height)) {

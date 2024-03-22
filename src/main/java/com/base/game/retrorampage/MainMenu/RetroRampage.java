@@ -29,10 +29,6 @@ public class RetroRampage extends Application {
         stage.setFullScreen(config.loadFullscreenSetting());
     }
 
-    // The main method that launches the JavaFX application
-    public static void main(String[] args) {
-        launch(args);
-    }
 
     // Entry point for the JavaFX application. This method is called after the application starts.
     @Override
@@ -54,5 +50,11 @@ public class RetroRampage extends Application {
     private void showMainMenu(Stage stage, Scene scene) {
         stage.setScene(scene);
         stage.show();
+    }
+
+
+    // The main method that launches the JavaFX application
+    public static void main(String[] args) {
+        launch(args);
     }
 }

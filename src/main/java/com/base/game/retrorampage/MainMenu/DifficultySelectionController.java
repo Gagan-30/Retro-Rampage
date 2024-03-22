@@ -1,8 +1,6 @@
-// Package declaration aligns with the application's structure, indicating this class is part of the MainMenu package.
 package com.base.game.retrorampage.MainMenu;
 
-// Import statements for required JavaFX classes.
-
+import com.base.game.retrorampage.LevelGeneration.MainGame;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -12,6 +10,7 @@ public class DifficultySelectionController {
 
     private Scene previousScene; // A private field to store the scene that was displayed before the current scene.
     private Stage stage; // A field to reference the main application window (stage).
+    private MainGame mainGame;
 
     // Sets the previous scene. This method allows for navigation back to the previous scene when needed.
     public void setPreviousScene(Scene previousScene) {
@@ -30,35 +29,45 @@ public class DifficultySelectionController {
         }
     }
 
-    // Event handler for the "Easy" button click. It should contain logic for handling what happens when the Easy difficulty is selected.
+    // Setter method to set the MainGame instance
+    public void setMainGame(MainGame mainGame) {
+        this.mainGame = mainGame;
+    }
+
     @FXML
     private void onEasyButtonClick() {
-        // Implementation of Easy difficulty selection logic.
+        boolean wasFullScreen = stage.isFullScreen();
+        // If the stage was in full screen mode before, re-enable full screen mode.
+        if (wasFullScreen) {
+            stage.setFullScreen(true);
+        }
+        mainGame.start(stage);
+        mainGame.setGlobalEnemyHealth(100);
+        mainGame.initialize();
+        mainGame.update();
+        mainGame.getLevelGenerator().gameOver();
     }
 
     // Event handler for the "Medium" button click. It should contain logic for handling what happens when the Medium difficulty is selected.
     @FXML
     private void onMediumButtonClick() {
-        // Implementation of Medium difficulty selection logic.
+        mainGame.start(stage);
+        mainGame.setGlobalEnemyHealth(150);
+        mainGame.initialize();
+        mainGame.update();
+        mainGame.getLevelGenerator().gameOver();
     }
 
     // Event handler for the "Hard" button click. It should contain logic for handling what happens when the Hard difficulty is selected.
     @FXML
     private void onHardButtonClick() {
-        // Implementation of Hard difficulty selection logic.
+        mainGame.start(stage);
+        mainGame.setGlobalEnemyHealth(200);
+        mainGame.initialize();
+        mainGame.update();
+        mainGame.getLevelGenerator().gameOver();
     }
 
-    // Event handler for the "Survivor" button click. It should contain logic for handling what happens when the Survivor difficulty is selected.
-    @FXML
-    public void onSurvivorButtonClick() {
-        // Implementation of Survivor difficulty selection logic.
-    }
-
-    // Event handler for the "Grounded" button click. It should contain logic for handling what happens when the Grounded difficulty is selected.
-    @FXML
-    public void onGroundedButtonClick() {
-        // Implementation of Grounded difficulty selection logic.
-    }
 
     // Event handler for the "Return" button click. It manages the transition back to the previous scene, potentially re-enabling fullscreen mode if it was active before.
     @FXML
@@ -71,7 +80,7 @@ public class DifficultySelectionController {
                 stage.setFullScreen(true); // Re-enables fullscreen mode if it was set before.
             }
 
-            updateTitle("MainGame Menu"); // Updates the stage's title to "MainGame Menu".
+            updateTitle("Main Menu"); // Updates the stage's title to "MainGame Menu".
         }
     }
 }

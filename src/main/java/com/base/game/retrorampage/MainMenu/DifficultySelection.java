@@ -3,6 +3,7 @@ package com.base.game.retrorampage.MainMenu;
 
 // Import statements for required JavaFX classes and exception handling.
 
+import com.base.game.retrorampage.LevelGeneration.MainGame;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,6 +17,13 @@ public class DifficultySelection {
     // Method to create and return a Scene for the difficulty selection screen.
     public Scene createDifficultySelectionScene(Scene previousScene, Stage mainStage) {
         try {
+
+            // Stop the game loop of the previous scene if it's running
+            if (previousScene != null && previousScene.getUserData() instanceof MainGame) {
+                MainGame previousMainGame = (MainGame) previousScene.getUserData();
+                previousMainGame.stopGameLoop();
+            }
+
             // Initializes an FXMLLoader to load the FXML file for the difficulty selection screen.
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DifficultySelection-view.fxml"));
             Parent root = fxmlLoader.load(); // Loads the FXML file and returns the root node.
@@ -34,11 +42,14 @@ public class DifficultySelection {
                 mainStage.setFullScreen(true);
             }
 
-            // Retrieves the controller associated with the FXML file and sets up necessary references.
-            // This allows the controller to manipulate the stage or navigate back to the previous scene.
+            // Retrieve the controller associated with the FXML file
             DifficultySelectionController difficultySelectionController = fxmlLoader.getController();
             difficultySelectionController.setPreviousScene(previousScene);
             difficultySelectionController.setStage(mainStage);
+
+            // Instantiate MainGame and pass the stage to it
+            MainGame mainGame = new MainGame(mainStage);
+            difficultySelectionController.setMainGame(mainGame); // Pass MainGame instance
 
             // Returns the newly created scene.
             return scene;

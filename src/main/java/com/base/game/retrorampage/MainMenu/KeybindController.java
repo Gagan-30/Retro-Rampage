@@ -60,12 +60,6 @@ public class KeybindController {
         buttonToActionMap.put(moveRight2Button, "MoveRight2");
         buttonToActionMap.put(shoot1Button, "Shoot1");
         buttonToActionMap.put(shoot2Button, "Shoot2");
-        buttonToActionMap.put(aim1Button, "Aim1");
-        buttonToActionMap.put(aim2Button, "Aim2");
-        buttonToActionMap.put(reload1Button, "Reload1");
-        buttonToActionMap.put(reload2Button, "Reload2");
-        buttonToActionMap.put(inventory1Button, "Inventory1");
-        buttonToActionMap.put(inventory2Button, "Inventory2");
     }
 
     // Loads the current keybinds from the configuration into the scene by setting each button's text.
