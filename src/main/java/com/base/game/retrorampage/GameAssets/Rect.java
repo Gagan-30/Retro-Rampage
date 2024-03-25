@@ -6,7 +6,6 @@ import java.util.Arrays;
  * A rectangle shape, defined by its position and size,
  * particularly useful in collision detection.
  */
-
 public class Rect {
     /**
      * x-coordinate of left edge of rectangle
@@ -88,15 +87,21 @@ public class Rect {
         setValues(left, top, this.width, this.height);
     }
 
+    /**
+     * Set the size of the rectangle.
+     *
+     * @param width  The new width of the rectangle.
+     * @param height The new height of the rectangle.
+     */
     public void setSize(double width, double height) {
         setValues(this.left, this.top, width, height);
     }
 
     /**
-     * Determine if this rectangle overlaps with other rectangle.
+     * Determine if this rectangle overlaps with another rectangle.
      *
-     * @param other rectangle to check for overlap
-     * @return true if this rectangle overlaps with other rectangle
+     * @param other The rectangle to check for overlap.
+     * @return True if this rectangle overlaps with the other rectangle, false otherwise.
      */
     public boolean overlaps(Rect other) {
         boolean noOverlap = (other.right <= this.left)
@@ -106,6 +111,12 @@ public class Rect {
         return !noOverlap;
     }
 
+    /**
+     * Calculate the minimum translation vector needed to separate this rectangle from another rectangle.
+     *
+     * @param other The other rectangle.
+     * @return The minimum translation vector.
+     */
     public Vector getMinimumTranslationVector(Rect other) {
         Vector[] differences = {
                 new Vector(other.right - this.left, 0),
@@ -119,10 +130,20 @@ public class Rect {
         return differences[0];
     }
 
+    /**
+     * Get the x-coordinate of the rectangle.
+     *
+     * @return The x-coordinate of the rectangle.
+     */
     public double getX() {
         return x;
     }
 
+    /**
+     * Get the y-coordinate of the rectangle.
+     *
+     * @return The y-coordinate of the rectangle.
+     */
     public double getY() {
         return y;
     }

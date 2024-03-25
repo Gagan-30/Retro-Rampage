@@ -2,7 +2,7 @@ package com.base.game.retrorampage.MainMenu;
 
 import com.base.game.retrorampage.GameAssets.Enemy;
 import com.base.game.retrorampage.LevelGeneration.LevelGenerator;
-import com.base.game.retrorampage.LevelGeneration.MainGame;
+import com.base.game.retrorampage.LevelGeneration.Level;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -62,11 +62,12 @@ public class GameOverController {
 
     @FXML
     public void onRetryButtonClick() {
-        MainGame mainGame = (MainGame) previousScene.getUserData();
-        if (mainGame != null) {
+        boolean wasFullScreen = stage.isFullScreen();
+        Level level = (Level) previousScene.getUserData();
+        if (level != null) {
 
-            // Retrieve the levelGenerator from the MainGame instance
-            LevelGenerator levelGenerator = mainGame.getLevelGenerator();
+            // Retrieve the levelGenerator from the Level instance
+            LevelGenerator levelGenerator = level.getLevelGenerator();
 
             // Reinitialize the LevelGenerator to regenerate the level
             Scene scene = levelGenerator.generateLevel();
@@ -74,11 +75,16 @@ public class GameOverController {
             // Set the scene to the primary stage
             stage.setScene(scene);
 
+            boolean isFullscreen = config.loadFullscreenSetting();
+            if (isFullscreen == true) {
+                stage.setFullScreen(true);
+            }
+
             // Start the game loop again
-            mainGame.startGameLoop();
+            level.startGameLoop();
         } else {
-            // Handle the case where mainGame is null
-            System.out.println("MainGame object is null.");
+            // Handle the case where level is null
+            System.out.println("Level object is null.");
         }
     }
 

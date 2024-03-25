@@ -120,7 +120,7 @@ public class GraphicsController {
         if (previousScene != null && stage != null) {
             stage.setScene(previousScene); // Sets the main stage's scene back to the previous scene.
             boolean wasFullScreen = stage.isFullScreen(); // Checks if fullscreen mode was previously enabled.
-            if (wasFullScreen) {
+            if (!wasFullScreen) {
                 stage.setFullScreen(true); // Re-enables fullscreen mode if it was previously set.
             }
             updateTitle("Settings"); // Updates the stage title to "Settings".

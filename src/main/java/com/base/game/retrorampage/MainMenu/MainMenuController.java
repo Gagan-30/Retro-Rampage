@@ -10,14 +10,12 @@ public class MainMenuController {
 
     // Instances of classes for each part of the menu to manage their respective scenes
     private final DifficultySelection difficultySelection = new DifficultySelection();
-    private final LoadGame loadGame = new LoadGame();
     private final Settings settings = new Settings();
     private final About about = new About();
     private final Exit exit = new Exit();
     // Variables to hold references to the main application window and various scenes
     private Stage mainStage;
     private Scene difficultySelectionScene;
-    private Scene loadGameScene;
     private Scene settingsScene;
     private Scene aboutScene;
     private Scene exitScene;
@@ -51,25 +49,6 @@ public class MainMenuController {
         }
 
         updateTitle("Select Difficulty"); // Update the window's title
-    }
-
-
-    // Event handler for the "Load Game" button
-    @FXML
-    protected void onLoadGameButtonClick() {
-        boolean wasFullScreen = mainStage.isFullScreen();// Check if the stage was in full screen
-
-        if (loadGameScene == null) {
-            loadGameScene = loadGame.createLoadGameScene(mainStage.getScene(), mainStage);
-        }
-        mainStage.setScene(loadGameScene); // Set the scene
-
-        // Preserve full screen mode if it was set
-        if (wasFullScreen) {
-            mainStage.setFullScreen(true);
-        }
-
-        updateTitle("Select Game Save");// Update the window's title
     }
 
     // Event handler for the "Settings" button

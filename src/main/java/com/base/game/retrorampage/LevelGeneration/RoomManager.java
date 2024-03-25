@@ -10,21 +10,52 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Manages the generation and layout of rooms in the game level.
+ */
 public class RoomManager {
+    /**
+     * The desired number of cells/rooms
+     */
     private final int numberOfCells;
-    private final Pane root; // The pane on which rooms will be drawn
+    /**
+     * The pane on which rooms will be drawn
+     */
+    private final Pane root;
+    /**
+     * List to store generated cells/rooms
+     */
     private final List<Cell> cells = new ArrayList<>();
+    /**
+     * Random object for generating random values
+     */
     private final Random random = new Random();
+    /**
+     * The room designated as the spawn room
+     */
     private Cell spawnRoom;
+    /**
+     * The room designated as the exit room
+     */
     private Cell exitRoom;
-    private Cell spawnCell;
-    private Cell spawnRoomCenter;
 
+    /**
+     * Constructor for the RoomManager class.
+     *
+     * @param numberOfCells The number of cells/rooms to generate.
+     * @param root          The root pane where rooms will be drawn.
+     */
     public RoomManager(int numberOfCells, Pane root) {
         this.numberOfCells = numberOfCells;
         this.root = root;
     }
 
+    /**
+     * Generates random rooms based on the specified criteria.
+     * Rooms are randomly generated within the root pane, considering the configured resolution settings.
+     * The generated rooms are then dispersed to avoid overlap and ensure a more balanced layout.
+     * The first generated room is designated as the spawn room, while the last one serves as the exit room.
+     */
     public void generateRooms() {
         cells.clear(); // Clear previous cells if any
         double centerX = root.getWidth() / 2;
@@ -79,38 +110,37 @@ public class RoomManager {
         }
     }
 
+
+    /**
+     * Retrieves the coordinates of the centers of all the generated rooms.
+     *
+     * @return A list containing the coordinates of the centers of all the rooms.
+     */
     public List<Coordinate> getRoomCenters() {
+        // Create a list to store the room centers
         List<Coordinate> roomCenters = new ArrayList<>();
+
+        // Iterate through each cell/room in the list
         for (Cell cell : cells) {
+            // Check if the cell is a room
             if (cell.isRoom()) {
+                // Calculate the center coordinates of the room
                 double centerX = cell.getX() + cell.getWidth() / 2.0;
                 double centerY = cell.getY() + cell.getHeight() / 2.0;
+
+                // Create a new Coordinate object with the calculated center coordinates and add it to the list
                 roomCenters.add(new Coordinate(centerX, centerY));
             }
         }
+
+        // Return the list of room centers
         return roomCenters;
     }
 
-    // Optional: Method to visualize rooms on the Pane for debugging or visualization purposes
-    public void drawRooms() {
-        for (Cell cell : cells) {
-            if (cell.isRoom()) {
-                Rectangle rectangle = new Rectangle(cell.getX(), cell.getY(), cell.getWidth(), cell.getHeight());
-                rectangle.setStroke(Color.BLACK); // Border color for all cells
 
-                // Set fill color based on the room type
-                if (cell == exitRoom) {
-                    rectangle.setFill(Color.DARKRED); // Spawn room in green
-                } else {
-                    rectangle.setFill(Color.GREY); // Other rooms remain transparent or another color
-                }
-
-                root.getChildren().add(rectangle);
-            }
-        }
-    }
-
-
+    /**
+     * Disperses the cells/rooms to avoid overlap.
+     */
     public void disperseCells() {
         boolean moved;
         do {
@@ -129,6 +159,12 @@ public class RoomManager {
         } while (moved);
     }
 
+    /**
+     * Adjusts the positions of overlapping cells/rooms to reduce overlap.
+     *
+     * @param cellA The first cell/room.
+     * @param cellB The second cell/room.
+     */
     private void adjustPositions(Cell cellA, Cell cellB) {
         // Calculate the overlap offsets for X and Y axes
         double minDisperseWidth = 80.0;
@@ -159,10 +195,43 @@ public class RoomManager {
         cellB.setY(clamp(cellB.getY() + moveBY, root.getHeight() - cellB.getHeight()));
     }
 
+    /**
+     * Clamps a value within a specified range.
+     *
+     * @param value The value to clamp.
+     * @param max   The maximum value.
+     * @return The clamped value.
+     */
     private double clamp(double value, double max) {
         return Math.max(0, Math.min(max, value));
     }
 
+    /**
+     * Visualizes the rooms on the root pane for debugging or visualization purposes.
+     */
+    public void drawRooms() {
+        for (Cell cell : cells) {
+            if (cell.isRoom()) {
+                Rectangle rectangle = new Rectangle(cell.getX(), cell.getY(), cell.getWidth(), cell.getHeight());
+                rectangle.setStroke(Color.BLACK); // Border color for all cells
+
+                // Set fill color based on the room type
+                if (cell == exitRoom) {
+                    rectangle.setFill(Color.DARKRED); // Spawn room in green
+                } else {
+                    rectangle.setFill(Color.GREY); // Other rooms remain transparent or another color
+                }
+
+                root.getChildren().add(rectangle);
+            }
+        }
+    }
+
+    /**
+     * Retrieves the list of room rectangles for visualization.
+     *
+     * @return The list of room rectangles.
+     */
     public List<Rectangle> getRoomRectangles() {
         List<Rectangle> roomRectangles = new ArrayList<>();
         for (Cell cell : cells) {
@@ -175,14 +244,20 @@ public class RoomManager {
         return roomRectangles;
     }
 
+    /**
+     * Retrieves the spawn cell where the player spawns.
+     *
+     * @return The spawn cell.
+     */
     public Cell getSpawnCell() {
         return spawnRoom;
     }
 
-    public Cell getLastRoom() {
-        return exitRoom;
-    }
-
+    /**
+     * Retrieves the list of generated cells/rooms.
+     *
+     * @return The list of cells/rooms.
+     */
     public List<Cell> getCells() {
         return cells;
     }

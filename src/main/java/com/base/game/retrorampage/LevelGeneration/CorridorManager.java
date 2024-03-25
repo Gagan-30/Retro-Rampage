@@ -6,23 +6,34 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.List;
 
+/**
+ * Manages the creation of hallways between rooms in the game level.
+ */
 public class CorridorManager {
     private final Pane root; // The JavaFX pane on which corridors will be drawn
-    private List<Rectangle> rooms;
-    private Rectangle[] hallwayRectangles;
-    private Rectangle[] hallwayBounds;
+    private List<Rectangle> rooms; // List of rectangles representing rooms
+    private Rectangle[] hallwayRectangles; // Array to store hallway rectangles
+    private Rectangle[] hallwayBounds; // Array to store hallway bounds
 
+    /**
+     * Constructs a CorridorManager with the specified root pane.
+     *
+     * @param root The JavaFX pane on which corridors will be drawn.
+     */
     public CorridorManager(Pane root) {
         this.root = root;
     }
 
-
-    // This method assumes that the 'edges' list contains edges connecting the centers
-    // of rooms that are to be connected by hallways.
+    /**
+     * Creates hallways between rooms based on the provided edges and hallway width.
+     *
+     * @param edges        The list of edges connecting room centers.
+     * @param hallwayWidth The width of the hallways.
+     */
     public void createHallways(List<GraphManager.Edge> edges, double hallwayWidth) {
+
         for (GraphManager.Edge edge : edges) {
             // Calculate the direction and length of the hallway
-            // This assumes that room centers are directly connectable without intersecting other rooms
             double dx = edge.end.x - edge.start.x;
             double dy = edge.end.y - edge.start.y;
 
@@ -65,7 +76,11 @@ public class CorridorManager {
             root.getChildren().addAll(hallwayHorizontal, hallwayVertical);
         }
     }
-
+    /**
+     * Adjusts a hallway segment if it overlaps with a room, ensuring no overlap occurs.
+     *
+     * @param hallwaySegment The hallway segment to adjust.
+     */
     private void adjustSegmentIfOverlapping(Rectangle hallwaySegment) {
         for (Rectangle room : rooms) {
             if (hallwaySegment.getBoundsInParent().intersects(room.getBoundsInParent())) {
@@ -109,19 +124,42 @@ public class CorridorManager {
         }
     }
 
+    /**
+     * Sets the list of rooms managed by this CorridorManager.
+     *
+     * @param rooms The list of rooms represented as rectangles.
+     */
     public void setRooms(List<Rectangle> rooms) {
         this.rooms = rooms;
     }
 
+    /**
+     * Gets the array of hallway rectangles.
+     *
+     * @return The array of hallway rectangles.
+     */
     public Rectangle[] getHallwayRectangles() {
         return hallwayRectangles;
     }
 
+    /**
+     * Gets the array of hallway bounds.
+     *
+     * @return The array of hallway bounds.
+     */
     public Rectangle[] getHallwayBounds() {
         return hallwayBounds;
     }
 
-    // Inside the CorridorManager class
+    /**
+     * Checks if a position (x, y) is within any of the rooms.
+     *
+     * @param x      The x-coordinate of the position.
+     * @param y      The y-coordinate of the position.
+     * @param width  The width of the position.
+     * @param height The height of the position.
+     * @return true if the position is within any of the rooms, false otherwise.
+     */
     public boolean isPositionWithinCell(double x, double y, double width, double height) {
         for (Rectangle roomRectangle : rooms) {
             if (roomRectangle.getBoundsInParent().contains(x, y, width, height)) {
@@ -130,6 +168,4 @@ public class CorridorManager {
         }
         return false;
     }
-
-
 }

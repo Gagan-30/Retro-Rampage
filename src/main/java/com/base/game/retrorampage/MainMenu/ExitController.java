@@ -59,7 +59,7 @@ public class ExitController {
             if (wasFullScreen) {
                 stage.setFullScreen(true); // Re-enable fullscreen if it was previously active
             }
-            updateTitle("MainGame Menu");
+            updateTitle("Level Menu");
         }
     }
 

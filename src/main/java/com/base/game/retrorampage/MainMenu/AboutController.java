@@ -1,12 +1,12 @@
 package com.base.game.retrorampage.MainMenu;
 
-// Import necessary JavaFX classes.
-
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-// Defines the AboutController class.
+/**
+ * Controller class for the About screen.
+ */
 public class AboutController {
 
     private Scene previousScene; // Variable to store the previously displayed scene.
@@ -42,7 +42,9 @@ public class AboutController {
         }
     }
 
-    // Method annotated with @FXML to indicate it's linked to an FXML UI component, specifically a button.
+    /**
+     * Handles the return button click event to navigate back to the previous scene.
+     */
     @FXML
     public void onReturnButtonClick() {
         // Check if the main application window (stage) is currently in full screen mode.
@@ -58,8 +60,8 @@ public class AboutController {
                 stage.setFullScreen(true);
             }
 
-            // Update the window's title to "MainGame Menu".
-            updateTitle("MainGame Menu");
+            // Update the window's title to "Level Menu".
+            updateTitle("Level Menu");
         }
     }
 }

@@ -1,15 +1,15 @@
 package com.base.game.retrorampage.MainMenu;
 
 // Import necessary JavaFX classes.
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
-// Defines the 'About' class.
+/**
+ * The About class defines methods for creating the "About" scene in the game's main menu.
+ */
 public class About {
 
     /**

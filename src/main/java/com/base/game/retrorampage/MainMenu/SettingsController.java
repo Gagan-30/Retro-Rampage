@@ -115,8 +115,8 @@ public class SettingsController {
                 stage.setFullScreen(true);
             }
 
-            // Update the window title to "MainGame Menu"
-            updateTitle("MainGame Menu");
+            // Update the window title to "Level Menu"
+            updateTitle("Level Menu");
         }
     }
 }

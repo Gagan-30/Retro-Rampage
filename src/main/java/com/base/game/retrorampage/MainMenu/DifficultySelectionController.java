@@ -1,6 +1,6 @@
 package com.base.game.retrorampage.MainMenu;
 
-import com.base.game.retrorampage.LevelGeneration.MainGame;
+import com.base.game.retrorampage.LevelGeneration.Level;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -10,7 +10,7 @@ public class DifficultySelectionController {
 
     private Scene previousScene; // A private field to store the scene that was displayed before the current scene.
     private Stage stage; // A field to reference the main application window (stage).
-    private MainGame mainGame;
+    private Level level;
 
     // Sets the previous scene. This method allows for navigation back to the previous scene when needed.
     public void setPreviousScene(Scene previousScene) {
@@ -29,43 +29,53 @@ public class DifficultySelectionController {
         }
     }
 
-    // Setter method to set the MainGame instance
-    public void setMainGame(MainGame mainGame) {
-        this.mainGame = mainGame;
+    // Setter method to set the Level instance
+    public void setMainGame(Level level) {
+        this.level = level;
     }
 
     @FXML
     private void onEasyButtonClick() {
         boolean wasFullScreen = stage.isFullScreen();
+        level.start(stage);
         // If the stage was in full screen mode before, re-enable full screen mode.
         if (wasFullScreen) {
             stage.setFullScreen(true);
         }
-        mainGame.start(stage);
-        mainGame.setGlobalEnemyHealth(100);
-        mainGame.initialize();
-        mainGame.update();
-        mainGame.getLevelGenerator().gameOver();
+        level.setGlobalEnemyHealth(100);
+        level.initialize();
+        level.update();
+        level.getLevelGenerator().gameOver();
     }
 
     // Event handler for the "Medium" button click. It should contain logic for handling what happens when the Medium difficulty is selected.
     @FXML
     private void onMediumButtonClick() {
-        mainGame.start(stage);
-        mainGame.setGlobalEnemyHealth(150);
-        mainGame.initialize();
-        mainGame.update();
-        mainGame.getLevelGenerator().gameOver();
+        boolean wasFullScreen = stage.isFullScreen();
+        level.start(stage);
+        // If the stage was in full screen mode before, re-enable full screen mode.
+        if (wasFullScreen) {
+            stage.setFullScreen(true);
+        }
+        level.setGlobalEnemyHealth(150);
+        level.initialize();
+        level.update();
+        level.getLevelGenerator().gameOver();
     }
 
     // Event handler for the "Hard" button click. It should contain logic for handling what happens when the Hard difficulty is selected.
     @FXML
     private void onHardButtonClick() {
-        mainGame.start(stage);
-        mainGame.setGlobalEnemyHealth(200);
-        mainGame.initialize();
-        mainGame.update();
-        mainGame.getLevelGenerator().gameOver();
+        boolean wasFullScreen = stage.isFullScreen();
+        level.start(stage);
+        // If the stage was in full screen mode before, re-enable full screen mode.
+        if (wasFullScreen) {
+            stage.setFullScreen(true);
+        }
+        level.setGlobalEnemyHealth(200);
+        level.initialize();
+        level.update();
+        level.getLevelGenerator().gameOver();
     }
 
 
@@ -80,7 +90,7 @@ public class DifficultySelectionController {
                 stage.setFullScreen(true); // Re-enables fullscreen mode if it was set before.
             }
 
-            updateTitle("Main Menu"); // Updates the stage's title to "MainGame Menu".
+            updateTitle("Main Menu"); // Updates the stage's title to "Level Menu".
         }
     }
 }

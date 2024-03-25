@@ -273,33 +273,64 @@ public class Enemy extends Sprite {
 
     // Method to update enemy's damage label
     public void updateDamageLabel(int amount) {
-        damageLabel.setText("-" + amount);
-        damageLabel.setX(square.getX() - square.getWidth() / 2); // Adjust position to center the label horizontally
-        damageLabel.setY(square.getY() - square.getHeight() / 2 - 30); // Adjust position to place the label above the enemy
+        if (amount != 60) {
+            damageLabel.setText("-" + amount);
+            damageLabel.setX(square.getX() - square.getWidth() / 2); // Adjust position to center the label horizontally
+            damageLabel.setY(square.getY() - square.getHeight() / 2 - 30); // Adjust position to place the label above the enemy
 
-        // Set initial opacity and translation
-        damageLabel.setOpacity(1.0);
-        damageLabel.setTranslateY(0);
+            // Set initial opacity and translation
+            damageLabel.setOpacity(1.0);
+            damageLabel.setTranslateY(0);
 
-        // Set an event handler to hide the label when the fade-out animation is finished
-        fadeTransition.setOnFinished(event -> {
-            damageLabel.setVisible(false);
-            damageLabel.setOpacity(1.0); // Reset opacity after animation
-            damageLabel.setTranslateY(0); // Reset translation after animation
-        });
+            // Set an event handler to hide the label when the fade-out animation is finished
+            fadeTransition.setOnFinished(event -> {
+                damageLabel.setVisible(false);
+                damageLabel.setOpacity(1.0); // Reset opacity after animation
+                damageLabel.setTranslateY(0); // Reset translation after animation
+            });
 
-        // Set an event handler to reset translate transition after its completion
-        translateTransition.setOnFinished(event -> {
-            damageLabel.setTranslateY(0); // Reset translation after animation
-        });
+            // Set an event handler to reset translate transition after its completion
+            translateTransition.setOnFinished(event -> {
+                damageLabel.setTranslateY(0); // Reset translation after animation
+            });
 
-        // Ensure the label is in front of the enemy by setting its Z-order
-        damageLabel.toFront();
+            // Ensure the label is in front of the enemy by setting its Z-order
+            damageLabel.toFront();
 
-        // Start the fade-out and translate animations
-        fadeTransition.play();
-        translateTransition.play();
-        damageLabel.setVisible(true); // Make the label visible before starting the animations
+            // Start the fade-out and translate animations
+            fadeTransition.play();
+            translateTransition.play();
+            damageLabel.setVisible(true); // Make the label visible before starting the animations
+        } else {
+            damageLabel.setText("+" + amount);
+            damageLabel.setX(square.getX() - square.getWidth() / 2); // Adjust position to center the label horizontally
+            damageLabel.setY(square.getY() - square.getHeight() / 2 - 30); // Adjust position to place the label above the enemy
+
+            // Set initial opacity and translation
+            damageLabel.setOpacity(1.0);
+            damageLabel.setFill(Color.GREEN);
+            damageLabel.setTranslateY(0);
+
+            // Set an event handler to hide the label when the fade-out animation is finished
+            fadeTransition.setOnFinished(event -> {
+                damageLabel.setVisible(false);
+                damageLabel.setOpacity(1.0); // Reset opacity after animation
+                damageLabel.setTranslateY(0); // Reset translation after animation
+            });
+
+            // Set an event handler to reset translate transition after its completion
+            translateTransition.setOnFinished(event -> {
+                damageLabel.setTranslateY(0); // Reset translation after animation
+            });
+
+            // Ensure the label is in front of the enemy by setting its Z-order
+            damageLabel.toFront();
+
+            // Start the fade-out and translate animations
+            fadeTransition.play();
+            translateTransition.play();
+            damageLabel.setVisible(true); // Make the label visible before starting the animations
+        }
     }
 
     public void setPlayer(Player player) {

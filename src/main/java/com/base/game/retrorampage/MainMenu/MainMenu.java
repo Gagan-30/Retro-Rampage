@@ -29,7 +29,7 @@ public class MainMenu {
 
         // Create a new scene with the loaded layout
         Scene scene = new Scene(root);
-        // Set the title of the window (stage) to "MainGame Menu"
+        // Set the title of the window (stage) to "Level Menu"
         stage.setTitle("Main Menu");
         // Make the window resizable
         stage.setResizable(true);
@@ -51,7 +51,7 @@ public class MainMenu {
             stage.setHeight(Integer.parseInt(parts[1]));
         }
         // Set the full screen exit hint to an empty string (disabling it)
-        stage.setFullScreenExitHint("Press F11 to enter or exit Full screen");
+        stage.setFullScreenExitHint("");
         stage.setFullScreenExitKeyCombination(KeyCombination.keyCombination(String.valueOf(KeyCode.F11)));
         // Apply the fullscreen setting from the config
         stage.setFullScreen(config.loadFullscreenSetting());

@@ -10,9 +10,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
- * MainGame class to be extended for game projects.
- * Creates the window and {@link Group} objects,
- * and manages the life cycle of the game (initialization and game loop).
+ * Level class to be extended for game projects.
+ * Manages the life cycle of the game (initialization and game loop).
  */
 public abstract class Game extends Application implements Screen {
 
@@ -32,11 +31,6 @@ public abstract class Game extends Application implements Screen {
     protected GraphicsContext context;
 
     /**
-     * The group containing game entities.
-     */
-    protected Group group;
-
-    /**
      * Handles user input.
      */
     protected Input input;
@@ -45,7 +39,12 @@ public abstract class Game extends Application implements Screen {
      * Animation timer for the game loop.
      */
     protected AnimationTimer gameLoop;
+
+    /**
+     * The previous scene before switching to this game scene.
+     */
     private Scene previousScene;
+
 
     /**
      * Initializes the window and game objects,
@@ -70,7 +69,6 @@ public abstract class Game extends Application implements Screen {
         context = canvas.getGraphicsContext2D();
         root.getChildren().add(canvas);
 
-        group = new Group();
         input = new Input(mainScene);
 
         gameLoop = new AnimationTimer() {
@@ -93,7 +91,6 @@ public abstract class Game extends Application implements Screen {
 
                 // Update game state
                 update();
-                group.update(1 / 60.0);
 
                 // Clear the canvas
                 context.setFill(Color.GRAY);
@@ -145,6 +142,11 @@ public abstract class Game extends Application implements Screen {
      */
     public abstract void update();
 
+    /**
+     * Set the previous scene before switching to this game scene.
+     *
+     * @param previousScene the previous scene
+     */
     public void setPreviousScene(Scene previousScene) {
         this.previousScene = previousScene;
     }

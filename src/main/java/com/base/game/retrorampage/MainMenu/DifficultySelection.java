@@ -3,7 +3,7 @@ package com.base.game.retrorampage.MainMenu;
 
 // Import statements for required JavaFX classes and exception handling.
 
-import com.base.game.retrorampage.LevelGeneration.MainGame;
+import com.base.game.retrorampage.LevelGeneration.Level;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -19,9 +19,9 @@ public class DifficultySelection {
         try {
 
             // Stop the game loop of the previous scene if it's running
-            if (previousScene != null && previousScene.getUserData() instanceof MainGame) {
-                MainGame previousMainGame = (MainGame) previousScene.getUserData();
-                previousMainGame.stopGameLoop();
+            if (previousScene != null && previousScene.getUserData() instanceof Level) {
+                Level previousLevel = (Level) previousScene.getUserData();
+                previousLevel.stopGameLoop();
             }
 
             // Initializes an FXMLLoader to load the FXML file for the difficulty selection screen.
@@ -47,9 +47,9 @@ public class DifficultySelection {
             difficultySelectionController.setPreviousScene(previousScene);
             difficultySelectionController.setStage(mainStage);
 
-            // Instantiate MainGame and pass the stage to it
-            MainGame mainGame = new MainGame(mainStage);
-            difficultySelectionController.setMainGame(mainGame); // Pass MainGame instance
+            // Instantiate Level and pass the stage to it
+            Level level = new Level(mainStage);
+            difficultySelectionController.setMainGame(level); // Pass Level instance
 
             // Returns the newly created scene.
             return scene;

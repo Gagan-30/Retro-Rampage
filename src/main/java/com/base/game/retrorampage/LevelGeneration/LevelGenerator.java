@@ -15,44 +15,179 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * LevelGenerator class responsible for generating and managing game levels.
+ */
 public class LevelGenerator {
+    /**
+     * Global enemy health variable.
+     */
     private static int globalEnemyHealth;
+
+    /**
+     * JavaFX Scene object representing the game scene.
+     */
     private final Scene scene;
-    private final int WIDTH = 1920;
-    private final int HEIGHT = 1080;
+
+    /**
+     * Width of the game window.
+     */
+    private final int WIDTH;
+
+    /**
+     * Height of the game window.
+     */
+    private final int HEIGHT;
 
     // Managers and components
-    private final Pane root; // Root pane to contain the level elements
-    private final RoomManager roomManager; // Manages the generation and drawing of rooms
-    private final GraphManager graphManager; // Manages graph-related operations
-    private final CorridorManager corridorManager; // Manages the creation of corridors
-    private final Input input; // Handles user input
-    private final Config config; // Manages configuration settings
-    private final Player player; // Represents the player
-    private final List<Bullet> bullets; // ArrayList to store bullets
-    private final Map<Enemy, Long> enemyCooldowns = new HashMap<>(); // Map to store enemy cooldowns
+    /**
+     * Root pane to contain the level elements.
+     */
+    private final Pane root;
+
+    /**
+     * Manages the generation and drawing of rooms.
+     */
+    private final RoomManager roomManager;
+
+    /**
+     * Manages graph-related operations.
+     */
+    private final GraphManager graphManager;
+
+    /**
+     * Manages the creation of corridors.
+     */
+    private final CorridorManager corridorManager;
+
+    /**
+     * Handles user input.
+     */
+    private final Input input;
+
+    /**
+     * Manages configuration settings.
+     */
+    private Config config;
+
+    /**
+     * Represents the player.
+     */
+    private final Player player;
+
+    /**
+     * ArrayList to store bullets.
+     */
+    private final List<Bullet> bullets;
+
+    /**
+     * Map to store enemy cooldowns.
+     */
+    private final Map<Enemy, Long> enemyCooldowns = new HashMap<>();
+
+    /**
+     * Camera object for managing the view.
+     */
     private final Camera camera;
+
+    /**
+     * Initial health value.
+     */
     private final int health;
 
+    /**
+     * Flag indicating if the right mouse button is pressed.
+     */
     private final boolean isRightMousePressed = false;
+
+    /**
+     * Flag indicating if the middle mouse button is pressed.
+     */
     private final boolean isMiddleMousePressed = false;
+
+    /**
+     * Reference to the primary stage.
+     */
     private final Stage primaryStage;
+
+    /**
+     * Reference to the game instance.
+     */
     private final Game game;
+
+    /**
+     * AudioClip object for playing audio.
+     */
     private AudioClip audioClip;
+
+    /**
+     * URL for gunshot sound.
+     */
     private URL gunshotPath;
+
+    /**
+     * URL for enemy damage sound.
+     */
     private URL enemyDamagePath;
+
+    /**
+     * URL for key pickup sound.
+     */
     private URL keyPickUpPath;
+
+    /**
+     * URL for heal-up sound.
+     */
     private URL healUpPath;
-    private boolean isShooting = false; // Add this variable
+
+    /**
+     * Flag indicating if the player is shooting.
+     */
+    private boolean isShooting = false;
+
+    /**
+     * Time of the last update.
+     */
     private long lastUpdateTime = System.nanoTime();
+
+    /**
+     * List of enemies.
+     */
     private List<Enemy> enemies;
+
+    /**
+     * Health item object.
+     */
     private HealthItem healthItem;
+
+    /**
+     * Exit key object.
+     */
     private ExitKey exitKey;
+
+    /**
+     * Key for shooting action 1.
+     */
     private String shootKey1;
+
+    /**
+     * Key for shooting action 2.
+     */
     private String shootKey2;
+
+    /**
+     * Flag indicating if the left mouse button is pressed.
+     */
     private boolean isLeftMousePressed = false;
 
-    // Constructor
+
+    /**
+     * Constructor for LevelGenerator.
+     * @param primaryStage The primary stage of the application.
+     * @param game The game instance.
+     * @param numberOfCells The number of cells.
+     * @param configFilePath The file path for the configuration.
+     */
     public LevelGenerator(Stage primaryStage, Game game, int numberOfCells, String configFilePath) {
         boolean wasFullScreen = primaryStage.isFullScreen();
         // If the stage was in full screen mode before, re-enable full screen mode.
@@ -61,7 +196,9 @@ public class LevelGenerator {
         }
         this.primaryStage = primaryStage;
         this.root = new Pane(); // Create a new pane to hold the level elements
-
+        this.config = new Config(configFilePath); // Load configuration settings
+        this.WIDTH = config.getWidth(); // Set WIDTH using config.getWidth()
+        this.HEIGHT = config.getHeight(); // Set HEIGHT using config.getHeight()
         this.scene = new Scene(root, WIDTH, HEIGHT); // Set scene dimensions
         this.game = game;
 
@@ -70,7 +207,6 @@ public class LevelGenerator {
         this.graphManager = new GraphManager();
         this.corridorManager = new CorridorManager(root);
         this.input = new Input(scene); // Set up input handling
-        this.config = new Config(configFilePath); // Load configuration settings
         this.camera = new Camera(1.0, 0.1);
         this.player = new Player(25, "player.png", 100, root, camera, roomManager); // Initialize the player
         this.bullets = new ArrayList<>(); // Initialize the bullets list
@@ -83,12 +219,18 @@ public class LevelGenerator {
         handleMousePress();
     }
 
-    // Setter method to set the global enemy health
+    /**
+     * Setter method to set the global enemy health.
+     * @param health The global enemy health value to set.
+     */
     public static void setGlobalEnemyHealth(int health) {
         globalEnemyHealth = health;
     }
 
-    // Generate the level
+    /**
+     * Generate the game level.
+     * @return The generated Scene object.
+     */
     public Scene generateLevel() {
         // 1. Generate and identify rooms
         roomManager.generateRooms();
@@ -135,6 +277,10 @@ public class LevelGenerator {
         return this.scene;
     }
 
+
+    /**
+     * Update method called in the game loop to update game logic.
+     */
     public void update() {
         double dt = calculateDeltaTime();
         updateCamera();
@@ -147,14 +293,19 @@ public class LevelGenerator {
         checkPlayerHealth();
         checkEndLevel();
     }
-
+    /**
+     * Calculate delta time.
+     * @return The delta time.
+     */
     private double calculateDeltaTime() {
         long now = System.nanoTime();
         double dt = (now - lastUpdateTime) / 1e9; // Convert nanoseconds to seconds
         lastUpdateTime = now;
         return dt;
     }
-
+    /**
+     * Update the camera position and zoom.
+     */
     private void updateCamera() {
         // Update the camera to follow the player
         camera.follow(player, WIDTH, HEIGHT);
@@ -162,7 +313,9 @@ public class LevelGenerator {
         // Apply transformations to the root
         root.getTransforms().setAll(camera.getTranslation(), camera.getZoom());
     }
-
+    /**
+     * Update the player's position based on user input.
+     */
     private void updatePlayerPosition() {
         player.updatePosition(input, config, 120.0);
     }
@@ -194,7 +347,9 @@ public class LevelGenerator {
         }
     }
 
-    // Handle mouse press and release events to track the left mouse button state
+    /**
+     * Handle mouse press and release events to track the left mouse button state.
+     */
     private void handleMousePress() {
         shootKey1 = config.getKeybind("Shoot1");
         shootKey2 = config.getKeybind("Shoot2");
@@ -252,8 +407,10 @@ public class LevelGenerator {
         }
     }
 
-    // Update the checkBulletCollisions method in LevelGenerator
-
+    /**
+     * Update the list of bullets and check for collisions.
+     * @param dt The time step.
+     */
     private void updateBullets(double dt) {
         Iterator<Bullet> iterator = bullets.iterator();
         while (iterator.hasNext()) {
@@ -266,7 +423,10 @@ public class LevelGenerator {
             }
         }
     }
-
+    /**
+     * Check for collisions between bullets and enemies.
+     * @param bullet The bullet to check collisions for.
+     */
     private void checkBulletCollisions(Bullet bullet) {
         boolean bulletOutsideRooms = true;
 
@@ -291,6 +451,10 @@ public class LevelGenerator {
             if (bullet.isActive() && enemy.getSquare().getBoundsInParent().intersects(bullet.getBoundsInParent())) {
                 // Handle bullet collision with enemy
                 enemy.reduceHealth(25);
+                enemyDamagePath = getClass().getResource("/enemydamage.wav");
+                audioClip = new AudioClip(enemyDamagePath.toString());
+                audioClip.setVolume(config.getVolume());
+                audioClip.play(); // Play heal up audio
                 enemy.updateDamageLabel(25);
                 bullet.setActive(false);
 
@@ -302,7 +466,9 @@ public class LevelGenerator {
         }
     }
 
-    // In the updateEnemies method of LevelGenerator, print a debug statement
+    /**
+     * Update the list of enemies and their behavior.
+     */
     private void updateEnemies() {
         List<Enemy> enemiesToRemove = new ArrayList<>();
 
@@ -334,6 +500,7 @@ public class LevelGenerator {
                     // Set cooldown for the enemy (2 seconds in milliseconds)
                     long cooldownDuration = 2000;
                     enemyCooldowns.put(enemy, System.currentTimeMillis() + cooldownDuration);
+                    enemy.updateDamageLabel(20);
 
                     // Optionally, handle player-enemy collision without health reduction here
                     System.out.println("Enemy hit player, cooldown started!");
@@ -355,17 +522,24 @@ public class LevelGenerator {
         enemies.removeAll(enemiesToRemove);
     }
 
+    /**
+     * Update the health item's position and check for player collision.
+     */
     private void updateHealthItem() {
         if (healthItem != null) {
             healthItem.update();
             checkPlayerHealthItemCollision();
         }
     }
-
+    /**
+     * Check for collision between player and health item.
+     */
     private void checkPlayerHealthItemCollision() {
         if (healthItem != null && healthItem.isActive() && player.getSquare().getBoundsInParent().intersects(healthItem.getBoundsInParent())) {
             // Player collided with the health item
-            player.heal(healthItem.getHealthIncrease());
+            player.heal(60);
+            player.updateHealthLabel(60);
+            
             healUpPath = getClass().getResource("/healup.wav");
             audioClip = new AudioClip(healUpPath.toString());
             audioClip.setVolume(config.getVolume());
@@ -375,20 +549,26 @@ public class LevelGenerator {
             healthItem = null; // Set healthItem to null
         }
     }
-
+    /**
+     * Check the player's health and handle game over if health is zero.
+     */
     private void checkPlayerHealth() {
         if (player.getHealth() == 0) {
             Platform.runLater(this::gameOver);
         }
     }
-
+    /**
+     * Update the exit key's position and check for player collision.
+     */
     private void updateExitKey() {
         if (exitKey != null && exitKey.isActive()) {
             exitKey.update();
             checkPlayerExitKeyCollision();
         }
     }
-
+    /**
+     * Check for collision between player and exit key.
+     */
     private void checkPlayerExitKeyCollision() {
         if (exitKey != null && exitKey.isActive() && player.getSquare().getBoundsInParent().intersects(exitKey.getBoundsInParent())) {
             if (!exitKey.hasKey()) {
@@ -407,14 +587,18 @@ public class LevelGenerator {
             exitKey = null; // Move this line after you've performed any necessary logic
         }
     }
-
+    /**
+     * Check if the level should end and trigger next level if conditions are met.
+     */
     private void checkEndLevel() {
         // Check if the player has the key and is in the dark red room
         if (player.hasKey() && player.isInRedRoom()) {
             Platform.runLater(this::nextLevel);
         }
     }
-
+    /**
+     * Clear the level by removing all elements and resetting variables.
+     */
     public void clearLevel() {
         // Remove all elements from the root pane
         root.getChildren().clear();
@@ -430,7 +614,9 @@ public class LevelGenerator {
         // Reset player health
         player.setHealth(100);
     }
-
+    /**
+     * Handle the game over state.
+     */
     public void gameOver() {
         // Create an instance of the NextLevel class
         GameOver gameOver = new GameOver();
@@ -454,7 +640,9 @@ public class LevelGenerator {
             System.err.println("Failed to create the next level scene.");
         }
     }
-
+    /**
+     * Move to the next level.
+     */
     private void nextLevel() {
         // Create an instance of the NextLevel class
         NextLevel nextLevel = new NextLevel();

@@ -10,14 +10,44 @@ import java.util.ArrayList;
  * A structure for storing and updating keyboard and mouse state.
  */
 public class Input {
+    /**
+     * A list to store keys that were just pressed.
+     */
     public ArrayList<String> justPressedQueue;
+
+    /**
+     * A list to store keys that were just released.
+     */
     public ArrayList<String> justReleasedQueue;
+
+    /**
+     * A list to store keys that were just pressed.
+     */
     public ArrayList<String> justPressedList;
+
+    /**
+     * A list to store keys that are currently pressed.
+     */
     public ArrayList<String> stillPressedList;
+
+    /**
+     * A list to store keys that were just released.
+     */
     public ArrayList<String> justReleasedList;
 
+    /**
+     * The X coordinate of the mouse.
+     */
     private double mouseX;
+
+    /**
+     * The Y coordinate of the mouse.
+     */
     private double mouseY;
+
+    /**
+     * A flag indicating whether the mouse button is pressed.
+     */
     private boolean isMousePressed;
 
     /**
@@ -26,12 +56,14 @@ public class Input {
      * @param listeningScene the window Scene that has focus during the game
      */
     public Input(Scene listeningScene) {
+        // Initialization of lists
         justPressedQueue = new ArrayList<>();
         justReleasedQueue = new ArrayList<>();
         justPressedList = new ArrayList<>();
         stillPressedList = new ArrayList<>();
         justReleasedList = new ArrayList<>();
 
+        // Event listeners for keyboard input
         listeningScene.setOnKeyPressed(
                 (KeyEvent event) -> {
                     String keyName = event.getCode().toString();
@@ -46,6 +78,7 @@ public class Input {
                 }
         );
 
+        // Event listeners for mouse input
         listeningScene.setOnMousePressed(
                 (MouseEvent event) -> {
                     isMousePressed = true;
@@ -64,10 +97,6 @@ public class Input {
                     mouseY = event.getY();
                 }
         );
-    }
-
-    public Input() {
-
     }
 
     /**
@@ -147,16 +176,30 @@ public class Input {
         return mouseY;
     }
 
+    /**
+     * Set the position of the mouse.
+     *
+     * @param x the X coordinate of the mouse
+     * @param y the Y coordinate of the mouse
+     */
     public void setMousePosition(double x, double y) {
         this.mouseX = x;
         this.mouseY = y;
     }
 
+    /**
+     * Update the mouse position based on MouseEvent.
+     *
+     * @param event the MouseEvent containing the new mouse position
+     */
     public void updateMousePosition(MouseEvent event) {
         mouseX = event.getX();
         mouseY = event.getY();
     }
 
+    /**
+     * Reset all input states.
+     */
     public void resetInput() {
         // Clear all lists
         justPressedQueue.clear();
@@ -170,6 +213,4 @@ public class Input {
         mouseY = 0;
         isMousePressed = false;
     }
-
-
 }
